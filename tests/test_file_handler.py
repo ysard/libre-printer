@@ -1,0 +1,89 @@
+"""Test file handler module"""
+# Standard imports
+import os
+import shutil
+import pathlib
+import tempfile
+import pytest
+# Custom imports
+from libreprinter.file_handler import init_directories, get_max_job_number, convert_data_line_ending
+from libreprinter.commons import OUTPUT_DIRS
+
+
+@pytest.yield_fixture()
+def temp_dir():
+    """Create temp directory"""
+
+    # Setup: Create temp dir
+    temp_dir = tempfile.mkdtemp() + "/"
+
+    yield temp_dir
+
+    # Tear down: Clean
+    shutil.rmtree(temp_dir)
+
+
+def test_init_directories(temp_dir):
+    """Test the creation of default directories
+
+    .. seealso:: Directories listed in :meth:libreprinter.commons.OUTPUT_DIRS
+    """
+    init_directories(temp_dir)
+
+    found = {path.name for path in pathlib.Path(temp_dir).glob("*")}
+
+    print("temp_dir:", temp_dir, "found:", found)
+    assert set(OUTPUT_DIRS) == found
+
+
+def test_get_max_job_number(temp_dir):
+    """Test the search of the highest file name recursively through project's dirs
+
+    - raw/1.raw: File with data
+    - raw/10.raw: File without data
+    - pcl/2.raw: File with data
+
+    We expect that :meth:get_max_job_number returns 2 (int)
+    """
+    # Empty dir
+    found_val = get_max_job_number(temp_dir)
+    print(found_val)
+    assert found_val == 1
+
+    # Populated dir
+    init_directories(temp_dir)
+    # Create test files
+    with open(temp_dir + "raw/1.raw", "w") as f_d:
+        f_d.write("hello world")
+
+    with open(temp_dir + "pcl/2.raw", "w") as f_d:
+        f_d.write("hello world")
+
+    os.mknod(temp_dir + "raw/10.raw")
+
+    found_val = get_max_job_number(temp_dir)
+    print(found_val)
+
+    assert found_val == 2
+
+
+def test_convert_data_line_ending():
+    """Test conversion of line endings"""
+    unix_text = b"hello world\n"
+    windows_text = b"hello world\r\n"
+
+    # Same line ending
+    found = convert_data_line_ending(unix_text, b"\n")
+    assert unix_text == found
+
+    # Unix => Windows
+    found = convert_data_line_ending(unix_text, b"\r\n")
+    assert windows_text == found
+
+    # Windows => Unix
+    found = convert_data_line_ending(windows_text, b"\n")
+    assert unix_text == found
+
+    # Not bytes data
+    with pytest.raises(TypeError, match=r".*argument 1 must be str, not bytes"):
+        _ = convert_data_line_ending(windows_text.decode(), b"\n")

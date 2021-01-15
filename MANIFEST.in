@@ -1,0 +1,14 @@
+exclude *.ipynb
+exclude *.py
+exclude *.txt
+exclude *.yml
+exclude *.yaml
+exclude Makefile
+prune .idea
+prune docs
+prune poc
+prune tests
+include setup.py
+recursive-include libreprinter *.py
+include libreprinter/assets/LICENSE
+
