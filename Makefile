@@ -1,5 +1,5 @@
 test:
-    pytest tests
+	pytest tests
 	@#python setup.py test --addopts "tests libreprinter -vv"
 
 coverage:
