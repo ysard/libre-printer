@@ -277,6 +277,13 @@ def parse_buffer(serial_handler, job_number, config):
                     usb_printer_dev_f_d.close()
                 # Exit loop
                 return
+
+            if stream:
+                raw_f_d.flush()
+            if plain_stream_f_d:
+                plain_stream_f_d.flush()
+
+            received_bytes = False
             LOGGER.debug("Waiting data...")
             continue
 
@@ -347,14 +354,17 @@ def parse_buffer(serial_handler, job_number, config):
             if plain_stream_f_d:
                 # plain-stream
                 plain_stream_f_d.write(convert_data_line_ending(databytes, line_ending))
-            elif stream:
-                # Not plain-stream, but strip-escp2-stream
-                # => need to sync escp2 converter
-                # Experimental sync
-                sync_converters(0, job_number)
 
+        # Save received data
         # print("out:", databytes)
         raw_f_d.write(databytes)
+
+        if epson_emulation and stream and not plain_stream_f_d:
+            # Not plain-stream, but strip-escp2-stream
+            # => need to sync escp2 converter
+            raw_f_d.flush()
+            # Experimental sync
+            sync_converters(0, job_number)
 
         if usb_printer_dev_f_d:
             # usb_passthrough enabled: forward bytes
