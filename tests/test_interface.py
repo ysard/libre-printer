@@ -121,6 +121,8 @@ def test_interface_receiving(dtr, emulation, test_file, init_config):
     debug_config_file(config)
 
     # Launch interface reader
+    # Assert the DTR line is not functional after opening the serial connection
+    # on emulated interface, so it needs to be patched for tests.
     dtr.return_value = True
     interface_thread = Thread(target=partial(read_interface, config))
     interface_thread.start()
