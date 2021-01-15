@@ -5,15 +5,15 @@ import shutil
 import pathlib
 import tempfile
 import pytest
+from unittest.mock import patch
 # Custom imports
-from libreprinter.file_handler import init_directories, get_max_job_number, convert_data_line_ending
+from libreprinter.file_handler import init_directories, cleanup_directories, get_max_job_number, convert_data_line_ending
 from libreprinter.commons import OUTPUT_DIRS
 
 
 @pytest.yield_fixture()
 def temp_dir():
-    """Create temp directory"""
-
+    """Create temp directory (with trailing "/")"""
     # Setup: Create temp dir
     temp_dir = tempfile.mkdtemp() + "/"
 
@@ -34,6 +34,26 @@ def test_init_directories(temp_dir):
 
     print("temp_dir:", temp_dir, "found:", found)
     assert set(OUTPUT_DIRS) == found
+
+
+@patch("libreprinter.file_handler.SHARED_MEM_NAME", "test")
+def test_cleanup_directories(temp_dir):
+    """Test the deletion of directories
+
+    .. seealso:: Directories listed in :meth:libreprinter.commons.OUTPUT_DIRS
+    """
+    init_directories(temp_dir)
+
+    # Fake file in dir
+    os.mknod(temp_dir + "1.raw")
+    # Fake shared memory file
+    # libreprinter.commons.SHARED_MEM_NAME is patched as "test"
+    os.mknod("/dev/shm/test")
+
+    cleanup_directories(temp_dir)
+
+    for directory in OUTPUT_DIRS:
+        assert not os.path.exists(temp_dir + directory)
 
 
 def test_get_max_job_number(temp_dir):

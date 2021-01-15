@@ -1,10 +1,11 @@
 """Gestion of files (creation and processing) and directories used by the project"""
 # Standard imports
 import os
+import shutil
 import glob
 import itertools as it
 # Custom imports
-from libreprinter.commons import OUTPUT_DIRS
+from libreprinter.commons import OUTPUT_DIRS, SHARED_MEM_NAME
 
 
 def init_directories(output_path):
@@ -22,6 +23,27 @@ def init_directories(output_path):
             os.mkdir(output_path + directory, mode=0o744)
         except FileExistsError:
             pass
+
+
+def cleanup_directories(output_path):
+    """Delete all directories initialised by this project in the given path
+
+    Deletes also /dev/shm/ shared memory.
+
+    :param output_path: Path were directories will be created.
+    :type output_path: str
+    """
+    for directory in OUTPUT_DIRS:
+        try:
+            shutil.rmtree(output_path + directory)
+        except FileNotFoundError:
+            pass
+
+    # Clean shared memory
+    try:
+        os.remove("/dev/shm/" + SHARED_MEM_NAME)
+    except FileNotFoundError:
+        pass
 
 
 def get_max_job_number(output_path):

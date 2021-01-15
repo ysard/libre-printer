@@ -10,6 +10,7 @@ from libreprinter.config_parser import parse_config
 def default_config():
     """Get default settings for different sections of the expected config file"""
     misc_section = {
+        "start_cleanup": "no",
         "escp2_converter_path": "/home/pi/temp/sdl/escparser/convert-escp2",
         "endlesstext": "no",
         "line_ending": "\n",
@@ -50,6 +51,7 @@ TEST_DATA = [
     (
         """
         [misc]
+        start_cleanup=
         escp2_converter_path=
         endlesstext=
         line_ending=

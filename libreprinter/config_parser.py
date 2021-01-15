@@ -34,6 +34,10 @@ def parse_config(config: configparser.ConfigParser):
 
     ## Misc section
     misc_section = config["misc"]
+    start_cleanup = misc_section.get("start_cleanup")
+    if not start_cleanup:
+        misc_section["start_cleanup"] = "no"
+
     escp2_converter_path = misc_section.get("escp2_converter_path")
     if not escp2_converter_path:
         misc_section["escp2_converter_path"] = "/home/pi/temp/sdl/escparser/convert-escp2"

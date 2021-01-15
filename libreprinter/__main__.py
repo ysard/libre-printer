@@ -2,7 +2,7 @@
 # Custom imports
 from libreprinter import __version__
 from libreprinter.config_parser import load_config
-from libreprinter.file_handler import init_directories
+from libreprinter.file_handler import init_directories, cleanup_directories
 from libreprinter.interface import read_interface
 from libreprinter.jobs_to_printer_watchdog import setup_watchdog
 from libreprinter.escp2_converter import launch_escp2_converter
@@ -16,6 +16,11 @@ def main():
     LOGGER.info("Libreprinter start; %s", __version__)
 
     config = load_config()
+    misc_section = config["misc"]
+
+    # Reset output dirs
+    if misc_section.getboolean("start_cleanup"):
+        cleanup_directories(misc_section["output_path"])
 
     # Prepare working directories
     init_directories(config["misc"]["output_path"])
