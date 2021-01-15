@@ -12,7 +12,7 @@ import pytest
 from unittest.mock import patch
 # Custom imports
 from libreprinter.config_parser import parse_config, debug_config_file
-from libreprinter.interface import read_interface, get_interface_config
+from libreprinter.interface import read_interface, build_interface_config_settings
 from libreprinter.file_handler import init_directories
 from libreprinter.legacy_interprocess_com import initialize_interprocess_com, \
     get_status_message, debug_shared_memory
@@ -195,6 +195,6 @@ def test_get_interface_config(sample_config, expected):
     config = parse_config(config)
 
     # Get settings
-    found_settings = get_interface_config(config)
+    found_settings = build_interface_config_settings(config)
     print(found_settings)
     assert expected == found_settings

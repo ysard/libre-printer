@@ -81,7 +81,7 @@ def get_serial_handler(serial_path):
         time.sleep(1)
 
 
-def get_interface_config(config):
+def build_interface_config_settings(config):
     r"""Build configuration strings ready to be sent to the interface
 
     :param config: ConfigParser object
@@ -128,7 +128,7 @@ def configure_interface(serial_handler, config):
     """
     LOGGER.debug("Send config to the interface...")
 
-    [serial_handler.write(param.encode()) for param in get_interface_config(config)]
+    [serial_handler.write(param.encode()) for param in build_interface_config_settings(config)]
     # Signal end of config
     serial_handler.write(b"end_config\n")
 
