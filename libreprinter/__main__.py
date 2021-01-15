@@ -23,24 +23,24 @@ def main():
         cleanup_directories(misc_section["output_path"])
 
     # Prepare working directories
-    init_directories(config["misc"]["output_path"])
+    init_directories(misc_section["output_path"])
 
     # Launch converters
     converter_process = None
-    if (config["misc"]["emulation"] in ("epson", "auto") and
-        config["misc"]["endlesstext"] in ("strip-escp2-stream", "strip-escp2-jobs", "no")
+    if (misc_section["emulation"] in ("epson", "auto") and
+        misc_section["endlesstext"] in ("strip-escp2-stream", "strip-escp2-jobs", "no")
     ):
         LOGGER.info("Launch convert-escp2 program...")
         converter_process = launch_escp2_converter(config)
 
-    if (config["misc"]["output_printer"] != "no" and
-        config["misc"]["endlesstext"] in ("plain-jobs", "strip-escp2-jobs", "no")
+    if (misc_section["output_printer"] != "no" and
+        misc_section["endlesstext"] in ("plain-jobs", "strip-escp2-jobs", "no")  # TODO: uniquement "no"
     ):
-        # Send new pdfs on the printer configured in Cups
+        # Send new pdfs and txt files on the printer configured in Cups
+        # output_printer and not stream*:
         # output_printer is defined; it is not an infinite stream
-        # output_printer and not stream*
-        #  => send txt job to printer
-        #  => send pdf to printer
+        #  => send txt job to printer ("plain-jobs", "strip-escp2-jobs") # TODO: strip génère des PDFs vides...
+        #  => send pdf to printer ("no")
         setup_watchdog(config)
 
     # Launch interface reader

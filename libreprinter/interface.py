@@ -24,11 +24,15 @@ LOGGER = logger()
 def _get_serial_handler(serial_path):
     """Open serial port and return serial handler
 
-    .. note:: Low level function, prefer using :meth:get_serial_handler.
+    Low level function, prefer using :meth:get_serial_handler.
 
     TODO: reset DTR => ok ? marche pas tout le temps
     TODO: DTR on Rpi ? => gpio control
     TODO: flush buffer after open
+
+    .. note:: doc: See rtscts=True and dsrdtr=True
+        https://github.com/pyserial/pyserial/issues/59
+
     :return: Serial port handler.
     :rtype: serial.Serial
     """
@@ -49,9 +53,7 @@ def _get_serial_handler(serial_path):
     try:
         serial_handler.open()
         assert serial_handler.is_open
-        serial_handler.dtr = False
-        # TODO: check this, not functionnal for tests with virtual console...
-        # See rtscts=True and dsrdtr=True https://github.com/pyserial/pyserial/issues/59
+        serial_handler.dtr = False  # This line raises an exception on emulated interface
         time.sleep(1)
         assert serial_handler.is_open
 
