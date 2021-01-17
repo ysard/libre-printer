@@ -12,6 +12,9 @@ run:
 black:
 	black libreprinter
 
+clean:
+	rm -rf eps pcl pdf png raw txt txt_jobs txt_stream
+
 doc:
 	$(MAKE) -C ./docs html
 
