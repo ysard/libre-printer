@@ -12,7 +12,8 @@ SHARED_MEM_NAME = "retroprinter-shared-mem"
 
 # Paths
 DIR_LOGS = tempfile.gettempdir() + "/"
-CONFIG_FILE = "/media/DATA/Projets/perimetrie/retroprinter/software/libre_printer/libreprinter.conf"
+CONFIG_FILE = "./libreprinter.conf"
+ESCP2_CONVERTER = "/home/pi/temp/sdl/escparser/convert-escp2"
 
 DIR_ASSETS = resource_filename(__name__, "assets/")  # current package name
 

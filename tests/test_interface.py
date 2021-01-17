@@ -132,7 +132,7 @@ def extra_config(init_config, request):
     config["misc"]["end_page_timeout"] = "1"
     # Add endless setting & converter path
     config["misc"]["endlesstext"] = endlesstext
-    config["misc"]["escp2_converter_path"] = "/media/DATA/Projets/perimetrie/retroprinter/software/hacked_project/convert-escp2"
+    config["misc"]["escp2_converter_path"] = cm.ESCP2_CONVERTER
 
     debug_config_file(config)
 
