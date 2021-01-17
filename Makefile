@@ -3,7 +3,7 @@ test:
 	@#python setup.py test --addopts "tests libreprinter -vv"
 
 coverage:
-	pytest --cov=libreprinter -vv
+	pytest --cov=libreprinter --cov-report term-missing -vv
 	@#python setup.py test --addopts "--cov libreprinter tests"
 
 run:
