@@ -1,3 +1,4 @@
+"""Logger settings and project constants"""
 # Standard imports
 from logging.handlers import RotatingFileHandler
 import logging
