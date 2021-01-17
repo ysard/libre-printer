@@ -80,8 +80,8 @@ def parse_config(config: configparser.ConfigParser):
     output_path = output_path + "/" if output_path[-1] != "/" else output_path
     misc_section["output_path"] = output_path
 
-    auto_end_page = misc_section.get("auto_end_page")
-    misc_section["auto_end_page"] = auto_end_page if auto_end_page else "no"
+    auto_end_page = misc_section.getboolean("auto_end_page")
+    misc_section["auto_end_page"] = "yes" if auto_end_page else "no"
 
     end_page_timeout = misc_section.get("end_page_timeout")
     if not end_page_timeout or not end_page_timeout.isnumeric() or not int(
@@ -105,7 +105,7 @@ def parse_config(config: configparser.ConfigParser):
 
     dtr_logic = serial_section.get("dtr_logic")
     if dtr_logic not in ("high", "low"):
-        serial_section["dtr_logic"] = "low"
+        serial_section["dtr_logic"] = "high"
 
     enabled = serial_section.get("enabled")
     if enabled not in ("yes", "no", "auto"):
