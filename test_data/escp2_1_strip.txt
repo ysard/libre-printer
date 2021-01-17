@@ -1,0 +1,67 @@
+
+
+
+
+
+
+
+
+
+
+Marking highlight 1
+Place the cursor under the first character of the text concerned and press
+HIGHLIGHT 1. The text will move to the right and underbar will appear.
+
+Move  the  cursor  to  the  space  after  the  last  character of the text
+concerned and press HIGHLIGHT 1 again.  A second underbar will  appear and
+if  there  is any text to the right it will move  to  make  room  for  the
+underbar.
+
+When printed the  text  between  the  underbars will be in the highlight 1
+mode, i.e. unless the effect has been  changed  with  the  HT,  it will be
+underlined.
+
+Marking highlight 2
+Follow  the same procedure as for highlight 1.  Instead of an underbar the
+marker in  the  text is an asterisk.  In the default mode this will result
+in bold type.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
