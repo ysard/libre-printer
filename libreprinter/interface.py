@@ -12,7 +12,7 @@ import serial
 import logging
 # Custom imports
 from libreprinter.commons import BAUDRATE
-from libreprinter.file_handler import get_max_job_number, \
+from libreprinter.file_handler import get_job_number, \
     convert_file_line_ending, convert_data_line_ending
 from libreprinter.legacy_interprocess_com import initialize_interprocess_com, \
     send_status_message, debug_shared_memory
@@ -394,7 +394,7 @@ def read_interface(config):
     # Signal the conversion program that it can control leds
     # send_status_message(200, 1)
 
-    job_number = get_max_job_number(misc_section["output_path"])
+    job_number = get_job_number(misc_section["output_path"])
     # TODO: Set job_number according to pending jobs in shared memory and
     #   real pending files in /raw dir
     LOGGER.debug("Current job number: %s", job_number)

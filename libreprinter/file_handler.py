@@ -46,10 +46,11 @@ def cleanup_directories(output_path):
         pass
 
 
-def get_max_job_number(output_path):
-    """Return the number of the last job found in previous directories
+def get_job_number(output_path):
+    """Return the number of the current job based on files found in output directories
 
     - Get only non empty files
+    - Get only expected extensions (txt, raw, eps)
     - Search highest file number in all folders
 
     TODO: handle properly pdf dir data: page1-1.pdf, page1-2.pdf, page2-1.pdf, ...
@@ -58,13 +59,18 @@ def get_max_job_number(output_path):
     """
     # Search files in folders with an extension which equals the folder's name
     # => temp/trash files are avoided
-    g = it.chain(*(glob.glob(output_path + directory + "/*." + directory) for directory in OUTPUT_DIRS if directory != "pdf"))
-    # Prune empty files, get basenames
+    g = it.chain(*(glob.glob(output_path + directory + "/*.*") for directory in OUTPUT_DIRS if directory != "pdf"))
+    # Prune empty files, get basenames and filter extensions
     pruned = (
-        os.path.basename(os.path.splitext(file)[0]) for file in g
-        if os.path.getsize(file) != 0
+        os.path.splitext(filepath) for filepath in g
+        if os.path.getsize(filepath) != 0
+    )
+    pruned = (
+        os.path.basename(filename) for filename, extension in pruned
+        if extension in (".txt", ".raw", ".eps")
     )
     pruned = sorted(int(val) for val in pruned if val.isnumeric())
+    # Increment the value to get the current job number
     return int(pruned[-1]) + 1 if pruned else 1
 
 

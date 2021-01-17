@@ -7,7 +7,7 @@ from pkg_resources import resource_filename
 
 # Misc
 BAUDRATE = 115200  # 500000
-OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt")  # txt_jobs replaced by txt; TODO: txt_stream
+OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream", "txt_jobs")
 SHARED_MEM_NAME = "retroprinter-shared-mem"
 
 # Paths

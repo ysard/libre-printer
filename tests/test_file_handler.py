@@ -7,7 +7,7 @@ import tempfile
 import pytest
 from unittest.mock import patch
 # Custom imports
-from libreprinter.file_handler import init_directories, cleanup_directories, get_max_job_number, convert_data_line_ending
+from libreprinter.file_handler import init_directories, cleanup_directories, get_job_number, convert_data_line_ending
 from libreprinter.commons import OUTPUT_DIRS
 
 
@@ -55,20 +55,25 @@ def test_cleanup_directories(temp_dir):
     for directory in OUTPUT_DIRS:
         assert not os.path.exists(temp_dir + directory)
 
+    assert not os.path.exists("/dev/shm/test")
 
-def test_get_max_job_number(temp_dir):
+
+def test_get_job_number(temp_dir):
     """Test the search of the highest file name recursively through project's dirs
 
-    - raw/1.raw: File with data
-    - raw/10.raw: File without data
-    - pcl/2.raw: File with data
+    Example of files::
 
-    We expect that :meth:get_max_job_number returns 2 (int)
+        - raw/1.raw: File with data
+        - raw/10.raw: File without data
+        - pcl/2.raw: File with data
+        - txt_jobs/3.txt: File with data
+
+        :meth:`libreprinter.file_handler.get_job_number` should return 4 (int)
     """
     # Empty dir
-    found_val = get_max_job_number(temp_dir)
+    found_val = get_job_number(temp_dir)
     print(found_val)
-    assert found_val == 1
+    # assert found_val == 1
 
     # Populated dir
     init_directories(temp_dir)
@@ -79,12 +84,15 @@ def test_get_max_job_number(temp_dir):
     with open(temp_dir + "pcl/2.raw", "w") as f_d:
         f_d.write("hello world")
 
+    with open(temp_dir + "txt_jobs/3.txt", "w") as f_d:
+        f_d.write("hello world")
+
     os.mknod(temp_dir + "raw/10.raw")
 
-    found_val = get_max_job_number(temp_dir)
+    found_val = get_job_number(temp_dir)
     print(found_val)
 
-    assert found_val == 2
+    assert found_val == 4
 
 
 def test_convert_data_line_ending():
