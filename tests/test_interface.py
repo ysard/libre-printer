@@ -61,7 +61,7 @@ def init_virtual_interface(temp_dir):
         [serial_printer]
         """,
     ],
-    ids=["defaultConfig"]
+    ids=["defaultConfig"],
 )
 def init_config(request, init_virtual_interface):
     """Return temporary working dir + initialized config
@@ -147,7 +147,7 @@ def extra_config(init_config, request):
 
 
 @pytest.mark.timeout(10)
-@patch('serial.Serial.dtr')
+@patch("serial.Serial.dtr")
 @pytest.mark.parametrize(
     "emulation, test_file",
     [
@@ -312,7 +312,7 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
             ; Default
             enabled=no
             """,
-            ['delayprinter=0\n'],
+            ["delayprinter=0\n"],
         ),
         (
             """
@@ -322,10 +322,11 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
             ; Manually enabled
             enabled=yes
             """,
-            ['dtr_logic=0\n', 'serial_enabled=1\n', 'baudrate=19200\n']
-        )
-    ]
-    , ids=["serial_disabled", "serial_enabled"])
+            ["dtr_logic=0\n", "serial_enabled=1\n", "baudrate=19200\n"],
+        ),
+    ],
+    ids=["serial_disabled", "serial_enabled"],
+)
 def test_get_interface_config(sample_config, expected):
     """Test the build of settings from config file, ready to be sent to the interface
 

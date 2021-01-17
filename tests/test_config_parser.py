@@ -3,6 +3,7 @@
 import os
 import configparser
 import pytest
+
 # Custom imports
 from libreprinter.config_parser import parse_config
 
@@ -44,7 +45,8 @@ TEST_DATA = [
         [misc]
         [parallel_printer]
         [serial_printer]
-        """, default_config()
+        """,
+        default_config(),
     ),
     # Config with empty settings (interpreted as empty strings)
     # vs default expected config
@@ -71,8 +73,9 @@ TEST_DATA = [
         dtr_logic=
         enabled=
         baudrate=
-        """, default_config()
-    )
+        """,
+        default_config(),
+    ),
 ]
 
 
@@ -88,7 +91,9 @@ def test_empty_file():
         _ = parse_config(config)
 
 
-@pytest.mark.parametrize("sample_config,expected", TEST_DATA, ids=["empty_sections", "empty_settings"])
+@pytest.mark.parametrize(
+    "sample_config,expected", TEST_DATA, ids=["empty_sections", "empty_settings"]
+)
 def test_default_settings(sample_config, expected):
     """Test default settings set by the config parser in case of config file
     with empty sections or empty settings.

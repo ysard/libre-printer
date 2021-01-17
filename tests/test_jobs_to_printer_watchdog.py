@@ -1,9 +1,11 @@
 # Standard imports
 import time
 from unittest.mock import patch
+
 # Custom imports
 from libreprinter.file_handler import init_directories
 from libreprinter.jobs_to_printer_watchdog import setup_watchdog
+
 # Import create dir fixture
 from .test_file_handler import temp_dir
 

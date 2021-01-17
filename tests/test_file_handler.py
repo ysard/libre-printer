@@ -6,8 +6,14 @@ import pathlib
 import tempfile
 import pytest
 from unittest.mock import patch
+
 # Custom imports
-from libreprinter.file_handler import init_directories, cleanup_directories, get_job_number, convert_data_line_ending
+from libreprinter.file_handler import (
+    init_directories,
+    cleanup_directories,
+    get_job_number,
+    convert_data_line_ending,
+)
 from libreprinter.commons import OUTPUT_DIRS
 
 
