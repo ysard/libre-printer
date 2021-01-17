@@ -84,6 +84,13 @@ def get_serial_handler(serial_path):
 def build_interface_config_settings(config):
     r"""Build configuration strings ready to be sent to the interface
 
+    About `enabled` param of `serial_printer` config section:
+
+        - no: Only parallel printer will be working
+            => send only parallel config
+        - yes: Only serial printer will be working
+            => send only serial config
+
     :param config: ConfigParser object
     :type config: configparser.ConfigParser
     :return: List of settings (form: `<param>=<value>\n`).

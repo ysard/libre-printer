@@ -34,12 +34,13 @@ def main():
         converter_process = launch_escp2_converter(config)
 
     if (misc_section["output_printer"] != "no" and
-        misc_section["endlesstext"] in ("plain-jobs", "strip-escp2-jobs", "no")  # TODO: uniquement "no"
+        misc_section["endlesstext"] in ("plain-jobs", "strip-escp2-jobs", "no")
     ):
+        # TODO: only "no" because strip wrongly builds empty pdf files
         # Send new pdfs and txt files on the printer configured in Cups
         # output_printer and not stream*:
         # output_printer is defined; it is not an infinite stream
-        #  => send txt job to printer ("plain-jobs", "strip-escp2-jobs") # TODO: strip génère des PDFs vides...
+        #  => send txt job to printer ("plain-jobs", "strip-escp2-jobs")
         #  => send pdf to printer ("no")
         setup_watchdog(config)
 

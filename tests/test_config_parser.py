@@ -118,4 +118,4 @@ def test_default_settings(sample_config, expected):
 
 # TODO:
 #   test windows param:\r\n
-#   test end_page_timeout <= 0 => convertit à 4
+#   test end_page_timeout <= 0 => set to 4

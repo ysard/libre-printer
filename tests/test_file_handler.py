@@ -26,7 +26,7 @@ def temp_dir():
 def test_init_directories(temp_dir):
     """Test the creation of default directories
 
-    .. seealso:: Directories listed in :meth:libreprinter.commons.OUTPUT_DIRS
+    .. seealso:: Directories listed in :meth:`libreprinter.commons.OUTPUT_DIRS`
     """
     init_directories(temp_dir)
 
@@ -40,7 +40,9 @@ def test_init_directories(temp_dir):
 def test_cleanup_directories(temp_dir):
     """Test the deletion of directories
 
-    .. seealso:: Directories listed in :meth:libreprinter.commons.OUTPUT_DIRS
+    libreprinter.commons.SHARED_MEM_NAME is patched with a value "test"
+
+    .. seealso:: Directories listed in :meth:`libreprinter.commons.OUTPUT_DIRS`
     """
     init_directories(temp_dir)
 

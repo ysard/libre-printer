@@ -1,5 +1,4 @@
-"""Test conversion process through interface interpreter
-"""
+"""Test conversion process through the software interface interpreter"""
 # Standard imports
 import os
 import time
@@ -25,7 +24,7 @@ LOGGER = cm.logger()
 DIR_DATA = os.path.dirname(os.path.abspath(__file__)) + "/../test_data/"  # current package name
 
 
-@pytest.fixture()
+@pytest.yield_fixture()
 def init_virtual_interface(temp_dir):
     """Init virtual serial interface
 
@@ -58,7 +57,8 @@ def init_virtual_interface(temp_dir):
         [parallel_printer]
         [serial_printer]
         """,
-    ]
+    ],
+    ids=["defaultConfig"]
 )
 def init_config(request, init_virtual_interface):
     """Return temporary working dir + initialized config
@@ -98,20 +98,22 @@ def init_config(request, init_virtual_interface):
     [
         ("epson", "escp2_1.prn"),
         ("epson", "test_page_escp2.prn"),
-        # ("hp", "test_page_pcl.prn"),  # TODO: pas de sync converter .. comment vérifier si le job est fini ?
+        # ("hp", "test_page_pcl.prn"),  # TODO: pas de sync converter .. How to test end of job ?
     ],
 )
 def test_interface_receiving(dtr, emulation, test_file, init_config):
     """Simulation of jobs with various emulation parameters
 
+    This tests uses full pipeline with emulated serial interface.
+
     :param emulation: Emulation type (epson, hp, auto)
     :param test_file: File sent to the interface. The result must be exactly the
         same. Files are stored in `<project_root_dir>/test_data/`.
     :param init_config: temporary working dir + initialized config.
-        See :meth:`init_config`.
+        See :meth:`init_config` fixture.
     :type emulation: str
     :type test_file: str
-    :type init_config: tuple[str, str]
+    :type init_config: tuple[str, configparser.ConfigParser]
     """
     tmp_dir, config = init_config
 
@@ -133,8 +135,8 @@ def test_interface_receiving(dtr, emulation, test_file, init_config):
     #   (device disconnected or multiple access on port?)
 
     # Put data in input-tty
-    with open(DIR_DATA + test_file, "rb") as f_d, open(
-            tmp_dir + "input-tty", "wb") as tty_f_d:
+    with open(DIR_DATA + test_file, "rb") as f_d, \
+            open(tmp_dir + "input-tty", "wb") as tty_f_d:
         tty_f_d.write(b"end_config\n")  # Cheat about config ack from interface
         expected_content = f_d.read()
         tty_f_d.write(expected_content)
