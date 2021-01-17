@@ -3,6 +3,7 @@
 import shlex
 import subprocess
 import pathlib
+
 # Custom imports
 import libreprinter.commons as cm
 
@@ -47,7 +48,9 @@ def launch_escp2_converter(config):
     converter_path = pathlib.Path(config["misc"]["escp2_converter_path"])
 
     if not converter_path.exists():
-        LOGGER.error("Setting <escp2_converter_path:%s> doesn't exists!", converter_path)
+        LOGGER.error(
+            "Setting <escp2_converter_path:%s> doesn't exists!", converter_path
+        )
         raise FileNotFoundError("escp2 converter not found")
 
     if converter_path.is_file():
@@ -62,7 +65,9 @@ def launch_escp2_converter(config):
         binary = "convert-escp2"
 
         if not (working_dir / binary).is_file():
-            LOGGER.error("convert-escp2 not found in <escp2_converter_path:%s> !", converter_path)
+            LOGGER.error(
+                "convert-escp2 not found in <escp2_converter_path:%s> !", converter_path
+            )
             raise FileNotFoundError("escp2 converter not found")
 
     # Launch as subprocess

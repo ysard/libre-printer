@@ -4,6 +4,7 @@ import os
 import shutil
 import glob
 import itertools as it
+
 # Custom imports
 from libreprinter.commons import OUTPUT_DIRS, SHARED_MEM_NAME
 
@@ -59,11 +60,16 @@ def get_job_number(output_path):
     """
     # Search files in folders with an extension which equals the folder's name
     # => temp/trash files are avoided
-    g = it.chain(*(glob.glob(output_path + directory + "/*.*") for directory in OUTPUT_DIRS if directory != "pdf"))
+    g = it.chain(
+        *(
+            glob.glob(output_path + directory + "/*.*")
+            for directory in OUTPUT_DIRS
+            if directory != "pdf"
+        )
+    )
     # Prune empty files, get basenames and filter extensions
     pruned = (
-        os.path.splitext(filepath) for filepath in g
-        if os.path.getsize(filepath) != 0
+        os.path.splitext(filepath) for filepath in g if os.path.getsize(filepath) != 0
     )
     pruned = (
         os.path.basename(filename) for filename, extension in pruned

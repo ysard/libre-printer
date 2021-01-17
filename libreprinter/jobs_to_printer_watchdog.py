@@ -4,6 +4,7 @@ import shlex
 import subprocess
 from watchdog.observers.inotify import InotifyObserver
 from watchdog.events import RegexMatchingEventHandler
+
 # Custom imports
 from libreprinter.commons import logger
 
@@ -23,6 +24,7 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
         :param FILES_REGEX: Patterns to detect pdf and txt files.
         :type FILES_REGEX: list[str]
     """
+
     FILES_REGEX = [r".*/pdf/.*\.pdf$", r".*/txt_jobs/.*\.txt$"]
 
     def __init__(self, printer_name=None, *args, **kwargs):
@@ -39,8 +41,9 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
         try:
             # We are in a child thread, we can have blocking calls like run()
             # Capture all outputs from lpr in case of error with PIPE
-            subprocess.run(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE,
-                           check=True)
+            subprocess.run(
+                args, stderr=subprocess.PIPE, stdout=subprocess.PIPE, check=True
+            )
         except subprocess.CalledProcessError as e:
             # process exits with a non-zero exit code
             LOGGER.error("stdout: %s; stderr: %s", e.stdout, e.stderr)
@@ -60,8 +63,7 @@ def setup_watchdog(config):
     LOGGER.info("Launch pdf & txt watchdog...")
 
     event_handler = PdfTxtEventHandler(
-        printer_name=config["misc"]["output_printer"],
-        ignore_directories=True
+        printer_name=config["misc"]["output_printer"], ignore_directories=True
     )
     observer = InotifyObserver()
     # config["misc"]["output_path"] "/home/Lex/pdf/"
@@ -73,5 +75,7 @@ def setup_watchdog(config):
 
 if __name__ == "__main__":
 
-    obs = setup_watchdog({"misc": {"output_path": "./", "output_printer": "TEST_PRINTER"}})
+    obs = setup_watchdog(
+        {"misc": {"output_path": "./", "output_printer": "TEST_PRINTER"}}
+    )
     obs.join()

@@ -10,12 +10,19 @@ import shutil
 import time
 import serial
 import logging
+
 # Custom imports
 from libreprinter.commons import BAUDRATE
-from libreprinter.file_handler import get_job_number, \
-    convert_file_line_ending, convert_data_line_ending
-from libreprinter.legacy_interprocess_com import initialize_interprocess_com, \
-    send_status_message, debug_shared_memory
+from libreprinter.file_handler import (
+    get_job_number,
+    convert_file_line_ending,
+    convert_data_line_ending,
+)
+from libreprinter.legacy_interprocess_com import (
+    initialize_interprocess_com,
+    send_status_message,
+    debug_shared_memory,
+)
 from libreprinter.commons import logger
 
 LOGGER = logger()
@@ -236,7 +243,7 @@ def parse_buffer(serial_handler, job_number, config):
             config["misc"]["usb_passthrough"], "wb"
         )
 
-    epson_emulation = (config["misc"]["emulation"] == "epson")
+    epson_emulation = config["misc"]["emulation"] == "epson"
 
     # Handle data stream and stream plain text
     stream = plain_stream_f_d = line_ending = None
@@ -251,7 +258,7 @@ def parse_buffer(serial_handler, job_number, config):
 
             plain_stream_f_d = open(
                 "{}txt_stream/{}.txt".format(config["misc"]["output_path"], job_number),
-                "wb"
+                "wb",
             )
 
     raw_f_d = open(
@@ -348,7 +355,7 @@ def parse_buffer(serial_handler, job_number, config):
                     escmode = False
                 elif escimode:
                     if not italic:
-                        print_controlcodes = (databyte == 1)
+                        print_controlcodes = databyte == 1
                     escimode = False
 
                 elif masterfontmode:
@@ -434,7 +441,7 @@ def read_interface(config):
             # Copy current file to pcl folder
             shutil.copy(
                 "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
-                "{}/pcl/{}.pcl".format(misc_section["output_path"], job_number)
+                "{}/pcl/{}.pcl".format(misc_section["output_path"], job_number),
             )
 
         if epson_emulation and (misc_section["endlesstext"] == "plain-jobs"):
@@ -443,7 +450,7 @@ def read_interface(config):
             convert_file_line_ending(
                 "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
                 "{}/txt_jobs/{}.txt".format(misc_section["output_path"], job_number),
-                config["misc"]["line_ending"]
+                config["misc"]["line_ending"],
             )
 
         if jobs_count >= 199:

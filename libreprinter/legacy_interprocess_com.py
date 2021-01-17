@@ -4,6 +4,7 @@
 import os
 import mmap
 from numpy import frombuffer, uint32
+
 # Custom imports
 import libreprinter.commons as cm
 
@@ -43,7 +44,7 @@ def initialize_interprocess_com():
     SHARED_MEM_BUFFER = frombuffer(m, dtype=uint32)
 
     LOGGER.debug("Shared mem initialised")
-    #print(SHARED_MEM_BUFFER[400:405])
+    # print(SHARED_MEM_BUFFER[400:405])
     debug_shared_memory()
 
 
@@ -98,15 +99,21 @@ def debug_shared_memory():
         202: {
             0: "no data to process or data is processed",
             1: "data to process",
-        }
+        },
     }
 
     # Get 202 message: at offset 200 * 2 + 1 = 401
     value = get_status_message(200)
-    print("200: Power Led control and unlock buggy converters:", value, words_table[200][value])
+    print(
+        "200: Power Led control and unlock buggy converters:",
+        value,
+        words_table[200][value],
+    )
     # Get 202 message: at offset 201 * 2 + 1 = 403
     value = get_status_message(201)
-    print("201: Converters to convert-flasher:", value, words_table[201][value]) # TODO convert-flasher uniquement ???
+    print(
+        "201: Converters to convert-flasher:", value, words_table[201][value]
+    )  # TODO convert-flasher uniquement ???
     # Get 202 message: at offset 202 * 2 + 1 = 405
     value = get_status_message(202)
     print("202: Interface to converters raw/escp2:", value, words_table[202][value])

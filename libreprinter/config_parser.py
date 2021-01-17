@@ -2,6 +2,7 @@
 # Standard imports
 import os
 import configparser
+
 # Custom imports
 from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER
 
@@ -84,8 +85,11 @@ def parse_config(config: configparser.ConfigParser):
     misc_section["auto_end_page"] = "yes" if auto_end_page else "no"
 
     end_page_timeout = misc_section.get("end_page_timeout")
-    if not end_page_timeout or not end_page_timeout.isnumeric() or not int(
-            end_page_timeout) > 0:
+    if (
+        not end_page_timeout
+        or not end_page_timeout.isnumeric()
+        or not int(end_page_timeout) > 0
+    ):
         # Not able to detect end of page with a 0 timeout
         misc_section["end_page_timeout"] = "4"
 

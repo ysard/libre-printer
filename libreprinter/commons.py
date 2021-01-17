@@ -50,7 +50,9 @@ _logger = logging.getLogger(LOGGER_NAME)
 _logger.setLevel(LOG_LEVEL)
 
 # log file
-formatter = logging.Formatter("%(asctime)s :: %(levelname)s :: [%(filename)s:%(lineno)s:%(funcName)s()] :: %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s :: %(levelname)s :: [%(filename)s:%(lineno)s:%(funcName)s()] :: %(message)s"
+)
 file_handler = RotatingFileHandler(
     DIR_LOGS
     + LOGGER_NAME
