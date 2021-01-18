@@ -13,7 +13,7 @@ import pytest
 from unittest.mock import patch
 # Custom imports
 from libreprinter.config_parser import parse_config, debug_config_file
-from libreprinter.interface import read_interface, build_interface_config_settings, apply_msb_control
+from libreprinter.interface import read_interface, build_interface_config_settings, apply_msb_control, is_bit_set
 from libreprinter.file_handler import init_directories
 from libreprinter.legacy_interprocess_com import initialize_interprocess_com, \
     get_status_message, debug_shared_memory
@@ -366,3 +366,27 @@ def test_apply_msb_control():
         ValueError, match=r"msbsetting value not expected:.*"
     ):
         _ = apply_msb_control(b"\xff", msbsetting=3)
+
+
+@pytest.mark.timeout(6)
+def test_bad_serial_port():
+    """Test inexistant serial port"""
+    # Get default settings
+    config = configparser.ConfigParser()
+    [config.add_section(section) for section in ("misc", "parallel_printer", "serial_printer")]
+    config = parse_config(config)
+
+    # Replace replace serial_port setting with a non-existent port
+    config["misc"]["serial_port"] = ""
+
+    # 5 tries in 5 seconds before returning None
+    ret = read_interface(config)
+    assert ret is None
+
+
+def test_is_bit_set():
+    found = is_bit_set(b"\x01", 0)
+    assert found
+
+    found = is_bit_set(b"\x01", 1)
+    assert not found

@@ -202,8 +202,16 @@ def apply_msb_control(databyte, msbsetting):
 
 
 def is_bit_set(byte, bit_number):
-    """Test if nth bit is set in the given byte"""
-    return byte & (1 << bit_number)
+    """Test if nth bit is set in the given byte
+
+    :param byte: databyte to test
+    :param bit_number: nth bit number to test in databyte
+    :type byte: bytes
+    :type bit_number: int
+    :return: Result of test
+    :rtype: boolean
+    """
+    return bool(byte[0] & (1 << bit_number))
 
 
 def get_buffer(serial_handler, end_page_timeout):
