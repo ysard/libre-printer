@@ -30,7 +30,7 @@ def default_config():
     }
 
     serial_section = {
-        "dtr_logic": "low",
+        "dtr_logic": "high",
         "enabled": "no",
         "baudrate": "19200",
     }
