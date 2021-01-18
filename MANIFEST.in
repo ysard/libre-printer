@@ -8,7 +8,11 @@ prune .idea
 prune docs
 prune poc
 prune tests
+prune test_data
+prune datasheet
+prune firmware
 include setup.py
+include *.conf
 recursive-include libreprinter *.py
 include libreprinter/assets/LICENSE
 
