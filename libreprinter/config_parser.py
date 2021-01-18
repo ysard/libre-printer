@@ -138,7 +138,7 @@ def parse_config(config: configparser.ConfigParser):
     baudrate = serial_section.get("baudrate")
     if not baudrate or not baudrate.isnumeric():
         serial_section["baudrate"] = "19200"
-    elif int(baudrate) > 19200:
+    elif int(baudrate) > 19200:  # pragma: no cover
         LOGGER.warning(
             "User defined high baudrate (>19200) for software serial emulation!\n"
             "This may cause data loss. You have been warned :p"

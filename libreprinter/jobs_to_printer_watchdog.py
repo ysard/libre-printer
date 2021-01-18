@@ -90,7 +90,7 @@ def setup_watchdog(config):
     return observer
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     obs = setup_watchdog(
         {"misc": {"output_path": "./", "output_printer": "TEST_PRINTER"}}

@@ -1,5 +1,4 @@
-from libreprinter.commons import logger, LOG_LEVELS
+from libreprinter.commons import log_level
 
 # Enable debug loglevel for tests
-LOGGER = logger()
-LOGGER.setLevel(LOG_LEVELS["debug"])
+log_level("DEBUG")
