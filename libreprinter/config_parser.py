@@ -43,6 +43,8 @@ def parse_config(config: configparser.ConfigParser):
     .. note:: All values are of type string; they must be casted
         (with dedicated methods) if necessary.
 
+        The syntax `if not xxx:` handles None and '' data retrieved from file.
+
     :param config: Opened ConfigParser object
     :type config: configparser.ConfigParser
     :return: Processed ConfigParser object
@@ -98,14 +100,15 @@ def parse_config(config: configparser.ConfigParser):
     output_path = output_path + "/" if output_path[-1] != "/" else output_path
     misc_section["output_path"] = output_path
 
-    auto_end_page = misc_section.getboolean("auto_end_page")
-    misc_section["auto_end_page"] = "yes" if auto_end_page else "no"
+    auto_end_page = misc_section.get("auto_end_page")
+    if not auto_end_page:
+        misc_section["auto_end_page"] = "no"
 
     end_page_timeout = misc_section.get("end_page_timeout")
     if (
         not end_page_timeout
         or not end_page_timeout.isnumeric()
-        or not int(end_page_timeout) > 0
+        or int(end_page_timeout) <= 0
     ):
         # Not able to detect end of page with a 0 timeout
         misc_section["end_page_timeout"] = "4"
