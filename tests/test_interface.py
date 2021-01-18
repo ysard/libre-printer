@@ -11,14 +11,24 @@ from multiprocessing import Process
 from functools import partial
 import pytest
 from unittest.mock import patch
+
 # Custom imports
 from libreprinter.config_parser import parse_config, debug_config_file
-from libreprinter.interface import read_interface, build_interface_config_settings, apply_msb_control, is_bit_set
+from libreprinter.interface import (
+    read_interface,
+    build_interface_config_settings,
+    apply_msb_control,
+    is_bit_set,
+)
 from libreprinter.file_handler import init_directories
-from libreprinter.legacy_interprocess_com import initialize_interprocess_com, \
-    get_status_message, debug_shared_memory
+from libreprinter.legacy_interprocess_com import (
+    initialize_interprocess_com,
+    get_status_message,
+    debug_shared_memory,
+)
 from libreprinter.escp2_converter import launch_escp2_converter
 import libreprinter.commons as cm
+
 # Import create dir fixture
 from .test_file_handler import temp_dir
 
@@ -362,9 +372,7 @@ def test_apply_msb_control():
     assert found == 0b11111111  # 254 => 255
 
     # Wrong msbsetting
-    with pytest.raises(
-        ValueError, match=r"msbsetting value not expected:.*"
-    ):
+    with pytest.raises(ValueError, match=r"msbsetting value not expected:.*"):
         _ = apply_msb_control(b"\xff", msbsetting=3)
 
 

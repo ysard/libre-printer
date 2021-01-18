@@ -150,7 +150,7 @@ def test_default_settings(sample_config, expected):
                 "line_ending": "\r\n",
                 "emulation": "hp",
                 "end_page_timeout": "4",  # <= 0 is not allowed
-            }
+            },
         ),
         (
             """
@@ -163,7 +163,7 @@ def test_default_settings(sample_config, expected):
             {
                 "emulation": "epson",
                 "end_page_timeout": "4",  # <= 0 is not allowed
-            }
+            },
         ),
     ],
     ids=["sample1", "sample2"],
