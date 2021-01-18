@@ -322,7 +322,7 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
             ; Manually enabled
             enabled=yes
             """,
-            ["dtr_logic=0\n", "serial_enabled=1\n", "baudrate=19200\n"],
+            ["dtr_logic=1\n", "serial_enabled=1\n", "baudrate=19200\n"],
         ),
     ],
     ids=["serial_disabled", "serial_enabled"],
