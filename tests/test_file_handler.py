@@ -41,6 +41,12 @@ def test_init_directories(temp_dir):
     print("temp_dir:", temp_dir, "found:", found)
     assert set(OUTPUT_DIRS) == found
 
+    # Double init should not raise any error
+    init_directories(temp_dir)
+
+    # Init in directory that doesn't exist should not raise any error
+    init_directories(temp_dir + "test/")
+
 
 @patch("libreprinter.file_handler.SHARED_MEM_NAME", "test")
 def test_cleanup_directories(temp_dir):
@@ -64,6 +70,9 @@ def test_cleanup_directories(temp_dir):
         assert not os.path.exists(temp_dir + directory)
 
     assert not os.path.exists("/dev/shm/test")
+
+    # Double deletion should not raise any error
+    cleanup_directories(temp_dir)
 
 
 def test_get_job_number(temp_dir):
