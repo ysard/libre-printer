@@ -79,6 +79,21 @@ TEST_DATA = [
 ]
 
 
+@pytest.fixture()
+def sample_config(request):
+    """Fixture to parse config string and return initialised ConfigParser object
+
+    :return: Parsed configuration
+    :rtype: configparser.ConfigParser
+    """
+    config = configparser.ConfigParser()
+    config.read_string(request.param)
+
+    # Set default values
+    # Default sections are expected from the given string
+    return parse_config(config)
+
+
 def test_empty_file():
     """Test empty config file"""
     sample_config = ""
@@ -92,7 +107,10 @@ def test_empty_file():
 
 
 @pytest.mark.parametrize(
-    "sample_config,expected", TEST_DATA, ids=["empty_sections", "empty_settings"]
+    "sample_config,expected",
+    TEST_DATA,
+    ids=["empty_sections", "empty_settings"],
+    indirect=["sample_config"],  # Send sample_config val to the fixture
 )
 def test_default_settings(sample_config, expected):
     """Test default settings set by the config parser in case of config file
@@ -100,16 +118,10 @@ def test_default_settings(sample_config, expected):
     """
     misc_section, parallel_section, serial_section = expected
 
-    config = configparser.ConfigParser()
-    config.read_string(sample_config)
-
-    # Set default values
-    config = parse_config(config)
-
     # Transtype for easier debugging (original object has a different string rep)
-    found_misc_section = dict(config["misc"])
-    found_parallel_section = dict(config["parallel_printer"])
-    found_serial_section = dict(config["serial_printer"])
+    found_misc_section = dict(sample_config["misc"])
+    found_parallel_section = dict(sample_config["parallel_printer"])
+    found_serial_section = dict(sample_config["serial_printer"])
 
     assert misc_section == found_misc_section
     assert parallel_section == found_parallel_section
@@ -121,6 +133,43 @@ def test_default_settings(sample_config, expected):
     assert expected == found
 
 
-# TODO:
-#   test windows param:\r\n
-#   test end_page_timeout <= 0 => set to 4
+@pytest.mark.parametrize(
+    "sample_config,expected_settings",
+    [
+        # Config with user settings vs expected parsed settings
+        (
+            """
+            [misc]
+            line_ending=windows
+            emulation=hp
+            end_page_timeout=-1
+            [parallel_printer]
+            [serial_printer]
+            """,
+            {
+                "line_ending": "\r\n",
+                "emulation": "hp",
+                "end_page_timeout": "4",  # <= 0 is not allowed
+            }
+        ),
+        (
+            """
+            [misc]
+            emulation=epson
+            end_page_timeout=0
+            [parallel_printer]
+            [serial_printer]
+            """,
+            {
+                "emulation": "epson",
+                "end_page_timeout": "4",  # <= 0 is not allowed
+            }
+        ),
+    ],
+    ids=["sample1", "sample2"],
+    indirect=["sample_config"],  # Send sample_config val to the fixture
+)
+def test_specific_settings(sample_config, expected_settings):
+    """Test user settings vs parsed ones"""
+    for k, v in expected_settings.items():
+        assert sample_config["misc"][k] == v
