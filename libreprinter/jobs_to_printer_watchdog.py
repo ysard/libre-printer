@@ -44,8 +44,8 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
 
     FILES_REGEX = [r".*/pdf/.*\.pdf$", r".*/txt_jobs/.*\.txt$"]
 
-    def __init__(self, printer_name=None, *args, **kwargs):
-        super().__init__(regexes=self.FILES_REGEX, *args, **kwargs)
+    def __init__(self, *args, printer_name=None, **kwargs):
+        super().__init__(*args, regexes=self.FILES_REGEX, **kwargs)
         self.printer_name = printer_name
 
     def on_closed(self, event):
