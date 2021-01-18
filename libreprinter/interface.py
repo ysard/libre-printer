@@ -185,16 +185,20 @@ def apply_msb_control(databyte, msbsetting):
         1: MSB (bit 7) is set to 0, 2: MSB (bit 7) is set to 1).
     :type databyte: bytes
     :type msbsetting: int
+    :return: Modified value; value derived from unsigned int (c_uint8)
+    :rtype: int
     """
     if msbsetting == 0:
         # Cancel MSB Control
         return databyte
     elif msbsetting == 1:
         # MSB is set: bit 7 to 0
-        return databyte & ~128
+        return (databyte[0] & ~128) % (1 << 8)  # Get only 8 bits: convert to unsigned int
     elif msbsetting == 2:
         # MSB is set: bit 7 to 1
-        return databyte | ~128
+        return (databyte[0] | ~128) % (1 << 8)  # Get only 8 bits: convert to unsigned int
+
+    raise ValueError("msbsetting value not expected: %s" % msbsetting)
 
 
 def is_bit_set(byte, bit_number):

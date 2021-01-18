@@ -13,7 +13,7 @@ import pytest
 from unittest.mock import patch
 # Custom imports
 from libreprinter.config_parser import parse_config, debug_config_file
-from libreprinter.interface import read_interface, build_interface_config_settings
+from libreprinter.interface import read_interface, build_interface_config_settings, apply_msb_control
 from libreprinter.file_handler import init_directories
 from libreprinter.legacy_interprocess_com import initialize_interprocess_com, \
     get_status_message, debug_shared_memory
@@ -344,3 +344,25 @@ def test_get_interface_config(sample_config, expected):
     found_settings = build_interface_config_settings(config)
     print(found_settings)
     assert expected == found_settings
+
+
+def test_apply_msb_control():
+    """Test msb modifications from escp datasheet (deprecated)"""
+    # Do nothing
+    found = apply_msb_control(b"\xff", msbsetting=0)
+    assert found == b"\xff"
+
+    # MSB is set: bit 7 to 0
+    found = apply_msb_control(b"\xff", msbsetting=1)
+    assert found == 0b01111111  # 255 => 127
+
+    # MSB is set: bit 7 to 1
+    # /!\ Beware with this one, we want an unsigned int: 255, not -1
+    found = apply_msb_control(b"\xfe", msbsetting=2)
+    assert found == 0b11111111  # 254 => 255
+
+    # Wrong msbsetting
+    with pytest.raises(
+        ValueError, match=r"msbsetting value not expected:.*"
+    ):
+        _ = apply_msb_control(b"\xff", msbsetting=3)
