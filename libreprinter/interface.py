@@ -87,6 +87,8 @@ def _get_serial_handler(serial_path):
 
     # Wait Arduino boot after DTR signal
     time.sleep(1)
+    # Flush not expected random input data...
+    serial_handler.reset_input_buffer()
     return serial_handler
 
 
