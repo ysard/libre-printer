@@ -213,7 +213,9 @@ def is_bit_set(byte, bit_number):
     :return: Result of test
     :rtype: boolean
     """
-    return bool(byte[0] & (1 << bit_number))
+    # get a simple yes/no 1/0 answer
+    # right shift and get the least-significant bit
+    return bool((byte[0] >> bit_number) & 1)
 
 
 def get_buffer(serial_handler, end_page_timeout):
