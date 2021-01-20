@@ -52,7 +52,11 @@ def initialize_interprocess_com():
     if not os.path.isfile(shared_mem_path):
         # Create not existing file
         os.mknod(shared_mem_path)  # Will work only on Unix => who cares?
-        os.truncate(shared_mem_path, shared_mem_size)
+
+    # Truncate the file to the expected size in all cases
+    # Without this, we can't access to all memory used by buggy converters
+    # (limited to the 512 first bytes).
+    os.truncate(shared_mem_path, shared_mem_size)
 
     f_d = open(shared_mem_path, mode="rb+")
     m = mmap.mmap(f_d.fileno(), length=0, access=mmap.ACCESS_WRITE)
