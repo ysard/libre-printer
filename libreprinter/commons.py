@@ -52,7 +52,7 @@ LOG_LEVELS = {
 ################################################################################
 
 
-def logger(name=LOGGER_NAME, logfilename=None):
+def logger(name=LOGGER_NAME):
     """Return logger of given name, without initialize it.
 
     Equivalent of logging.getLogger() call.
