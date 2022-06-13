@@ -7,6 +7,7 @@ coverage:
 	@#python setup.py test --addopts "--cov libreprinter tests"
 
 run:
+	-killall convert-escp2
 	python -m libreprinter
 
 black:
