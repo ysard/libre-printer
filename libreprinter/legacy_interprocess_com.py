@@ -43,6 +43,9 @@ def initialize_interprocess_com():
     data than 512 bytes: a multiple of page size.).
 
     .. note:: Equivalent of legacy "initialize_interface_comms"
+
+    :return: The file handler on the shared memory file for its proper closing.
+    :rtype: <_io.BufferedRandom>
     """
     global SHARED_MEM_BUFFER
 
@@ -66,6 +69,7 @@ def initialize_interprocess_com():
     LOGGER.debug("Shared mem initialised")
     # print(SHARED_MEM_BUFFER[400:405])
     debug_shared_memory()
+    return f_d
 
 
 def get_status_message(offset):
