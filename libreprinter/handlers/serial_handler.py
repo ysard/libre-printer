@@ -33,9 +33,15 @@ def _get_serial_handler(serial_path):
 
     Low level function, prefer using :meth:get_serial_handler.
 
-    TODO: reset DTR => ok ? marche pas tout le temps
-    TODO: DTR on Rpi ? => gpio control
-    TODO: flush buffer after open
+    .. note:: About the reset of the Arduino
+        About toggle the DTR/RTS pin:
+        - Works only on real hardware serial interface (not USB CDC !)
+        - Works before opening the interface
+        - Set it to True or False works for a reset :o
+
+        Since we use USB CDC serial interface, DTR/RTS workarounds are not
+        needed anymore. We simply send a byte '0xFF' that is tested regularly by
+        the interface to do a simple soft reset (without bootloader call).
 
     .. note:: doc: See rtscts=True and dsrdtr=True
         https://github.com/pyserial/pyserial/issues/59
@@ -53,23 +59,22 @@ def _get_serial_handler(serial_path):
     serial_handler.port = serial_path
     serial_handler.baudrate = BAUDRATE
     serial_handler.timeout = 1
-    # Reset Arduino
-    # TODO: True or false works for a reset :o
-    # deassert the DTR line is also working ? it should forbid the reboot of arduino ?
-    serial_handler.dtr = True
     try:
         serial_handler.open()
         assert serial_handler.is_open
-        serial_handler.dtr = False  # This line raises an exception on emulated interface
-        time.sleep(1)
+
+        serial_handler.write(b"\xFF")
+        serial_handler.close()
+        # Wait reboot from interface
+        # At most 1 second waiting time for the test in loop() function
+        time.sleep(2)
+        serial_handler.open()
         assert serial_handler.is_open
 
     except serial.serialutil.SerialException as e:
         LOGGER.exception(e)
         return
 
-    # Wait Arduino boot after DTR signal
-    time.sleep(1)
     # Flush not expected random input data...
     serial_handler.reset_input_buffer()
     return serial_handler
