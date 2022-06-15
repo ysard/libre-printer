@@ -5,6 +5,7 @@ test:
 coverage:
 	pytest --cov=libreprinter --cov-report term-missing -vv
 	@#python setup.py test --addopts "--cov libreprinter tests"
+	@-coverage-badge -o images/coverage.svg
 
 run:
 	-killall convert-escp2
@@ -23,7 +24,7 @@ docstring_coverage:
 	interrogate -v libreprinter/ \
 	    -e libreprinter/__init__.py \
 	    -e libreprinter/handlers/__init__.py \
-	    --badge-style flat --generate-badge .
+	    --badge-style flat --generate-badge images/
 
 # development & release cycle
 fullrelease:
