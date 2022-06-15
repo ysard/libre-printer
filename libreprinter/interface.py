@@ -105,7 +105,7 @@ def configure_interface(serial_handler, config):
     # Wait config ack
     while True:
         response = serial_handler.readline().decode("utf8")
-        LOGGER.debug(response)
+        LOGGER.debug(response.rstrip())
 
         if response.startswith("end_config"):
             break
