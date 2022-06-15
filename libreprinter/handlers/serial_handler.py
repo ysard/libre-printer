@@ -19,6 +19,7 @@
 import os
 import time
 import serial
+from serial.serialutil import SerialException as SerialException
 
 # Custom imports
 from libreprinter.commons import BAUDRATE

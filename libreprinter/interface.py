@@ -36,7 +36,7 @@ from libreprinter.legacy_interprocess_com import (
     send_status_message,
     debug_shared_memory,
 )
-from libreprinter.handlers import get_serial_handler
+from libreprinter.handlers import get_serial_handler, SerialException
 from libreprinter.commons import logger
 
 LOGGER = logger()
@@ -371,7 +371,7 @@ def read_interface(config):
     configure_interface(serial_handler, config)
 
     # Setup communication with espc2 converter
-    initialize_interprocess_com()
+    shared_mem_f_d = initialize_interprocess_com()
 
     # Signal the conversion program that it can control leds
     # send_status_message(200, 1)
@@ -391,7 +391,12 @@ def read_interface(config):
 
         # TODO: redéfinier emulation à l'origine ?
         # ou passer toutes les fonctions qyi suivent à la fin de parse_buffer...
-        parse_buffer(serial_handler, job_number, config)
+        try:
+            parse_buffer(serial_handler, job_number, config)
+        except SerialException as e:
+            # Properly ends the infinite loop after an error on the serial pipe
+            LOGGER.exception(e)
+            break
 
         epson_emulation = misc_section["emulation"] == "epson"
 
@@ -428,9 +433,10 @@ def read_interface(config):
         jobs_count += 1
         job_number += 1
 
-    # Should never be reached
-    # serial_handler.close()
-    # Close opened shared mem...
+    # Should never be reached unless the link to the interface has been broken
+    serial_handler.close()
+    # Close opened shared mem in initialize_interprocess_com()
+    shared_mem_f_d.close()
 
 
 def sync_converters(jobs_count, job_number):
