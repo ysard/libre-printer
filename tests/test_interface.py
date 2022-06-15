@@ -163,7 +163,6 @@ def extra_config(init_config, request):
 
 
 @pytest.mark.timeout(10)
-@patch("serial.Serial.dtr")
 @pytest.mark.parametrize(
     "emulation, test_file",
     [
@@ -172,7 +171,7 @@ def extra_config(init_config, request):
         # ("hp", "test_page_pcl.prn"),  # TODO: pas de sync converter .. How to test end of job ?
     ],
 )
-def test_interface_receiving(dtr, emulation, test_file, init_config, slow_down_tests):
+def test_interface_receiving(emulation, test_file, init_config, slow_down_tests):
     """Simulation of jobs with various emulation parameters
 
     This tests uses full pipeline with emulated serial interface.
@@ -200,10 +199,7 @@ def test_interface_receiving(dtr, emulation, test_file, init_config, slow_down_t
 
     debug_config_file(config)
 
-    # Launch interface reader
-    # Assert the DTR line is not functional after opening the serial connection
-    # on emulated interface, so it needs to be patched for tests.
-    dtr.return_value = True
+    # Launch interface reader (infinite loop)
     interface_thread = Thread(target=partial(read_interface, config))
     interface_thread.start()
 
