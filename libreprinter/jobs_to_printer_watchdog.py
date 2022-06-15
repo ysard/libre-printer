@@ -45,6 +45,9 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
     FILES_REGEX = [r".*/pdf/.*\.pdf$", r".*/txt_jobs/.*\.txt$"]
 
     def __init__(self, *args, printer_name=None, **kwargs):
+        """Constructor override
+        Just add printer_name attr and define watchdog regexes.
+        """
         super().__init__(*args, regexes=self.FILES_REGEX, **kwargs)
         self.printer_name = printer_name
 
