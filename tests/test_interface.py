@@ -117,6 +117,11 @@ def tmp_process():
 
 
 @pytest.yield_fixture()
+def slow_down_tests():
+    yield
+    time.sleep(1)
+
+@pytest.yield_fixture()
 def extra_config(init_config, request):
     """Init configParser, init escp2 converter subprocess if needed
 
@@ -166,10 +171,17 @@ def extra_config(init_config, request):
         # ("hp", "test_page_pcl.prn"),  # TODO: pas de sync converter .. How to test end of job ?
     ],
 )
-def test_interface_receiving(dtr, emulation, test_file, init_config):
+def test_interface_receiving(dtr, emulation, test_file, init_config, slow_down_tests):
     """Simulation of jobs with various emulation parameters
 
     This tests uses full pipeline with emulated serial interface.
+
+    .. note:: About the exception `device reports readiness to read but returned
+        no data (device disconnected or multiple access on port?)` from pyserial.
+        This exception occurs only (?) on simulated mode on a virtual tty via
+        socat.
+        It seems to be solved via a timeout between tests and just after
+        the start of the read_interface thread.
 
     :param emulation: Emulation type (epson, hp, auto)
     :param test_file: File sent to the interface. The result must be exactly the
@@ -195,10 +207,8 @@ def test_interface_receiving(dtr, emulation, test_file, init_config):
     interface_thread.start()
 
     LOGGER.debug("Thread started")
-    # TODO check minor exception from pyserial:
-    #   device reports readiness to read but returned no data
-    #   (device disconnected or multiple access on port?)
-
+    # Fix minor exception from pyserial (See docstring note)
+    time.sleep(2)
     # Put data in input-tty
     with open(DIR_DATA + test_file, "rb") as f_d, \
             open(tmp_dir + "input-tty", "wb") as tty_f_d:
