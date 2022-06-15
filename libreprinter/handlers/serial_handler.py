@@ -15,10 +15,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""Low level functions to interact with the serial port
+Basically get a serial handler used in the :meth:`libreprinter.interface` module.
+"""
 # Standard imports
 import os
 import time
 import serial
+# Import here the serial exception used in the interface module
 from serial.serialutil import SerialException as SerialException
 
 # Custom imports
