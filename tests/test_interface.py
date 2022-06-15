@@ -133,6 +133,7 @@ def extra_config(init_config, request):
     :param request: Type of emulation (epson/hp/auto) and endlesstext param.
         These settings are added in config. If endlesstext is "strip-escp2-stream"
         or "strip-escp2-jobs", espc2 converter is launched in background.
+        See `indirect` keyword arg of parametrized test
     :type init_config: tuple[str, configparser.ConfigParser]
     :type request: tuple[str, str]
     :return: Yield temporary directory and configParser
@@ -255,6 +256,7 @@ def test_interface_receiving(dtr, emulation, test_file, init_config, slow_down_t
         (("hp", "plain-stream"), "test_page_pcl.prn", "test_page_pcl.prn", "pcl/1.pcl", 1),
         # TODO: epson/hp/auto ?
     ],
+    # First param goes in the 'request' param of the fixture extra_config
     indirect=["extra_config"],
     ids=["plain-stream*1", "plain-stream*2", "plain-jobs", "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "pcl"]
 )
