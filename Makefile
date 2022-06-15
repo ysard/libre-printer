@@ -19,6 +19,12 @@ clean:
 doc:
 	$(MAKE) -C ./docs html
 
+docstring_coverage:
+	interrogate -v libreprinter/ \
+	    -e libreprinter/__init__.py \
+	    -e libreprinter/handlers/__init__.py \
+	    --badge-style flat --generate-badge .
+
 # development & release cycle
 fullrelease:
 	fullrelease
