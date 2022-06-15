@@ -5,7 +5,7 @@ test:
 coverage:
 	pytest --cov=libreprinter --cov-report term-missing -vv
 	@#python setup.py test --addopts "--cov libreprinter tests"
-	@-coverage-badge -o images/coverage.svg
+	@-coverage-badge -f -o images/coverage.svg
 
 run:
 	-killall convert-escp2
