@@ -37,7 +37,7 @@ PCL_CONVERTER = "/usr/local/bin/gpcl6"
 DIR_ASSETS = resource_filename(__name__, "assets/")  # current package name
 
 
-REPORT_BUG_URL = "https://github.com/../issues/new"
+REPORT_BUG_URL = "https://github.com/ysard/libre-printer/issues/new"
 
 # Logging
 LOGGER_NAME = "libreprinter"
