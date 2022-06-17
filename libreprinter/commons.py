@@ -24,7 +24,7 @@ import tempfile
 from pkg_resources import resource_filename
 
 # Misc
-BAUDRATE = 115200  # 500000
+BAUDRATE = 500000  # Yolo, it's USB CDC
 OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream", "txt_jobs")
 SHARED_MEM_NAME = "retroprinter-shared-mem"
 
