@@ -33,6 +33,11 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
 
     This class only reimplement :meth:`on_created` event.
 
+    Watched directories::
+
+        - `pdf`: `*.pdf`
+        - `txt_jobs`: `*.txt`
+
     Attribute:
         :param printer_name: Name of the CUPS printer which will receive files as jobs.
         :type printer_name: str
@@ -85,8 +90,8 @@ def setup_watchdog(config):
     event_handler = PdfTxtEventHandler(
         printer_name=config["misc"]["output_printer"], ignore_directories=True
     )
+    # Attach event handler to the configured output_path
     observer = InotifyObserver()
-    # config["misc"]["output_path"] "/home/Lex/pdf/"
     observer.schedule(event_handler, config["misc"]["output_path"], recursive=True)
     observer.start()
 
