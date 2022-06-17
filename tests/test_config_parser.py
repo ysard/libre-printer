@@ -109,6 +109,21 @@ def test_empty_file():
         _ = parse_config(config)
 
 
+def test_default_file():
+    """Test default config file loading"""
+    sample_config = load_config()
+    misc_section, parallel_section, serial_section = default_config()
+
+    # Transtype for easier debugging (original object has a different string rep)
+    found_misc_section = dict(sample_config["misc"])
+    found_parallel_section = dict(sample_config["parallel_printer"])
+    found_serial_section = dict(sample_config["serial_printer"])
+
+    assert misc_section == found_misc_section
+    assert parallel_section == found_parallel_section
+    assert serial_section == found_serial_section
+
+
 @pytest.mark.parametrize(
     "sample_config,expected",
     TEST_DATA,
