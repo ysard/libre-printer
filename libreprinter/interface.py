@@ -400,7 +400,10 @@ def read_interface(config):
 
         epson_emulation = misc_section["emulation"] == "epson"
 
-        LOGGER.debug("%s %s", epson_emulation, misc_section["usb_passthrough"])
+        LOGGER.debug(
+            "epson ? %s, usb_passthrough ? %s",
+            epson_emulation, misc_section["usb_passthrough"]
+        )
 
         if epson_emulation and misc_section["usb_passthrough"] == "no":
             # No conversion if usb_passthrough is enabled
