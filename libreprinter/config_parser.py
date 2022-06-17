@@ -21,7 +21,7 @@ import os
 import configparser
 
 # Custom imports
-from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER
+from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER, PCL_CONVERTER
 
 LOGGER = logger()
 
@@ -61,6 +61,10 @@ def parse_config(config: configparser.ConfigParser):
     escp2_converter_path = misc_section.get("escp2_converter_path")
     if not escp2_converter_path:
         misc_section["escp2_converter_path"] = ESCP2_CONVERTER
+
+    pcl_converter_path = misc_section.get("pcl_converter_path")
+    if not pcl_converter_path:
+        misc_section["pcl_converter_path"] = PCL_CONVERTER
 
     if misc_section.get("endlesstext") not in (
     "plain-stream", "strip-escp2-stream", "plain-jobs", "strip-escp2-jobs"):
