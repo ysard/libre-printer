@@ -67,7 +67,8 @@ def parse_config(config: configparser.ConfigParser):
         misc_section["pcl_converter_path"] = PCL_CONVERTER
 
     if misc_section.get("endlesstext") not in (
-    "plain-stream", "strip-escp2-stream", "plain-jobs", "strip-escp2-jobs"):
+        "plain-stream", "strip-escp2-stream", "plain-jobs", "strip-escp2-jobs"
+    ):
         misc_section["endlesstext"] = "no"
 
     line_ending = misc_section.get("line_ending")
