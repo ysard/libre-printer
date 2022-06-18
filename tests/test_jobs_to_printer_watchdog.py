@@ -13,6 +13,7 @@ CATCHED_EVENTS = list()
 
 
 def mock_on_closed(self, event):
+    """Show catched event, see :meth:`test_setup_watchdog`"""
     print(event)
     CATCHED_EVENTS.append(event)
 
