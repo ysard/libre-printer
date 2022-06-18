@@ -112,9 +112,9 @@ def launch_escp2_converter(config):
     LOGGER.debug("Subprocess command: %s", cmd)
 
     # Non blocking call => will be executed in background
-    p = subprocess.Popen(args, cwd=working_dir)
+    process = subprocess.Popen(args, cwd=working_dir)
     # 0 or -N if process is terminated (this should not be the case here)
-    assert p.returncode is None
+    assert process.returncode is None
 
-    LOGGER.debug("Subprocess PID: %s", p.pid)
-    return p
+    LOGGER.debug("Subprocess PID: %s", process.pid)
+    return process
