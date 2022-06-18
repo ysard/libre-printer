@@ -41,3 +41,21 @@ def test_setup_watchdog(temp_dir):
 
     assert len(CATCHED_EVENTS) == 1
     print(CATCHED_EVENTS)
+
+
+def test_bad_printer(temp_dir, caplog):
+    """Test with not existent printer
+
+    :param caplog: pytest caplog-fixture
+    :type caplog: <_pytest.logging.LogCaptureFixture>
+    """
+    init_directories(temp_dir)
+
+    setup_watchdog({"misc": {"output_path": temp_dir, "output_printer": "Fake_Printer_Name"}})
+
+    open(temp_dir + "pdf/x.pdf", "a").close()
+    time.sleep(0.5)
+
+    # We expect an exception in the logger returned by the lpr program
+    print(caplog.text)
+    assert "returned non-zero exit status 1" in caplog.text
