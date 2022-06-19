@@ -93,14 +93,21 @@ def setup_pcl_watchdog(config):
     """
     LOGGER.info("Launch pcl watchdog...")
 
+    # Test existence of pcl converter binary
+    converter_path = config["misc"]["pcl_converter_path"]
+    if not Path(converter_path).exists():
+        LOGGER.error(
+            "Setting <pcl_converter_path:%s> doesn't exists!", converter_path
+        )
+        raise FileNotFoundError("pcl converter not found")
+
     event_handler = PclEventHandler(
-        converter_path=config["misc"]["pcl_converter_path"], ignore_directories=True
+        converter_path=converter_path, ignore_directories=True
     )
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
     observer.schedule(event_handler, config["misc"]["output_path"] + "pcl/", recursive=False)
     observer.start()
-
     return observer
 
 

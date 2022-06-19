@@ -22,7 +22,7 @@ from libreprinter.config_parser import load_config
 from libreprinter.file_handler import init_directories, cleanup_directories
 from libreprinter.interface import read_interface
 from libreprinter.jobs_to_printer_watchdog import setup_watchdog
-from libreprinter.pcl_to_pdf import setup_pcl_watchdog
+from libreprinter.pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.escp2_converter import launch_escp2_converter
 import libreprinter.commons as cm
 
