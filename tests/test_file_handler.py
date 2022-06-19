@@ -20,7 +20,10 @@ from libreprinter.commons import OUTPUT_DIRS
 
 @pytest.yield_fixture()
 def temp_dir():
-    """Create temp directory (with trailing "/")"""
+    """Create temp directory (with trailing "/")
+
+    :rtype: Iterator[str]
+    """
     # Setup: Create temp dir
     temp_dir = tempfile.mkdtemp() + "/"
 
