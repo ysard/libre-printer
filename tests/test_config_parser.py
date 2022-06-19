@@ -19,7 +19,7 @@ def default_config():
         "line_ending": "\n",
         "usb_passthrough": "no",
         "output_printer": "no",
-        "serial_port": "/dev/ttyAMA0",
+        "serial_port": "/dev/ttyACM0",
         "output_path": os.getcwd() + "/",
         "retain_data": "yes",
         "auto_end_page": "no",

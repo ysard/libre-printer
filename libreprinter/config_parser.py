@@ -94,8 +94,7 @@ def parse_config(config: configparser.ConfigParser):
 
     serial_port = misc_section.get("serial_port")
     if not serial_port:
-        # TODO: detect platform ? For now: Rpi
-        misc_section["serial_port"] = "/dev/ttyAMA0"
+        misc_section["serial_port"] = "/dev/ttyACM0"
 
     if misc_section.get("emulation") not in ("epson", "escp2", "hp", "pcl"):
         misc_section["emulation"] = "auto"
