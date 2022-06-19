@@ -165,7 +165,7 @@ def test_default_settings(sample_config, expected):
             [serial_printer]
             """,
             {
-                "line_ending": "\r\n",
+                "line_ending": "\r\n",  # line ending is updated internally
                 "emulation": "hp",
                 "end_page_timeout": "4",  # <= 0 is not allowed
             },

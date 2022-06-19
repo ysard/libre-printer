@@ -15,7 +15,11 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test launch of the escp2 converter inside a subprocess"""
+"""Test launch of the escp2 converter inside a subprocess
+
+.. seealso:: :meth:`test_interface.test_endlesstext_values` for functional tests
+    of the escp2 converter.
+"""
 # Standard imports
 import pytest
 
