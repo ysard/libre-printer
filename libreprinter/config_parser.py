@@ -88,6 +88,10 @@ def parse_config(config: configparser.ConfigParser):
     if not output_printer:
         misc_section["output_printer"] = "no"
 
+    # Disable output_printer if data from host is streamed continuously
+    if "stream" in misc_section["endlesstext"]:
+        misc_section["output_printer"] = "no"
+
     serial_port = misc_section.get("serial_port")
     if not serial_port:
         # TODO: detect platform ? For now: Rpi
