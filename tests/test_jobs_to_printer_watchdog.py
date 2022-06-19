@@ -129,3 +129,31 @@ def test_bad_printer(temp_dir, caplog):
     # We expect an exception in the logger returned by the lpr program
     print(caplog.text)
     assert "returned non-zero exit status 1" in caplog.text
+
+
+def test_bad_pcl_converter_path(temp_dir, caplog):
+    """Test with not existent pcl converter
+
+    The watchdog should crash
+
+    :param temp_dir: (fixture) Create temp directory
+    :param caplog: pytest caplog-fixture
+    :type temp_dir: <str>
+    :type caplog: <_pytest.logging.LogCaptureFixture>
+    """
+    init_directories(temp_dir)
+
+    # FileNotFoundError is expected when launching the watchdog
+    with pytest.raises(FileNotFoundError, match=r"pcl converter not found"):
+        setup_pcl_watchdog(
+            {
+                "misc": {
+                    "output_path": temp_dir,
+                    "pcl_converter_path": "/usr/bin/Fake_Converter_Name",
+                }
+            }
+        )
+
+    # We expect an error in the logger
+    print(caplog.text)
+    assert "Setting <pcl_converter_path:" in caplog.text
