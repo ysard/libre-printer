@@ -183,8 +183,53 @@ def test_default_settings(sample_config, expected):
                 "end_page_timeout": "4",  # <= 0 is not allowed
             },
         ),
+        (
+            # output_printer1
+            """
+            [misc]
+            output_printer=Fake_Printer_Name
+            endlesstext=plain-stream
+            [parallel_printer]
+            [serial_printer]
+            """,
+            {
+                # endlesstext stream* param disables output_printer
+                "output_printer": "no",
+                "endlesstext": "plain-stream",
+            },
+        ),
+        (
+            # output_printer2
+            """
+            [misc]
+            output_printer=Fake_Printer_Name
+            endlesstext=strip-escp2-stream
+            [parallel_printer]
+            [serial_printer]
+            """,
+            {
+                # endlesstext stream* param disables output_printer
+                "output_printer": "no",
+                "endlesstext": "strip-escp2-stream",
+            },
+        ),
+        (
+            # output_printer3
+            """
+            [misc]
+            output_printer=Fake_Printer_Name
+            endlesstext=strip-escp2-jobs
+            [parallel_printer]
+            [serial_printer]
+            """,
+            {
+                # endlesstext jobs* param is compatible with output_printer
+                "output_printer": "Fake_Printer_Name",
+                "endlesstext": "strip-escp2-jobs",
+            },
+        ),
     ],
-    ids=["sample1", "sample2"],
+    ids=["sample1", "sample2", "output_printer1", "output_printer2", "output_printer3"],
     indirect=["sample_config"],  # Send sample_config val to the fixture
 )
 def test_specific_settings(sample_config, expected_settings):
