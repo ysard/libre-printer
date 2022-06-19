@@ -110,12 +110,18 @@ def test_setup_watchdog(watchdog, config, files_to_create, expected_file, temp_d
 def test_bad_printer(temp_dir, caplog):
     """Test with not existent printer
 
+    lpr program should return an error
+
+    :param temp_dir: (fixture) Create temp directory
     :param caplog: pytest caplog-fixture
+    :type temp_dir: <str>
     :type caplog: <_pytest.logging.LogCaptureFixture>
     """
     init_directories(temp_dir)
 
-    setup_watchdog({"misc": {"output_path": temp_dir, "output_printer": "Fake_Printer_Name"}})
+    setup_watchdog(
+        {"misc": {"output_path": temp_dir, "output_printer": "Fake_Printer_Name"}}
+    )
 
     open(temp_dir + "pdf/x.pdf", "a").close()
     time.sleep(0.5)
