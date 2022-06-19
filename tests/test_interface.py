@@ -27,6 +27,7 @@ from libreprinter.legacy_interprocess_com import (
     debug_shared_memory,
 )
 from libreprinter.escp2_converter import launch_escp2_converter
+from libreprinter.pcl_to_pdf_watchdog import setup_pcl_watchdog
 import libreprinter.commons as cm
 
 # Import create dir fixture
@@ -123,7 +124,7 @@ def slow_down_tests():
 
 @pytest.yield_fixture()
 def extra_config(init_config, request):
-    """Init configParser, init escp2 converter subprocess if needed
+    """Init configParser, init converter subprocess/watchdog if needed
 
     This fixture has a tearDown which ensures that the subprocess is killed
     between tests.
@@ -131,8 +132,11 @@ def extra_config(init_config, request):
     :param init_config: temporary working dir + initialized config.
         See :meth:`init_config` fixture.
     :param request: Type of emulation (epson/hp/auto) and endlesstext param.
-        These settings are added in config. If endlesstext is "strip-escp2-stream"
-        or "strip-escp2-jobs", espc2 converter is launched in background.
+        These settings are added in config.
+        With epson emulation, if endlesstext is "strip-escp2-stream"
+        "strip-escp2-jobs" or "no", espc2 converter is launched in background.
+        With hp emulation, if endlesstext is "no", pcl watchdog is launched in
+        background.
         See `indirect` keyword arg of parametrized test
     :type init_config: tuple[str, configparser.ConfigParser]
     :type request: tuple[str, str]
@@ -149,14 +153,22 @@ def extra_config(init_config, request):
     # Add endless setting & converter path
     config["misc"]["endlesstext"] = endlesstext
     config["misc"]["escp2_converter_path"] = cm.ESCP2_CONVERTER
+    config["misc"]["pcl_converter_path"] = cm.PCL_CONVERTER
 
     debug_config_file(config)
 
-    if "escp2" in endlesstext:
-
+    if "escp2" in endlesstext or (emulation == "epson" and endlesstext == "no"):
+        # Launch escp2 converter
         converter_process = launch_escp2_converter(config)
         yield (tmp_dir, config)
         converter_process.kill()
+        return
+
+    if emulation == "hp" and endlesstext == "no":
+        # Launch pcl converter
+        observer = setup_pcl_watchdog(config)
+        yield (tmp_dir, config)
+        observer.stop()
         return
 
     yield (tmp_dir, config)
