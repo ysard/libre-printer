@@ -334,7 +334,7 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
     ret = set(Path(tmp_dir).rglob("*"))
     print("Dir tree: ", ret)
     found_stats = processed_file.stat()
-    print(processed_file, found_stats)
+    print("Processed file & found stats:", processed_file, found_stats)
     if isinstance(expected_file, int):
         # Fallback for pdfs from ghostscript (see doc)
         # Check only the expected size
