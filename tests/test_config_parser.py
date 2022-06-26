@@ -23,7 +23,7 @@ def default_config():
         "output_path": os.getcwd() + "/",
         "retain_data": "yes",
         "auto_end_page": "no",
-        "end_page_timeout": "4",
+        "end_page_timeout": "2",
         "emulation": "auto",
     }
 
@@ -167,7 +167,7 @@ def test_default_settings(sample_config, expected):
             {
                 "line_ending": "\r\n",  # line ending is updated internally
                 "emulation": "hp",
-                "end_page_timeout": "4",  # <= 0 is not allowed
+                "end_page_timeout": "2",  # <= 0 is not allowed
             },
         ),
         (
@@ -180,7 +180,7 @@ def test_default_settings(sample_config, expected):
             """,
             {
                 "emulation": "epson",
-                "end_page_timeout": "4",  # <= 0 is not allowed
+                "end_page_timeout": "2",  # <= 0 is not allowed
             },
         ),
         (
