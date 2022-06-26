@@ -35,6 +35,7 @@ def default_config():
         "dtr_logic": "high",
         "enabled": "no",
         "baudrate": "19200",
+        "flow_control": "hardware",
     }
     return misc_section, parallel_section, serial_section
 
@@ -76,6 +77,7 @@ TEST_DATA = [
         dtr_logic=
         enabled=
         baudrate=
+        flow_control=
         """,
         default_config(),
     ),

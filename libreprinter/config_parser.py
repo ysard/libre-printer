@@ -23,6 +23,12 @@ import configparser
 # Custom imports
 from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER, PCL_CONVERTER
 
+FLOW_CTRL_MAPPING = {
+    "hardware": 1,
+    "software": 2,
+    "both": 3,
+}
+
 LOGGER = logger()
 
 
@@ -154,6 +160,10 @@ def parse_config(config: configparser.ConfigParser):
             "This may be higher than the value the host configuration can support. "
             "You have been warned :p"
         )
+
+    flow_control = serial_section.get("flow_control")
+    if flow_control not in ("hardware", "software", "both"):
+        serial_section["flow_control"] = "hardware"
 
     debug_config_file(config)
     return config

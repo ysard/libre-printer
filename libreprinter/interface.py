@@ -38,6 +38,7 @@ from libreprinter.legacy_interprocess_com import (
 )
 from libreprinter.handlers import get_serial_handler, SerialException
 from libreprinter.commons import logger
+from libreprinter.config_parser import FLOW_CTRL_MAPPING
 
 LOGGER = logger()
 
@@ -76,6 +77,9 @@ def build_interface_config_settings(config):
         baudrate = serial_section.getint("baudrate")
 
         interface_params.append(f"baudrate={baudrate}\n")
+
+        flow_control = serial_section.get("flow_control")
+        interface_params.append(f"flow_control={FLOW_CTRL_MAPPING[flow_control]}\n")
 
     if serial_enabled != "yes":
         # Parallel printer only
