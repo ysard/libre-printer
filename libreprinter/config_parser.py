@@ -127,7 +127,7 @@ def parse_config(config: configparser.ConfigParser):
         or int(end_page_timeout) <= 0
     ):
         # Not able to detect end of page with a 0 timeout
-        misc_section["end_page_timeout"] = "4"
+        misc_section["end_page_timeout"] = "2"
 
     retain_data = misc_section.get("retain_data")
     if not retain_data:
