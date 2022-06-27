@@ -89,7 +89,7 @@ Nous proposons toutefois une version un peu plus ancienne (mais fonctionnelle) d
 qui est compilable sur toutes les plateformes.
 
 
-## Pourquoi ce projet ?
+## Pourquoi ce projet ?
 
 Pourquoi un projet concurrent à RetroPrinter ?
 
@@ -144,12 +144,11 @@ n'ont pas besoin des surcouches propriétaires et payantes des années 2022...
 Libre Printer est diffusé sous deux licences : l'une communautaire et l'autre
 à usage scommercial.
 
-
-## Communautaire = Libre et Open Source
+### Communautaire = Libre et Open Source
 
 Libre Printer est diffusé sous licence AGPL (Affero General Public License).
 
-## Commerciale
+### Commerciale
 
 Il s'agit de limiter les usages intégrés dans des appareils propriétaires
 dont les vendeurs ne participeraient pas au projet de manière équitable

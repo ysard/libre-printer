@@ -84,7 +84,7 @@ of the Retroprinter project, which has only been compiled for the ARM platform (
 However, we offer a slightly older (but functional) version of the converter that is compilable on all platforms.
 
 
-## Why this project?
+## Why this project?
 
 Why a competing project to RetroPrinter?
 
@@ -115,7 +115,6 @@ both an economical and pragmatic choice for its diffusion
 
 ### Ethical considerations
 
-
 - Our solution is **truly** free: licensed under the AGPL.
 
 It is common to see programs in C/C++ etc. developed not by expertise or by performance research,
@@ -124,24 +123,22 @@ Thus the "community" formed around these projects receives few benefits: slow de
 lack of know-how for some tasks, paying products, no right to modify or redistribute the program, etc.
 This behaviour is toxic because the community can neither audit nor improve the products.
 The most paradoxical thing is that when the proprietary code leaks (and it always does) it becomes a competitor
-to the original (Cf. [Streisand effect]((https://fr.wikipedia.org/wiki/Effet_Streisand)));
+to the original (Cf. [Streisand effect](https://fr.wikipedia.org/wiki/Effet_Streisand));
 which is precisely what the authors wanted to avoid in the first place.
 
 Finally, quite frankly, let's be pragmatic, the technologies of the 80's don't need the proprietary
 and paying overlay of the 2022's... Let's hear it.
 
 
-
 ## License
 
 Libre Printer is distributed under two licenses: one for community use and one for commercial use.
 
-
-## Community = Free and Open Source
+### Community = Free and Open Source
 
 Libre Printer is released under the AGPL (Affero General Public License).
 
-## Commercial
+### Commercial
 
 This is to limit the uses integrated in proprietary devices whose vendors would not participate in
 the project in a fair way and who would otherwise be guilty of any violation of the Libre Printer
