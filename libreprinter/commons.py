@@ -95,6 +95,7 @@ _logger.addHandler(file_handler)
 
 def log_level(level):
     """Set terminal/file log level to given one.
+
     .. note:: Don't forget the propagation system of messages:
         From logger to handlers. Handlers receive log messages only if
         the main logger doesn't filter them.

@@ -100,8 +100,8 @@ def get_job_number(output_path):
 def convert_data_line_ending(in_data, line_ending):
     r"""Replace line endings of in_data and return the result
 
-    unix => windows: \n => \r\n
-    windows => unix: \r\n => \n
+    - unix => windows: `\\n => \\r\\n`
+    - windows => unix: `\\r\\n => \\n`
 
     :param in_data: Data to be processed
     :param line_ending: Destination line ending.
@@ -120,7 +120,7 @@ def convert_data_line_ending(in_data, line_ending):
 def convert_file_line_ending(in_file, out_file, line_ending):
     """Replace line endings of in_file and put data in out_file
 
-    .. seealso:: :meth:convert_data_line_ending
+    .. seealso:: :meth:`convert_data_line_ending`
 
     :param in_file: Path of processed but not modified file.
     :param out_file: Path of result file.

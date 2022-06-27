@@ -33,7 +33,7 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
 
     This class only reimplement :meth:`on_created` event.
 
-    Watched directories::
+    Watched directories:
 
         - `pdf`: `*.pdf`
         - `txt_jobs`: `*.txt`

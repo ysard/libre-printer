@@ -50,13 +50,13 @@ def launch_escp2_converter(config):
 
     convert-escp2 <path> <timeout> <retain_data> <printing> <endlesstext> <retain_pdf>
 
-    Fixed parameters::
+    Fixed parameters:
 
         - `path`: Path in `output_path` configuration variable.
         - `timeout`: 4, Wait for more data in file; pause waiting new byte in file
         - `retain_data`: 1, Useless param didn't used
-        - `printing`: 0, Do not let the converter send pdf to printer
-            => see :meth:`libreprinter.jobs_to_printer_watchdog`.
+        - `printing`: 0, Do not let the converter send pdf to printer;
+          see :meth:`libreprinter.jobs_to_printer_watchdog`.
         - `endlesstext`: Configured in `endlesstext` configuration variable.
         - `retain_pdf`: 1, Useless param didn't used; endlesstext handles this behaviour
 

@@ -34,7 +34,7 @@ class PclEventHandler(RegexMatchingEventHandler):
 
     This class only reimplement :meth:`on_created` event.
 
-    Watched directory::
+    Watched directory:
 
         - `pcl`: `*.pcl`
 
