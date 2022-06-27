@@ -5,6 +5,7 @@ pdf/
 pcl/
 txt_jobs/
 txt_stream/
+doc/build/
 
 # PyCharm
 .idea/
