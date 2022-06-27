@@ -75,8 +75,8 @@ from each other in order to avoid conflicts between dependencies.
    $ workon libre-printer
 
 
-Install the released version
-----------------------------
+Install the release version
+---------------------------
 
 |project_name| package is available on PyPI (Python Package Index), the official third-party
 software repository for Python language:
