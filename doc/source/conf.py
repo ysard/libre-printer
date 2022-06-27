@@ -62,3 +62,6 @@ html_static_path = ['_static']
 html_logo = '_static/misc/'
 
 html_favicon = '_static/misc/favicon.ico'
+
+# Shortcuts in text
+rst_epilog = '.. |project_name| replace:: %s' % project
