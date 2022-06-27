@@ -46,8 +46,8 @@ The operation can be summarized in 3 key steps:
 
 The interfaces concerned are the following:
 
-- Epson printers ESC/P - ESC/P2, 9 & 24 pins
-- HP PCL printers
+- Epson printers: ESC/P - ESC/P2, 9 & 24 pins
+- HP PCL printers:
     Any resolution and format (Ex: 150dpi, 300dpi, 600dpi), color or grayscale
     thanks to the project [GhostPCL](https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL).
 
@@ -55,10 +55,10 @@ The interfaces concerned are the following:
 
 Connections can be both serial RS-232 and parallel Centronics (DB-25 on one end, 36-pin Centronics on the other).
 
-Note that most DB-25 cables (25 pins) with DB25 connectors at both ends are serial cables. T
-his was the standard RS-232 connector before the more compact DE-9 or erroneously called DB-9 (9-pin)
+Note that most DB-25 cables (25 pins) with DB25 connectors at both ends are serial cables.
+This was the standard RS-232 connector before the more compact DE-9 or erroneously called DB-9 (9-pin)
 connectors were introduced in the 1980s, and sometimes for other purposes than a serial link
-([cf. RS-232](https://fr.wikipedia.org/wiki/RS-232), [connecteurs D-sub](https://fr.wikipedia.org/wiki/D-sub)).
+([cf. on Wikipedia: RS-232](https://fr.wikipedia.org/wiki/RS-232), [connecteurs D-sub](https://fr.wikipedia.org/wiki/D-sub)).
 
 ## Hardware
 
@@ -91,7 +91,7 @@ Why a competing project to RetroPrinter?
 - Because we can.
 - In short: This is an opportunity to have a better community project than the proprietary version.
 
-### Technical reasons
+### Technical considerations
 
 The original software is not maintainable (close source), without decent software design and unnecessarily cumbersome.
 
@@ -104,18 +104,19 @@ patches in the paid version of their product...
 with redundant/overlapping parameters and sometimes non-functional combinations.
 - The RetroPrinter interface is limited to a handful of platforms and cannot be a usable product
 for most people without some investment (let's not forget that in **the last few years the prices of
-RaspberryPi type boards have skyrocketed**!) Making the project compatible with all platforms is
+RaspberryPi type boards have skyrocketed**!). Making the project compatible with all platforms is
 both an economical and pragmatic choice for its diffusion
 
 
 - LibrePrinter components are much cheaper/more affordable.
 - We support serial printers without additional adapters.
+- Multiple interfaces can be connected on the same computer!
 - Our code is tested with over 90% coverage.
 
 
 ### Ethical considerations
 
-- Our solution is **truly** free: licensed under the AGPL.
+Our solution is **truly** free: licensed under the AGPL.
 
 It is common to see programs in C/C++ etc. developed not by expertise or by performance research,
 but rather by a desire to obfuscate code at "lower cost". RetroPrinter is no exception to this.
@@ -128,6 +129,13 @@ which is precisely what the authors wanted to avoid in the first place.
 
 Finally, quite frankly, let's be pragmatic, the technologies of the 80's don't need the proprietary
 and paying overlay of the 2022's... Let's hear it.
+
+
+## Contributing
+
+If you have a non-standard Centronics hardware or port you can open an issue on the
+[project](https://github.com/ysard/libre-printer/issues)
+and submit your problem to the Github community.
 
 
 ## License

@@ -46,8 +46,8 @@ Le fonctionnement peut être résumé en 3 étapes clés :
 
 Les interfaces concernées sont les suivantes :
 
-- Imprimantes Epson ESC/P - ESC/P2, 9 & 24 pins
-- Imprimantes HP PCL
+- Imprimantes Epson : ESC/P - ESC/P2, 9 & 24 pins
+- Imprimantes HP PCL :
     Toute résolution et tout format (Ex: 150dpi, 300dpi, 600dpi), couleur ou nuance de gris
     Merci au projet [GhostPCL](https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL).
 
@@ -59,7 +59,7 @@ Centronics à 36 broches de l'autre).
 Notez que la plupart des câbles DB-25 (25 pins) avec des connecteurs DB25 aux 2 extrémités
 sont des câbles série. C'était en effet la connectique standardisée de la norme RS-232 avant que
 les connecteurs plus compacts DE-9 ou appelés à tort DB-9 (9 pins) n'aient été introduits dans les années 80;
-par ailleurs parfois pour d'autres rôles qu'une liaison série ([cf. RS-232](https://fr.wikipedia.org/wiki/RS-232),
+par ailleurs parfois pour d'autres rôles qu'une liaison série ([cf. sur Wikipédia : RS-232](https://fr.wikipedia.org/wiki/RS-232),
 [connecteurs D-sub](https://fr.wikipedia.org/wiki/D-sub)).
 
 ## Matériel
@@ -120,7 +120,7 @@ et pragmatique pour sa diffusion
 
 ### Raisons éthiques
 
-- Notre solution est **vraiment** libre : sous licence AGPL.
+Notre solution est **vraiment** libre : sous licence AGPL.
 
 Il est fréquent de voir des programmes en C/C++ etc. développés
 non par expertise ou par recherche de performances, mais plutôt par volonté d'obfusquer du code à "moindre frais".
@@ -137,6 +137,13 @@ ce qui est précisément ce que les auteurs voulaient éviter à l'origine.
 Pour finir, très franchement gardons les pieds sur terre, les technologies des années 80
 n'ont pas besoin des surcouches propriétaires et payantes des années 2022...
 À bons entendeurs.
+
+
+## Contribution
+
+Si vous disposez d'un matériel ou d'un port centronics non standard vous pouvez
+ouvrir une issue sur le [projet](https://github.com/ysard/libre-printer/issues)
+et soumettre votre problème à la communauté Github.
 
 
 ## Licence
