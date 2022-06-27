@@ -1,4 +1,7 @@
-test:
+# Workaround for targets with the same name as a directory
+.PHONY: doc tests
+
+tests:
 	pytest tests
 	@#python setup.py test --addopts "tests libreprinter -vv"
 
@@ -16,9 +19,10 @@ black:
 
 clean:
 	rm -rf eps pcl pdf png raw txt txt_jobs txt_stream
+	$(MAKE) -C ./doc clean
 
 doc:
-	$(MAKE) -C ./docs html
+	$(MAKE) -C ./doc html
 
 docstring_coverage:
 	interrogate -v libreprinter/ \

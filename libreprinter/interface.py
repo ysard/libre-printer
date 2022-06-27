@@ -38,6 +38,7 @@ from libreprinter.legacy_interprocess_com import (
 )
 from libreprinter.handlers import get_serial_handler, SerialException
 from libreprinter.commons import logger
+from libreprinter.config_parser import FLOW_CTRL_MAPPING
 
 LOGGER = logger()
 
@@ -72,13 +73,17 @@ def build_interface_config_settings(config):
         if serial_enabled == "yes":
             # PS: auto: do not sent param, let the interface choose
             interface_params.append("serial_enabled=1\n")
+        elif serial_enabled == "auto":
+            raise NotImplementedError
 
         baudrate = serial_section.getint("baudrate")
-
         interface_params.append(f"baudrate={baudrate}\n")
 
+        flow_control = serial_section.get("flow_control")
+        interface_params.append(f"flow_control={FLOW_CTRL_MAPPING[flow_control]}\n")
+
     if serial_enabled != "yes":
-        # Parallel printer only
+        # Parallel printer only or serial automatic
         parallel_section = config["parallel_printer"]
         delayprinter = parallel_section.get("delayprinter")
         interface_params.append(f"delayprinter={delayprinter}\n")
@@ -129,10 +134,10 @@ def apply_msb_control(databyte, msbsetting):
         # Cancel MSB Control
         return databyte
     elif msbsetting == 1:
-        # MSB is set: bit 7 to 0
+        # MSB Control: clear bit 7 (to 0)
         return (databyte[0] & ~128) % (1 << 8)  # Get only 8 bits: convert to unsigned int
     elif msbsetting == 2:
-        # MSB is set: bit 7 to 1
+        # MSB Control: set bit 7 (to 1)
         return (databyte[0] | ~128) % (1 << 8)  # Get only 8 bits: convert to unsigned int
 
     raise ValueError("msbsetting value not expected: %s" % msbsetting)
@@ -400,7 +405,10 @@ def read_interface(config):
 
         epson_emulation = misc_section["emulation"] == "epson"
 
-        LOGGER.debug("%s %s", epson_emulation, misc_section["usb_passthrough"])
+        LOGGER.debug(
+            "epson ? %s, usb_passthrough ? %s",
+            epson_emulation, misc_section["usb_passthrough"]
+        )
 
         if epson_emulation and misc_section["usb_passthrough"] == "no":
             # No conversion if usb_passthrough is enabled

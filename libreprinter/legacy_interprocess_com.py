@@ -75,7 +75,7 @@ def initialize_interprocess_com():
 def get_status_message(offset):
     """Get value at the given address in shared memory
 
-    Expects that :meth:initialize_interprocess_com is called before.
+    Expects that :meth:`initialize_interprocess_com` is called before.
 
     .. note:: Equivalent of legacy "peekPacketWord"
 
@@ -90,7 +90,7 @@ def get_status_message(offset):
 def send_status_message(offset, value):
     """Put given value to the given offset in shared memory
 
-    Expects that :meth:initialize_interprocess_com is called before.
+    Expects that :meth:`initialize_interprocess_com` is called before.
 
     .. note:: Equivalent of legacy "pokePacketWord"
 

@@ -35,7 +35,7 @@ LOGGER = logger()
 def _get_serial_handler(serial_path):
     """Open serial port and return serial handler
 
-    Low level function, prefer using :meth:get_serial_handler.
+    Low level function, prefer using :meth:`get_serial_handler`.
 
     .. note:: About the reset of the Arduino
         About toggle the DTR/RTS pin:

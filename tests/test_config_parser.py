@@ -5,23 +5,25 @@ import configparser
 import pytest
 
 # Custom imports
-from libreprinter.config_parser import parse_config
+from libreprinter.config_parser import parse_config, load_config
+from libreprinter.commons import ESCP2_CONVERTER, PCL_CONVERTER
 
 
 def default_config():
     """Get default settings for different sections of the expected config file"""
     misc_section = {
         "start_cleanup": "no",
-        "escp2_converter_path": "/home/pi/temp/sdl/escparser/convert-escp2",
+        "escp2_converter_path": ESCP2_CONVERTER,
+        "pcl_converter_path": PCL_CONVERTER,
         "endlesstext": "no",
         "line_ending": "\n",
         "usb_passthrough": "no",
         "output_printer": "no",
-        "serial_port": "/dev/ttyAMA0",
+        "serial_port": "/dev/ttyACM0",
         "output_path": os.getcwd() + "/",
         "retain_data": "yes",
         "auto_end_page": "no",
-        "end_page_timeout": "4",
+        "end_page_timeout": "2",
         "emulation": "auto",
     }
 
@@ -33,6 +35,7 @@ def default_config():
         "dtr_logic": "high",
         "enabled": "no",
         "baudrate": "19200",
+        "flow_control": "hardware",
     }
     return misc_section, parallel_section, serial_section
 
@@ -55,6 +58,7 @@ TEST_DATA = [
         [misc]
         start_cleanup=
         escp2_converter_path=
+        pcl_converter_path=
         endlesstext=
         line_ending=
         usb_passthrough=
@@ -73,6 +77,7 @@ TEST_DATA = [
         dtr_logic=
         enabled=
         baudrate=
+        flow_control=
         """,
         default_config(),
     ),
@@ -104,6 +109,21 @@ def test_empty_file():
     with pytest.raises(KeyError, match=r".*misc.*"):
         # Raises KeyError on not found section
         _ = parse_config(config)
+
+
+def test_default_file():
+    """Test default config file loading"""
+    sample_config = load_config()
+    misc_section, parallel_section, serial_section = default_config()
+
+    # Transtype for easier debugging (original object has a different string rep)
+    found_misc_section = dict(sample_config["misc"])
+    found_parallel_section = dict(sample_config["parallel_printer"])
+    found_serial_section = dict(sample_config["serial_printer"])
+
+    assert misc_section == found_misc_section
+    assert parallel_section == found_parallel_section
+    assert serial_section == found_serial_section
 
 
 @pytest.mark.parametrize(
@@ -147,9 +167,9 @@ def test_default_settings(sample_config, expected):
             [serial_printer]
             """,
             {
-                "line_ending": "\r\n",
+                "line_ending": "\r\n",  # line ending is updated internally
                 "emulation": "hp",
-                "end_page_timeout": "4",  # <= 0 is not allowed
+                "end_page_timeout": "2",  # <= 0 is not allowed
             },
         ),
         (
@@ -162,11 +182,56 @@ def test_default_settings(sample_config, expected):
             """,
             {
                 "emulation": "epson",
-                "end_page_timeout": "4",  # <= 0 is not allowed
+                "end_page_timeout": "2",  # <= 0 is not allowed
+            },
+        ),
+        (
+            # output_printer1
+            """
+            [misc]
+            output_printer=Fake_Printer_Name
+            endlesstext=plain-stream
+            [parallel_printer]
+            [serial_printer]
+            """,
+            {
+                # endlesstext stream* param disables output_printer
+                "output_printer": "no",
+                "endlesstext": "plain-stream",
+            },
+        ),
+        (
+            # output_printer2
+            """
+            [misc]
+            output_printer=Fake_Printer_Name
+            endlesstext=strip-escp2-stream
+            [parallel_printer]
+            [serial_printer]
+            """,
+            {
+                # endlesstext stream* param disables output_printer
+                "output_printer": "no",
+                "endlesstext": "strip-escp2-stream",
+            },
+        ),
+        (
+            # output_printer3
+            """
+            [misc]
+            output_printer=Fake_Printer_Name
+            endlesstext=strip-escp2-jobs
+            [parallel_printer]
+            [serial_printer]
+            """,
+            {
+                # endlesstext jobs* param is compatible with output_printer
+                "output_printer": "Fake_Printer_Name",
+                "endlesstext": "strip-escp2-jobs",
             },
         ),
     ],
-    ids=["sample1", "sample2"],
+    ids=["sample1", "sample2", "output_printer1", "output_printer2", "output_printer3"],
     indirect=["sample_config"],  # Send sample_config val to the fixture
 )
 def test_specific_settings(sample_config, expected_settings):

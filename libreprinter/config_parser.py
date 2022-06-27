@@ -21,7 +21,13 @@ import os
 import configparser
 
 # Custom imports
-from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER
+from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER, PCL_CONVERTER
+
+FLOW_CTRL_MAPPING = {
+    "hardware": 1,
+    "software": 2,
+    "both": 3,
+}
 
 LOGGER = logger()
 
@@ -62,8 +68,13 @@ def parse_config(config: configparser.ConfigParser):
     if not escp2_converter_path:
         misc_section["escp2_converter_path"] = ESCP2_CONVERTER
 
+    pcl_converter_path = misc_section.get("pcl_converter_path")
+    if not pcl_converter_path:
+        misc_section["pcl_converter_path"] = PCL_CONVERTER
+
     if misc_section.get("endlesstext") not in (
-    "plain-stream", "strip-escp2-stream", "plain-jobs", "strip-escp2-jobs"):
+        "plain-stream", "strip-escp2-stream", "plain-jobs", "strip-escp2-jobs"
+    ):
         misc_section["endlesstext"] = "no"
 
     line_ending = misc_section.get("line_ending")
@@ -73,8 +84,10 @@ def parse_config(config: configparser.ConfigParser):
         # unix
         misc_section["line_ending"] = "\n"
 
-    # TODO: disable usb_passthrough if output_printer is set
-    # /dev/usb/lpx disappears when cups is used on this interface
+    # Warning: If usb_passthrough is set, output_printer is not disabled.
+    # It should be noted that any "raw" parallel interface like `/dev/usb/lpx`
+    # disappears when Cups is used on it. Thus it can't be used with this
+    # functionality anymore.
     usb_passthrough = misc_section.get("usb_passthrough")
     if not usb_passthrough:
         misc_section["usb_passthrough"] = "no"
@@ -83,10 +96,13 @@ def parse_config(config: configparser.ConfigParser):
     if not output_printer:
         misc_section["output_printer"] = "no"
 
+    # Disable output_printer if data from host is streamed continuously
+    if "stream" in misc_section["endlesstext"]:
+        misc_section["output_printer"] = "no"
+
     serial_port = misc_section.get("serial_port")
     if not serial_port:
-        # TODO: detect platform ? For now: Rpi
-        misc_section["serial_port"] = "/dev/ttyAMA0"
+        misc_section["serial_port"] = "/dev/ttyACM0"
 
     if misc_section.get("emulation") not in ("epson", "escp2", "hp", "pcl"):
         misc_section["emulation"] = "auto"
@@ -111,7 +127,7 @@ def parse_config(config: configparser.ConfigParser):
         or int(end_page_timeout) <= 0
     ):
         # Not able to detect end of page with a 0 timeout
-        misc_section["end_page_timeout"] = "4"
+        misc_section["end_page_timeout"] = "2"
 
     retain_data = misc_section.get("retain_data")
     if not retain_data:
@@ -144,6 +160,10 @@ def parse_config(config: configparser.ConfigParser):
             "This may be higher than the value the host configuration can support. "
             "You have been warned :p"
         )
+
+    flow_control = serial_section.get("flow_control")
+    if flow_control not in ("hardware", "software", "both"):
+        serial_section["flow_control"] = "hardware"
 
     debug_config_file(config)
     return config

@@ -24,7 +24,7 @@ import tempfile
 from pkg_resources import resource_filename
 
 # Misc
-BAUDRATE = 115200  # 500000
+BAUDRATE = 500000  # Yolo, it's USB CDC
 OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream", "txt_jobs")
 SHARED_MEM_NAME = "retroprinter-shared-mem"
 
@@ -32,11 +32,12 @@ SHARED_MEM_NAME = "retroprinter-shared-mem"
 DIR_LOGS = tempfile.gettempdir() + "/"
 CONFIG_FILE = "./libreprinter.conf"
 ESCP2_CONVERTER = "/home/pi/temp/sdl/escparser/convert-escp2"
+PCL_CONVERTER = "/usr/local/bin/gpcl6"
 
 DIR_ASSETS = resource_filename(__name__, "assets/")  # current package name
 
 
-REPORT_BUG_URL = "https://github.com/../issues/new"
+REPORT_BUG_URL = "https://github.com/ysard/libre-printer/issues/new"
 
 # Logging
 LOGGER_NAME = "libreprinter"
@@ -94,6 +95,7 @@ _logger.addHandler(file_handler)
 
 def log_level(level):
     """Set terminal/file log level to given one.
+
     .. note:: Don't forget the propagation system of messages:
         From logger to handlers. Handlers receive log messages only if
         the main logger doesn't filter them.

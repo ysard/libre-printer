@@ -13,13 +13,17 @@ from libreprinter.file_handler import (
     cleanup_directories,
     get_job_number,
     convert_data_line_ending,
+    convert_file_line_ending,
 )
 from libreprinter.commons import OUTPUT_DIRS
 
 
 @pytest.yield_fixture()
 def temp_dir():
-    """Create temp directory (with trailing "/")"""
+    """Create temp directory (with trailing "/")
+
+    :rtype: Iterator[str]
+    """
     # Setup: Create temp dir
     temp_dir = tempfile.mkdtemp() + "/"
 
@@ -132,3 +136,17 @@ def test_convert_data_line_ending():
     # Not bytes data
     with pytest.raises(TypeError, match=r".*argument 1 must be str, not bytes"):
         _ = convert_data_line_ending(windows_text.decode(), b"\n")
+
+
+def test_convert_file_line_ending(temp_dir):
+    """Test conversion of line endings in files"""
+
+    input_file = pathlib.Path(temp_dir + "windows_file")
+    output_file = pathlib.Path(temp_dir + "unix_file")
+
+    # Windows => Unix
+    input_file.write_text("hello\r\nworld")
+    convert_file_line_ending(input_file, output_file, "\n")
+    expected = b"hello\nworld"
+    # Use binary mode to avoid line ending change by encoding setting...
+    assert output_file.read_bytes() == expected
