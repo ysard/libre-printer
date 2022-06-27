@@ -94,6 +94,19 @@ def build_interface_config_settings(config):
 def configure_interface(serial_handler, config):
     """Send settings of the session to the interface via the serial port
 
+    Configuration process description:
+
+        .. code:: mermaid
+
+            sequenceDiagram
+            Host->>+Printer: param=value
+            Printer->>Host: param: value
+            Host->>Printer: ...
+            Printer->>Host: ...
+            Host->>Printer: end_config
+            Printer->>Host: Serial/Parallel printer configured!
+            Printer->>-Host: end_config
+
     :param serial_handler: Serial port handler.
     :param config: ConfigParser object
     :type serial_handler: serial.Serial
