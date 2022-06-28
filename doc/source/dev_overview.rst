@@ -1,6 +1,9 @@
 Developer overview
 ==================
 
+Here you will find how to contribute to the project, setting up an environment,
+submit modifications & report bugs.
+
 .. contents:: Summary
     :depth: 2
     :local:
