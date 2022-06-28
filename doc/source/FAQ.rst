@@ -61,14 +61,14 @@ sometimes for other purposes than a serial link
 Some ressources for the serial connector pinouts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: _static/DB25_RS232_cable.gif
+.. figure:: _static/pinouts/DB25_RS232_cable.gif
    :scale: 75 %
    :align: center
    :alt: COM Port pinout DE-9 DB-25, Female port, Computer side
 
    COM Port pinout DE-9 DB-25, Female port, Computer side
 
-.. figure:: _static/DB25_serial_cable_pinout.png
+.. figure:: _static/pinouts/DB25_serial_cable_pinout.png
    :scale: 75 %
    :align: center
    :alt: COM Port pinout DB-25, Female port, Computer side
@@ -82,14 +82,14 @@ Sources: `www.aggsoft.com <https://www.aggsoft.com/rs232-pinout-cable/RS232.htm>
 Some ressources for the Centronics/parallel connector pinouts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: _static/LPT_port_pinout.gif
+.. figure:: _static/pinouts/LPT_port_pinout.gif
    :scale: 75 %
    :align: center
    :alt: LPT Port pinout DB-25, Female port, Computer side
 
    LPT Port pinout DB-25, Female port, Computer side
 
-.. figure:: _static/Centronics_pinout.png
+.. figure:: _static/pinouts/Centronics_pinout.png
    :scale: 90 %
    :align: center
    :alt: Centronics Port, CN36, Female port, Printer side
