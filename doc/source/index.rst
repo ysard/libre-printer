@@ -27,6 +27,8 @@ Documentation
 
    project_presentation
    installation
+   service_configuration
+   interface_usage
    dev_documentation
 
    FAQ
