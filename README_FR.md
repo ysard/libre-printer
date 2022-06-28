@@ -62,9 +62,9 @@ les connecteurs plus compacts DE-9 ou appelés à tort DB-9 (9 pins) n'aient ét
 par ailleurs parfois pour d'autres rôles qu'une liaison série ([cf. sur Wikipédia : RS-232](https://fr.wikipedia.org/wiki/RS-232),
 [connecteurs D-sub](https://fr.wikipedia.org/wiki/D-sub)).
 
-## Matériel
+## Structure
 
-### Interface
+### Interface physique
 
 Au lieu d'opter vers une carte d'interface coûteuse, peu évolutive et freinant la rétro-ingénierie
 comme le projet d'origine, il s'agit de puces bon marché de l'écosystème Arduino.

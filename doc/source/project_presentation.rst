@@ -57,11 +57,13 @@ sometimes for other purposes than a serial link
 (`cf. on Wikipedia: RS-232 <https://fr.wikipedia.org/wiki/RS-232>`_,
 `connecteurs D-sub <https://fr.wikipedia.org/wiki/D-sub>`_).
 
-Hardware
-========
+.. _project_structure:
 
-Interface
----------
+Structure
+=========
+
+Hardware Interface
+------------------
 
 Instead of opting for an expensive, low scalability and reverse engineering
 hindering interface board like the original project, it is cheap chips from the

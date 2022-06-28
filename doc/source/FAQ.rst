@@ -97,7 +97,7 @@ Some ressources for the Centronics/parallel connector pinouts
    Centronics Port, CN36, Female port, Printer side
 
 Sources:
-`firewall.cx <https://www.firewall.cx/networking-topics/cabling-utp-fibre/120-network-parallel-cable.html>`_
+`firewall.cx <https://www.firewall.cx/networking-topics/cabling-utp-fibre/120-network-parallel-cable.html>`_.
 
 
 Hardware test
