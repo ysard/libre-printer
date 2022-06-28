@@ -52,6 +52,8 @@ Check this link for GNU/Linux compatible printers via CUPS:
 `openprinting.org <http://www.openprinting.org/printers>`_.
 
 
+.. _interface_type:
+
 How do I recognise my interface type?
 -------------------------------------
 

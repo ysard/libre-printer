@@ -1,3 +1,5 @@
+.. _project_presentation:
+
 ********************
 Project presentation
 ********************
@@ -56,12 +58,7 @@ Connectivity
 Connections can be both serial RS-232 and parallel Centronics (DB-25 on one end,
 36-pins Centronics on the other).
 
-Note that most DB-25 cables (25 pins) with DB25 connectors at both ends are serial
-cables. This was the standard RS-232 connector before the more compact DE-9 or
-erroneously called DB-9 (9-pin) connectors were introduced in the 1980s, and
-sometimes for other purposes than a serial link
-(`cf. on Wikipedia: RS-232 <https://fr.wikipedia.org/wiki/RS-232>`_,
-`connecteurs D-sub <https://fr.wikipedia.org/wiki/D-sub>`_).
+See the chapter :ref:`interface_type` for more information.
 
 .. _project_structure:
 
