@@ -14,6 +14,9 @@ run:
 	-killall convert-escp2
 	python -m libreprinter
 
+update_firmware:
+	avrdude -v -patmega32u4 -cavr109 -P/dev/ttyACM0 -b57600 -D -Uflash:w:./firmware/libreprinter.ino.hex:i
+
 black:
 	black libreprinter
 

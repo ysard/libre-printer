@@ -32,14 +32,17 @@ FLOW_CTRL_MAPPING = {
 LOGGER = logger()
 
 
-def load_config():
+def load_config(config_file=CONFIG_FILE):
     """Load configuration file and set default settings
 
+    :param config_file: Path of the configuration file to load.
+        Default: CONFIG_FILE from commons module.
+    :type config_file: Path
     :return: Configuration updated object.
     :rtype: configparser.ConfigParser
     """
     config = configparser.ConfigParser()
-    config.read(CONFIG_FILE)
+    config.read(config_file)
     return parse_config(config)
 
 

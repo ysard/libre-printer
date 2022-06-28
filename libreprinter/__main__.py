@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Libreprinter entry point"""
+# Standard imports
+import argparse
+from pathlib import Path
+
 # Custom imports
 from libreprinter import __version__
 from libreprinter.config_parser import load_config
@@ -29,11 +33,11 @@ import libreprinter.commons as cm
 LOGGER = cm.logger()
 
 
-def main():
+def libreprinter_entry_point(config_file=None, *args, **kwargs):
     """The main routine."""
     LOGGER.info("Libreprinter start; %s", __version__)
 
-    config = load_config()
+    config = load_config(config_file=config_file)
     misc_section = config["misc"]
 
     # Reset output dirs
@@ -70,6 +74,42 @@ def main():
     if converter_process:
         # Cleanup
         converter_process.kill()
+
+
+def args_to_params(args):
+    """Return argparse namespace as a dict {variable name: value}"""
+    return dict(vars(args).items())
+
+
+def main():
+    """Entry point and argument parser"""
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+
+    parser.add_argument(
+        "-C",
+        "--config_file",
+        nargs="?",
+        help="Configuration file to use.",
+        default=cm.CONFIG_FILE,
+        type=Path,
+    )
+
+    parser.add_argument(
+        "-v", "--version", action="version", version="%(prog)s " + __version__
+    )
+
+    # Get program args and launch associated command
+    args = parser.parse_args()
+
+    params = args_to_params(args)
+    # Quick check
+    assert params["config_file"].exists(), \
+        f"Configuration file <{params['config_file']}> not found!"
+
+    # Do magic
+    libreprinter_entry_point(**params)
 
 
 if __name__ == "__main__":

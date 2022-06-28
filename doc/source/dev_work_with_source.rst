@@ -1,7 +1,7 @@
 .. _working_with_source_code:
 
-Working with LibrePrinter source code
-=====================================
+Working with |project_name| source code
+=======================================
 
 All the main code is developped in Python3.6+ language.
 
@@ -21,7 +21,7 @@ hide their work and make their project not modifiable (ex: the binaries of Retro
 
 .. note::
    All Python modules are documented with a rate of 100%.
-   Code is also heavily tested with a rate of at least 90%.
+   Code is also heavily tested with a coverage rate of at least 90%.
 
 
 Technical documentation

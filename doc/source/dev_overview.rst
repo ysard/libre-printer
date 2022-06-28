@@ -1,6 +1,11 @@
 Developer overview
 ==================
 
+.. contents:: Summary
+    :depth: 2
+    :local:
+    :backlinks: top
+
 Setup the local copy of the code
 --------------------------------
 
@@ -25,7 +30,7 @@ Setup the local copy of the code
 
    Now, you should have 2 remote repositories named (``git branch``):
 
-   - upstream, which refers to the LibrePrinter repository
+   - upstream, which refers to the |project_name| repository
    - origin, which refers to your personal fork
 
 .. new line
@@ -68,7 +73,7 @@ Setup the local copy of the code
 Build environment setup
 -----------------------
 
-Once you’ve cloned your fork of the LibrePrinter repository, you should set up
+Once you’ve cloned your fork of the |project_name| repository, you should set up
 a Python development environment tailored for the project.
 
 See the chapter :ref:`setting_up_a_virtual_environment` of the installation process.
