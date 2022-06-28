@@ -60,6 +60,11 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_context = {
+    'PIWIK_URL': 'url',
+    'PIWIK_SITE_ID': 'id',
+}
+html_css_files = ['css/patch.css']  # override rules in RTD theme
 html_logo = '_static/misc/'
 
 html_favicon = '_static/misc/favicon.ico'
