@@ -96,7 +96,7 @@ def configure_interface(serial_handler, config):
 
     Configuration process description:
 
-        .. code:: mermaid
+        .. mermaid::
 
             sequenceDiagram
             Host->>+Printer: param=value
