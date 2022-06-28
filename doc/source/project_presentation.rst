@@ -46,7 +46,8 @@ Printer types & protocols supported
 
 The interfaces concerned are the following:
 
-- Epson printers: ESC/P - ESC/P2, 9 & 24 pins
+- Epson printers:
+    ESC/P - ESC/P2, 9 & 24 pins
 - HP PCL printers:
     Any resolution and format (Ex: 150dpi, 300dpi, 600dpi), color or grayscale
     thanks to the project
