@@ -1,7 +1,7 @@
 .. _working_with_source_code:
 
-Working with LibrePrinter source code
-=====================================
+Working with |project_name| source code
+=======================================
 
 All the main code is developped in Python3.6+ language.
 

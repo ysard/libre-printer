@@ -78,8 +78,8 @@ from each other in order to avoid conflicts between dependencies.
 Install the release version
 ---------------------------
 
-|project_name| package is available on PyPI (Python Package Index), the official third-party
-software repository for Python language:
+|project_name| package is available on PyPI (Python Package Index), the official
+third-party software repository for Python language:
 `LibrePrinter service <https://pypi.python.org/pypi/libre-printer>`_.
 
 You can install it with the following command on all systems with a Python environment with ``pip``:

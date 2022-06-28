@@ -120,7 +120,7 @@ Technical considerations
   pragmatic choice for its diffusion
 
 
-- LibrePrinter components are much cheaper/more affordable.
+- |project_name| components are much cheaper/more affordable.
 - We support serial printers without additional adapters.
 - Multiple interfaces can be connected on the same computer!
 - Our code is tested with over 90% coverage.

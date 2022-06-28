@@ -8,7 +8,7 @@ Frequently asked questions
 About the USB/Centronics adapters
 ---------------------------------
 
-They can be used to connect to a Centronics printer or to the LibrePrinter interface.
+They can be used to connect to a Centronics printer or to the |project_name| interface.
 Provided that this port is configured as an ESC or PCL printer in CUPS.
 
 See some examples of drivers for **Epson Dot Matrix & Stylus** printers,
