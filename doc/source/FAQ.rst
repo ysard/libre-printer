@@ -76,7 +76,7 @@ Some ressources for the serial connector pinouts
    COM Port pinout DB-25, Female port, Computer side
 
 Sources: `www.aggsoft.com <https://www.aggsoft.com/rs232-pinout-cable/RS232.htm>`_,
-`firewall.cx <https://www.firewall.cx/networking-topics/cabling-utp-fibre/121-network-serial-cable.html>`_.
+`firewall.cx <https://www.firewall.cx/networking-topics/cabling-utp-fibre/121-network-serial-cable.html>`__.
 
 
 Some ressources for the Centronics/parallel connector pinouts
@@ -97,7 +97,7 @@ Some ressources for the Centronics/parallel connector pinouts
    Centronics Port, CN36, Female port, Printer side
 
 Sources:
-`firewall.cx <https://www.firewall.cx/networking-topics/cabling-utp-fibre/120-network-parallel-cable.html>`_.
+`firewall.cx <https://www.firewall.cx/networking-topics/cabling-utp-fibre/120-network-parallel-cable.html>`__.
 
 
 Hardware test
