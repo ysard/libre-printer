@@ -1,6 +1,11 @@
 Developer overview
 ==================
 
+.. contents:: Summary
+    :depth: 2
+    :local:
+    :backlinks: top
+
 Setup the local copy of the code
 --------------------------------
 

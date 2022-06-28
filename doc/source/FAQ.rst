@@ -4,6 +4,10 @@
 Frequently asked questions
 ***************************
 
+.. contents:: Summary
+    :depth: 2
+    :local:
+    :backlinks: top
 
 About the USB/Centronics adapters
 ---------------------------------
