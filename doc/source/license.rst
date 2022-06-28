@@ -2,13 +2,14 @@
 License
 *******
 
-Libre Printer is distributed under two licenses:
+|project_name| is distributed under two licenses:
 one for community use and one for commercial use.
 
 Community = Free and Open Source
 ================================
 
-Libre Printer is released under the AGPL (Affero General Public License).
+The community version of |project_name| is released under the AGPL
+(Affero General Public License).
 
 ::
 
@@ -36,7 +37,7 @@ Commercial
 This is to limit the uses integrated in proprietary devices whose vendors would
 not participate in the project in a fair way and who would otherwise be guilty
 of any violation of the |project_name| license as well as of the free software
-used by Libre Printer itself.
+used by |project_name| itself.
 
 With such a license you maintain full ownership and control over your products,
 while allowing you to distribute your products to customers as you wish.

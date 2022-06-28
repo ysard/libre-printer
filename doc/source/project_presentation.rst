@@ -8,7 +8,7 @@ Features
 .. code:: mermaid
 
     graph TD
-        A[fa:fa-computer-classic Host] -->|Serial RS-232 data| B[fa:fa-microchip Libre Printer interface]
+        A[fa:fa-computer-classic Host] -->|Serial RS-232 data| B[fa:fa-microchip |project_name| interface]
         A --> |Parallel Centronics data| B
         B -->|fa:fa-usb USB| C[fa:fa-laptop RaspberryPi or Computer]
         C --> Raw[fa:fa-file Raw file]
