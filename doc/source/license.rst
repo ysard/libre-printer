@@ -11,7 +11,7 @@ Community = Free and Open Source
 The community version of |project_name| is released under the AGPL
 (Affero General Public License).
 
-::
+.. code-block:: text
 
   Libreprinter is a software allowing to use the Centronics and serial printing
   functions of vintage computers on modern equipement through a tiny hardware
