@@ -27,7 +27,7 @@ Features
         Raw -->|fa:fa-network-wired Network| G
 
 
-Libre-Printer consists of an Arduino interface and a set of programs designed to pretend
+|project_name| consists of an Arduino interface and a set of programs designed to pretend
 to be a Centronics parallel or serial printer. The data received is stored and/or redirected
 to a modern printer connected via USB or the network.
 
