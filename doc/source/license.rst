@@ -33,13 +33,14 @@ Libre Printer is released under the AGPL (Affero General Public License).
 Commercial
 ==========
 
-This is to limit the uses integrated in proprietary devices whose vendors would not participate in
-the project in a fair way and who would otherwise be guilty of any violation of the Libre Printer
-license as well as of the free software used by Libre Printer itself.
+This is to limit the uses integrated in proprietary devices whose vendors would
+not participate in the project in a fair way and who would otherwise be guilty
+of any violation of the |project_name| license as well as of the free software
+used by Libre Printer itself.
 
 With such a license you maintain full ownership and control over your products,
 while allowing you to distribute your products to customers as you wish.
-You are not obligated to share your proprietary source code and this saves you from having to conform
-to the requirements and restrictions of the AGPL.
+You are not obligated to share your proprietary source code and this saves you
+from having to conform to the requirements and restrictions of the AGPL.
 
 To know the terms of this license we invite you to contact us.
