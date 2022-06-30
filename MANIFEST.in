@@ -14,5 +14,3 @@ prune firmware
 include setup.py
 include *.conf
 recursive-include libreprinter *.py
-include libreprinter/assets/LICENSE
-

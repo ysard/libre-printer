@@ -18,21 +18,37 @@ and are often the weak point of the installation because they are prone to
 breakdowns and the abandonment of the manufacture of their consumables.
 
 
-Documentation
---------------
+Basics
+------
 
 .. toctree::
-   :maxdepth: 6
-   :caption: Contents:
+   :maxdepth: 2
 
    project_presentation
    installation
    service_configuration
    interface_usage
-   dev_documentation
 
    FAQ
    license
+
+
+Project Info
+------------
+
+.. toctree::
+   :maxdepth: 2
+
+   dev_overview
+
+
+API Reference
+-------------
+
+.. toctree::
+   :maxdepth: 3
+
+   dev_work_with_source
 
 
 Indices and tables

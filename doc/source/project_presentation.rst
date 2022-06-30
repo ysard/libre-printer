@@ -149,4 +149,3 @@ which is precisely what the authors wanted to avoid in the first place.
 
 Finally, quite frankly, let's be pragmatic, the technologies of the 80's don't
 need the proprietary and paying overlay of the 2022's... Let's hear it.
-

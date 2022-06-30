@@ -1,6 +1,6 @@
-*******
-License
-*******
+********
+Licenses
+********
 
 |project_name| is distributed under two licenses:
 one for community use and one for commercial use.

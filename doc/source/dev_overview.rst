@@ -1,13 +1,16 @@
-Developer overview
-==================
+Contributing
+============
+
+Here you will find how to contribute to the project, setting up an environment,
+submit modifications & report bugs.
 
 .. contents:: Summary
     :depth: 2
     :local:
     :backlinks: top
 
-Setup the local copy of the code
---------------------------------
+Setting up the local copy of the code
+-------------------------------------
 
 1. If you are a new contributor, you will have to fork the repository
    (`https://github.com/ysard/libre-printer <https://github.com/ysard/libre-printer>`_), clone it,
@@ -70,8 +73,8 @@ Setup the local copy of the code
    your changes to the pull-request.
 
 
-Build environment setup
------------------------
+Setting up the build environment
+--------------------------------
 
 Once you’ve cloned your fork of the |project_name| repository, you should set up
 a Python development environment tailored for the project.
@@ -119,7 +122,7 @@ Building documentation
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Building the documentation locally is useful to test changes.
-First, make sure you have the development dependencies installed; See `Build environment setup`_
+First, make sure you have the development dependencies installed; See `Setting up the build environment`_
 
 Then build the HTML output format by running:
 
@@ -138,7 +141,7 @@ of pages to be stale. You can clean out the cache with:
     make -C ./doc clean
 
 
-Report bugs
------------
+Reporting bugs
+--------------
 
 Please `report bugs on GitHub <https://github.com/ysard/libre-printer/issues>`_.

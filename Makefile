@@ -21,7 +21,7 @@ black:
 	black libreprinter
 
 clean:
-	rm -rf eps pcl pdf png raw txt txt_jobs txt_stream
+	rm -rf eps pcl pdf png raw txt txt_jobs txt_stream dist
 	$(MAKE) -C ./doc clean
 
 doc:
@@ -42,6 +42,14 @@ install:
 	pip install -e .[dev]
 uninstall:
 	pip libreprinter uninstall
+
+sdist:
+	@echo Building the distribution package...
+	python setup.py sdist
+
+upload: clean sdist
+	python setup.py bdist_wheel
+	twine upload dist/* -r pypi
 
 check_setups:
 	pyroma .
