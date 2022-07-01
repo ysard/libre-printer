@@ -3,17 +3,25 @@
 
 set -e
 
+SERVICE_USER="libreprinter"
+DATA_DIR="/var/lib/libre-printer/"
+
 # Install dedicated user
 case "$1" in
     configure)
         adduser --system --disabled-password --disabled-login --home /var/empty \
                 --no-create-home --quiet --force-badname --group --gecos "LibrePrinter daemon" \
-                libreprinter
+                ${SERVICE_USER}
         # lp: Members of this group can enable and use printers.
         # dialout: Full and direct access to serial ports.
-        usermod -a -G dialout,lp libreprinter
+        usermod -a -G dialout,lp ${SERVICE_USER}
         ;;
 esac
+
+# Fix permission of data dir for user (if exists)
+if id -u ${SERVICE_USER} > /dev/null 2>&1; then
+    chown ${SERVICE_USER}:${SERVICE_USER} ${DATA_DIR}
+fi
 
 #DEBHELPER#
 
