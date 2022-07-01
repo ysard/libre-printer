@@ -45,9 +45,9 @@ override_dh_virtualenv:
 	# Clean empty include dir
 	rmdir debian/$(PACKAGE)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)/include/
 	# Remove useless executables
-	rm debian/$(PACKAGE)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)/bin/pyserial-miniterm
-	rm debian/$(PACKAGE)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)/bin/pyserial-ports
-	rm debian/$(PACKAGE)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)/bin/watchmedo
+	rm $(DEB_DIR)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)/bin/pyserial-miniterm
+	rm $(DEB_DIR)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)/bin/pyserial-ports
+	rm $(DEB_DIR)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)/bin/watchmedo
 	# Create /etc directory for config file
 	mkdir -p $(DEB_DIR)/etc/$(PACKAGE)/
 	mv $(SDIST_DIR)/libreprinter.conf $(DEB_DIR)/etc/$(PACKAGE)/
