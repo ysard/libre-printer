@@ -9,8 +9,9 @@ case "$1" in
         adduser --system --disabled-password --disabled-login --home /var/empty \
                 --no-create-home --quiet --force-badname --group --gecos "LibrePrinter daemon" \
                 libreprinter
-
-        usermod -a -G dialout libreprinter
+        # lp: Members of this group can enable and use printers.
+        # dialout: Full and direct access to serial ports.
+        usermod -a -G dialout,lp libreprinter
         ;;
 esac
 
