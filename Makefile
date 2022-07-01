@@ -61,3 +61,6 @@ check_code:
 missing_doc:
 	# Remove D213 antagonist of D212
 	prospector libreprinter/ | grep "libreprinter/\|Line\|Missing docstring"
+
+debianize:
+	deactivate ; dpkg-buildpackage -us -uc -b
