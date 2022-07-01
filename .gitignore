@@ -68,9 +68,10 @@ env.bak/
 venv.bak/
 
 # Debian packaging
+debian/libre-printer-*/
+debian/libre-printer/
 debian/files
 debian/*.debhelper*
 debian/*.substvars
-debian/mind-the-gap*
 obj-*/
 .pc
