@@ -1,0 +1,1 @@
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1b4f", ATTRS{idProduct}=="9206", SYMLINK+="ttyACMX", TAG+="systemd", ENV{SYSTEMD_WANTS}="libre-printer@ttyACMX.service"
