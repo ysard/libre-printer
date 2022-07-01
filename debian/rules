@@ -36,7 +36,7 @@ build-arch:
 	dh $@ $(DH_VENV_ARGS) --sourcedir $(SDIST_DIR)
 
 %:
-	dh $@ --with python-virtualenv --sourcedir $(SDIST_DIR)
+	dh $@ --with systemd --with python-virtualenv --sourcedir $(SDIST_DIR)
 
 override_dh_virtualenv:
 	dh_virtualenv $(DH_VENV_ARGS)
