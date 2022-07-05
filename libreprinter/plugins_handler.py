@@ -48,6 +48,10 @@ def register(func):
 def names(package, config):
     """Import modules in the given package & return all plugins in it
 
+    :param package: Name of the Python package in which plugins can be found
+    :param config: ConfigParser object
+    :type package: str
+    :type config: configparser.ConfigParser
     :return: List of modules sorted in lexical order
     :rtype: List[str]
     """
@@ -58,13 +62,13 @@ def names(package, config):
 
 
 def get(package, plugin):
-    """Get a given plugin"""
+    """Get the entry point function of the given plugin"""
     _import(package, plugin)
     return _PLUGINS[package][plugin].func
 
 
 def call(package, plugin, *args, **kwargs):
-    """Call the given plugin"""
+    """Execute the entry point function of the given plugin"""
     plugin_func = get(package, plugin)
     return plugin_func(*args, **kwargs)
 
@@ -145,15 +149,36 @@ def is_plugin_compatible(current_config, plugin_config):
 
 
 def names_factory(package):
-    """Create a names() function for one package"""
+    """Create a names() function for one package
+
+    Usage:
+        In plugins/__init__.py:
+            `plugins = plugins_handler.names_factory(__package__)`
+        After import:
+            `plugins(args_for_names_function)`
+    """
     return functools.partial(names, package)
 
 
 def get_factory(package):
-    """Create a get() function for one package"""
+    """Create a get() function for one package
+
+    Usage:
+        In plugins/__init__.py:
+            `get_functions = plugins_handler.get_factory(__package__)`
+        After import:
+            `get_functions(plugin_name)(args_for_plugin_function)`
+    """
     return functools.partial(get, package)
 
 
 def call_factory(package):
-    """Create a call() function for one package"""
+    """Create a call() function for one package
+
+    Usage:
+        In plugins/__init__.py:
+            `call_functions = plugins_handler.call_factory(__package__)`
+        After import:
+            `call_functions(plugin_name, args_for_plugin_function)`
+    """
     return functools.partial(call, package)
