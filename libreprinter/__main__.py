@@ -47,9 +47,9 @@ def libreprinter_entry_point(config_file=None, *args, **kwargs):
 
     # Launch converters & watchdogs
     plugins_loaded = plugins.plugins(config)
-    process_to_kill = []
-    for plugin in plugins_loaded:
-        process_to_kill.append(plugins.get_functions(plugin)(config))
+    process_to_kill = [
+        plugins.get_functions(plugin)(config) for plugin in plugins_loaded
+    ]
 
     # Launch interface reader
     read_interface(config)
