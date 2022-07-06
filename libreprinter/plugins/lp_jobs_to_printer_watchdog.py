@@ -101,6 +101,9 @@ def setup_watchdog(config):
 
     Any pdf or txt file created in these directories will be sent to the printer
     configured via `output_printer`.
+
+    :return: Observer that is currently watching directories.
+    :rtype: watchdog.Observer
     """
     LOGGER.info("Launch pdf & txt watchdog...")
 
@@ -111,6 +114,7 @@ def setup_watchdog(config):
     observer = InotifyObserver()
     observer.schedule(event_handler, config["misc"]["output_path"], recursive=True)
     observer.start()
+    return observer
 
 
 if __name__ == "__main__":  # pragma: no cover

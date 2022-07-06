@@ -96,6 +96,9 @@ def setup_pcl_watchdog(config):
     Any pcl file created in this directories will be converted in `/pdf` by
     the ghostpcl binary whose path is indicated in the variable
     `pcl_converter_path`.
+
+    :return: Observer that is currently watching directories.
+    :rtype: watchdog.Observer
     """
     LOGGER.info("Launch pcl watchdog...")
 
@@ -114,6 +117,7 @@ def setup_pcl_watchdog(config):
     observer = InotifyObserver()
     observer.schedule(event_handler, config["misc"]["output_path"] + "pcl/", recursive=False)
     observer.start()
+    return observer
 
 
 if __name__ == "__main__":  # pragma: no cover
