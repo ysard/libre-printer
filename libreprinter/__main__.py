@@ -58,7 +58,7 @@ def libreprinter_entry_point(config_file=None, *args, **kwargs):
     [
         converter_process.kill()
         for converter_process in process_to_kill
-        if converter_process
+        if converter_process and hasattr(converter_process, "kill")
     ]
 
 
