@@ -26,8 +26,8 @@ from unittest.mock import patch
 
 # Custom imports
 from libreprinter.file_handler import init_directories
-from libreprinter.jobs_to_printer_watchdog import setup_watchdog
-from libreprinter.pcl_to_pdf_watchdog import setup_pcl_watchdog
+from libreprinter.plugins.lp_jobs_to_printer_watchdog import setup_watchdog
+from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.commons import PCL_CONVERTER
 
 # Import create dir fixture
@@ -43,8 +43,8 @@ def mock_on_closed(self, event):
 
 
 @pytest.mark.timeout(3)
-@patch("libreprinter.jobs_to_printer_watchdog.PdfTxtEventHandler.on_closed", mock_on_closed)
-@patch("libreprinter.pcl_to_pdf_watchdog.PclEventHandler.on_closed", mock_on_closed)
+@patch("libreprinter.plugins.lp_jobs_to_printer_watchdog.PdfTxtEventHandler.on_closed", mock_on_closed)
+@patch("libreprinter.plugins.lp_pcl_to_pdf_watchdog.PclEventHandler.on_closed", mock_on_closed)
 @pytest.mark.parametrize(
     "watchdog, config, files_to_create, expected_file",
     [

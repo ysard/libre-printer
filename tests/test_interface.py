@@ -26,8 +26,8 @@ from libreprinter.legacy_interprocess_com import (
     get_status_message,
     debug_shared_memory,
 )
-from libreprinter.escp2_converter import launch_escp2_converter
-from libreprinter.pcl_to_pdf_watchdog import setup_pcl_watchdog
+from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
+from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 import libreprinter.commons as cm
 
 # Import create dir fixture

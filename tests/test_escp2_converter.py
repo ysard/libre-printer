@@ -24,7 +24,7 @@
 import pytest
 
 # Custom imports
-from libreprinter.escp2_converter import launch_escp2_converter
+from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
 from libreprinter.commons import ESCP2_CONVERTER
 
 # Import create dir fixture
