@@ -330,6 +330,7 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
     processed_file = Path(tmp_dir) / out_file
     while not processed_file.exists() or processed_file.stat().st_size == 0:
         time.sleep(1 * repetitions + 3)  # Empirical delay
+        print("Waiting dir tree: ", set(Path(tmp_dir).rglob("*")))
 
     ret = set(Path(tmp_dir).rglob("*"))
     print("Dir tree: ", ret)
