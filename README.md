@@ -5,8 +5,8 @@
 # Libre Printer
 
 Libre Printer is a free reimplementation of the Retroprinter project and its proprietary interface.
-The idea is to provide a software and hardware interface masquerading as a printer that is compatible
-with older medical and industrial devices (machine tools).
+The idea is to provide a software and hardware interfaces pretending to be a printer that is compatible
+with old medical and industrial devices (machine tools).
 
 Sometimes these devices cannot be replaced for cost reasons or simply because there is no justification to do so.
 However, they often work in pairs with printers that are no longer manufactured and are often the weak point of
