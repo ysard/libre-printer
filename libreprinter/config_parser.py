@@ -111,7 +111,7 @@ def parse_config(config: configparser.ConfigParser):
     if not serial_port:
         misc_section["serial_port"] = "/dev/ttyACM0"
 
-    if misc_section.get("emulation") not in ("epson", "escp2", "hp", "pcl"):
+    if misc_section.get("emulation") not in ("epson", "escp2", "hp", "pcl", "text"):
         misc_section["emulation"] = "auto"
     if misc_section.get("emulation") in ("hp", "pcl"):
         misc_section["emulation"] = "hp"
