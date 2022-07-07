@@ -122,6 +122,7 @@ def slow_down_tests():
     yield
     time.sleep(1)
 
+
 @pytest.yield_fixture()
 def extra_config(init_config, request):
     """Init configParser, init converter subprocess/watchdog if needed
