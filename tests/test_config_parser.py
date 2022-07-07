@@ -15,6 +15,7 @@ def default_config():
         "start_cleanup": "no",
         "escp2_converter_path": ESCP2_CONVERTER,
         "pcl_converter_path": PCL_CONVERTER,
+        "enscript_settings": "-R",
         "endlesstext": "no",
         "line_ending": "\n",
         "usb_passthrough": "no",
@@ -59,6 +60,7 @@ TEST_DATA = [
         start_cleanup=
         escp2_converter_path=
         pcl_converter_path=
+        enscript_settings=
         endlesstext=
         line_ending=
         usb_passthrough=

@@ -75,6 +75,10 @@ def parse_config(config: configparser.ConfigParser):
     if not pcl_converter_path:
         misc_section["pcl_converter_path"] = PCL_CONVERTER
 
+    enscript_settings = misc_section.get("enscript_settings")
+    if not enscript_settings:
+        config["misc"]["enscript_settings"] = "-R"
+
     if misc_section.get("endlesstext") not in (
         "plain-stream", "strip-escp2-stream", "plain-jobs", "strip-escp2-jobs"
     ):
