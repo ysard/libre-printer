@@ -77,7 +77,7 @@ def parse_config(config: configparser.ConfigParser):
 
     enscript_settings = misc_section.get("enscript_settings")
     if not enscript_settings:
-        config["misc"]["enscript_settings"] = "-R"
+        config["misc"]["enscript_settings"] = "-BR"
 
     if misc_section.get("endlesstext") not in (
         "plain-stream", "strip-escp2-stream", "plain-jobs", "strip-escp2-jobs"

@@ -15,7 +15,7 @@ def default_config():
         "start_cleanup": "no",
         "escp2_converter_path": ESCP2_CONVERTER,
         "pcl_converter_path": PCL_CONVERTER,
-        "enscript_settings": "-R",
+        "enscript_settings": "-BR",
         "endlesstext": "no",
         "line_ending": "\n",
         "usb_passthrough": "no",
