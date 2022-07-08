@@ -1,21 +1,33 @@
-# Libreprinter is a software allowing to use the Centronics and serial printing
-# functions of vintage computers on modern equipement through a tiny hardware
-# interface.
-# Copyright (C) 2020-2022  Ysard
+#  Libreprinter is a software allowing to use the Centronics and serial printing
+#  functions of vintage computers on modern equipement through a tiny hardware
+#  interface.
+#  Copyright (C) 2020-2022  Ysard
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Watchdog for /pdf directory that is able to sent new files to a printer"""
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""Watchdog for /pdf directory that is able to sent new files to a printer
+
+Send new pdfs and txt files on the printer configured in Cups.
+
+Expected settings: `output_printer` set and not `stream*`:
+i.e. `output_printer` is defined; and it is not an infinite stream.
+
+=> send txt job to printer (settings "plain-jobs", "strip-escp2-jobs")
+=> send pdf to printer (setting != "no")
+
+TODO: only "no" for endless config because strip wrongly builds empty pdf files
+    => not any of ("plain-jobs", "strip-escp2-jobs", "no")
+"""
 # Standard imports
 import shlex
 import subprocess
@@ -23,9 +35,16 @@ from watchdog.observers.inotify import InotifyObserver
 from watchdog.events import RegexMatchingEventHandler
 
 # Custom imports
+from libreprinter import plugins_handler
 from libreprinter.commons import logger
 
 LOGGER = logger()
+
+CONFIG = {
+    "misc": {
+        "output_printer": lambda param: param != "no",
+    }
+}
 
 
 class PdfTxtEventHandler(RegexMatchingEventHandler):
@@ -75,6 +94,7 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
             LOGGER.exception(e)
 
 
+@plugins_handler.register
 def setup_watchdog(config):
     """Initialise a watchdog on `/pdf` `/txt_jobs` directories in configured
     `output_path`.
@@ -94,7 +114,6 @@ def setup_watchdog(config):
     observer = InotifyObserver()
     observer.schedule(event_handler, config["misc"]["output_path"], recursive=True)
     observer.start()
-
     return observer
 
 

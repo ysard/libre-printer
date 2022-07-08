@@ -1,0 +1,79 @@
+#!/usr/bin/make -f
+#
+# Build Debian package using https://github.com/spotify/dh-virtualenv
+#
+# The below targets create a clean copy of the workdir via
+# using "sdist", else "pip" goes haywire when installing from
+# sourcedir ".", because that includes the debian build stage,
+# and a recursive explosion ensues when symlinks are followed.
+#
+# It also ensures your MANIFEST is complete and at least covers
+# all files needed for a release build.
+
+# Increase trace logging, see debhelper(7) (uncomment to enable)
+DH_VERBOSE=1
+# The resulting location will be $DH_VIRTUALENV_INSTALL_ROOT/<packagename>
+export DH_VIRTUALENV_INSTALL_ROOT=/usr/share
+PYTHON_BIN=$(shell which python3)
+EXTRA_REQUIREMENTS=--upgrade-pip --use-system-packages --preinstall "setuptools>=38" --preinstall "wheel"
+DH_VENV_ARGS=--setuptools --builtin-venv --python=$(PYTHON_BIN) $(EXTRA_REQUIREMENTS)
+PACKAGE=$(shell dh_listpackages)
+VERSION=$(shell $(PYTHON_BIN) setup.py --version)
+SDIST_DIR=debian/$(PACKAGE)-$(VERSION)
+DEB_DIR=debian/$(PACKAGE)
+LOCAL_INSTALL_ROOT=$(DEB_DIR)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)
+
+.PHONY: clean build-arch override_dh_virtualenv
+
+clean:
+	test ! -d dist || rm -rf dist
+	test ! -d $(SDIST_DIR) || rm -rf $(SDIST_DIR)
+	dh $@ $(DH_VENV_ARGS)
+
+build-arch:
+	$(PYTHON_BIN) setup.py sdist --formats tar
+	mkdir -p $(SDIST_DIR)
+	tar -x -C $(SDIST_DIR) --strip-components=1 --exclude '*.egg-info' -f dist/*.tar
+	dh $@ $(DH_VENV_ARGS) --sourcedir $(SDIST_DIR)
+
+%:
+	dh $@ --with systemd --with python-virtualenv --sourcedir $(SDIST_DIR)
+
+override_dh_virtualenv:
+	dh_virtualenv $(DH_VENV_ARGS)
+	# Clean Python cache files
+	find $(DEB_DIR)/ -name "__pycache__" | xargs rm -rf
+	# Clean empty include dir
+	rmdir $(LOCAL_INSTALL_ROOT)/include/
+
+    # Remove useless executables
+	rm $(LOCAL_INSTALL_ROOT)/bin/pyserial-miniterm
+	rm $(LOCAL_INSTALL_ROOT)/bin/pyserial-ports
+	rm $(LOCAL_INSTALL_ROOT)/bin/watchmedo
+
+	# Create /etc directory for config file
+	mkdir -p $(DEB_DIR)/etc/$(PACKAGE)/
+	mv $(SDIST_DIR)/libreprinter.conf $(DEB_DIR)/etc/$(PACKAGE)/
+
+	# Create directory for firmware & updater
+	mkdir -p $(LOCAL_INSTALL_ROOT)/firmware/
+	cp firmware/firmware_updater.sh $(LOCAL_INSTALL_ROOT)/firmware/
+	cp firmware/restart_interface.py $(LOCAL_INSTALL_ROOT)/firmware/
+	cp firmware/libreprinter.ino.hex $(LOCAL_INSTALL_ROOT)/firmware/
+
+
+override_dh_link:
+	# Install symbolic links for scripts
+	dh_link $(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)/bin/libreprinter usr/sbin/libreprinter
+
+override_dh_fixperms:
+	dh_fixperms
+	# Fix execution rights for scripts
+	chmod 755 $(LOCAL_INSTALL_ROOT)/bin/libreprinter
+	chmod 755 $(LOCAL_INSTALL_ROOT)/firmware/firmware_updater.sh
+	chmod 755 $(LOCAL_INSTALL_ROOT)/firmware/restart_interface.py
+
+override_dh_install:
+	dh_install  #calls default *.install and *.dirs installation
+	# Create data dir, permissions will be fixed in postinst
+	mkdir -p $(DEB_DIR)/var/lib/$(PACKAGE)

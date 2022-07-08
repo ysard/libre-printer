@@ -1,20 +1,20 @@
-# Libreprinter is a software allowing to use the Centronics and serial printing
-# functions of vintage computers on modern equipement through a tiny hardware
-# interface.
-# Copyright (C) 2020-2022  Ysard
+#  Libreprinter is a software allowing to use the Centronics and serial printing
+#  functions of vintage computers on modern equipement through a tiny hardware
+#  interface.
+#  Copyright (C) 2020-2022  Ysard
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Watchdog for /pcl directory that is able to convert new files into pdfs"""
 # Standard imports
 import shlex
@@ -24,9 +24,17 @@ from watchdog.observers.inotify import InotifyObserver
 from watchdog.events import RegexMatchingEventHandler
 
 # Custom imports
+from libreprinter import plugins_handler
 from libreprinter.commons import logger
 
 LOGGER = logger()
+
+CONFIG = {
+    "misc": {
+        "emulation": "hp",
+        "endlesstext": "no",
+    }
+}
 
 
 class PclEventHandler(RegexMatchingEventHandler):
@@ -81,6 +89,7 @@ class PclEventHandler(RegexMatchingEventHandler):
             LOGGER.exception(e)
 
 
+@plugins_handler.register
 def setup_pcl_watchdog(config):
     """Initialise a watchdog on `/pcl` directory in configured `output_path`.
 

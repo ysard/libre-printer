@@ -2,14 +2,14 @@ Source: libre-printer
 Section: contrib/python
 Priority: extra
 Maintainer: Ysard <ysard_git@gmx.fr>
-Build-Depends: debhelper (>= 9), dh-virtualenv (>= 1.0), python3 (>= 3.6), python3-venv, python3-dev, tar (>=1.27.1), python3-setuptools
+Build-Depends: debhelper (>= 9), dh-virtualenv (>= 1.0), dh-systemd (>=1.5), python3 (>= 3.6), python3-venv, python3-dev, tar (>=1.27.1), python3-setuptools
 Standards-Version: 3.9.6
 Homepage: https://github.com/ysard/libre-printer
 Vcs-Git: https://github.com/ysard/libre-printer
 
 Package: libre-printer
 Architecture: all
-Depends: dpkg (>= 1.16.1), python3 (>= 3.6), python, python3-venv, ${misc:Depends}
+Depends: dpkg (>= 1.16.1), adduser (>= 3.11), python3 (>= 3.6), python3-venv, avrdude (>= 6.3), enscript (>= 1.6.5.90), ghostscript (>= 9.06), ${misc:Depends}
 Description: Parallel Centronics and Serial printing for vintage computers.
   This is a distribution of "Libre-Printer" as a self-contained
   Python virtualenv wrapped into a Debian package.

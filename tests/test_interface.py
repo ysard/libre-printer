@@ -26,8 +26,8 @@ from libreprinter.legacy_interprocess_com import (
     get_status_message,
     debug_shared_memory,
 )
-from libreprinter.escp2_converter import launch_escp2_converter
-from libreprinter.pcl_to_pdf_watchdog import setup_pcl_watchdog
+from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
+from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 import libreprinter.commons as cm
 
 # Import create dir fixture
@@ -121,6 +121,7 @@ def tmp_process():
 def slow_down_tests():
     yield
     time.sleep(1)
+
 
 @pytest.yield_fixture()
 def extra_config(init_config, request):
@@ -330,6 +331,7 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
     processed_file = Path(tmp_dir) / out_file
     while not processed_file.exists() or processed_file.stat().st_size == 0:
         time.sleep(1 * repetitions + 3)  # Empirical delay
+        print("Waiting dir tree: ", set(Path(tmp_dir).rglob("*")))
 
     ret = set(Path(tmp_dir).rglob("*"))
     print("Dir tree: ", ret)

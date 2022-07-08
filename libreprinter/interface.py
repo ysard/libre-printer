@@ -447,6 +447,13 @@ def read_interface(config):
                 config["misc"]["line_ending"],
             )
 
+        if config["misc"]["emulation"] == "text":
+            # Copy current file to txt_jobs folder
+            shutil.copy(
+                "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
+                "{}/txt_jobs/{}.txt".format(misc_section["output_path"], job_number),
+            )
+
         if jobs_count >= 199:
             # Arbitrary limit
             jobs_count = 0

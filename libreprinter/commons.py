@@ -33,6 +33,7 @@ DIR_LOGS = tempfile.gettempdir() + "/"
 CONFIG_FILE = "./libreprinter.conf"
 ESCP2_CONVERTER = "/home/pi/temp/sdl/escparser/convert-escp2"
 PCL_CONVERTER = "/usr/local/bin/gpcl6"
+ENSCRIPT_BINARY = "/usr/bin/enscript"
 
 DIR_ASSETS = resource_filename(__name__, "assets/")  # current package name
 

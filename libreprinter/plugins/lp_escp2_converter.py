@@ -1,20 +1,20 @@
-# Libreprinter is a software allowing to use the Centronics and serial printing
-# functions of vintage computers on modern equipement through a tiny hardware
-# interface.
-# Copyright (C) 2020-2022  Ysard
+#  Libreprinter is a software allowing to use the Centronics and serial printing
+#  functions of vintage computers on modern equipement through a tiny hardware
+#  interface.
+#  Copyright (C) 2020-2022  Ysard
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Parametrize and launch espc2 converter as subprocess"""
 # Standard imports
 import shlex
@@ -22,10 +22,17 @@ import subprocess
 import pathlib
 
 # Custom imports
-import libreprinter.commons as cm
+from libreprinter import plugins_handler
+from libreprinter.commons import logger
 
-LOGGER = cm.logger()
+LOGGER = logger()
 
+CONFIG = {
+    "misc": {
+        "emulation": ("epson", "auto"),
+        "endlesstext": ("strip-escp2-stream", "strip-escp2-jobs", "no"),
+    }
+}
 
 ENDLESS_TEXT_VALUE_MAPPING = {
     "no": 0,
@@ -42,6 +49,7 @@ ENDLESS_TEXT_VALUE_MAPPING = {
 # JOBS_STRIP_ESCP2    4  # Create a txt file for each printjob but strip out ESC/P2 codes
 
 
+@plugins_handler.register
 def launch_escp2_converter(config):
     """Start escp2 converter
 

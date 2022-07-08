@@ -10,6 +10,12 @@ coverage:
 	@#python setup.py test --addopts "--cov libreprinter tests"
 	@-coverage-badge -f -o images/coverage.svg
 
+docstring_coverage:
+	interrogate -v libreprinter/ \
+	    -e libreprinter/__init__.py \
+	    -e libreprinter/handlers/__init__.py \
+	    --badge-style flat --generate-badge images/
+
 run:
 	-killall convert-escp2
 	python -m libreprinter
@@ -26,12 +32,6 @@ clean:
 
 doc:
 	$(MAKE) -C ./doc html
-
-docstring_coverage:
-	interrogate -v libreprinter/ \
-	    -e libreprinter/__init__.py \
-	    -e libreprinter/handlers/__init__.py \
-	    --badge-style flat --generate-badge images/
 
 # development & release cycle
 fullrelease:
@@ -61,3 +61,6 @@ check_code:
 missing_doc:
 	# Remove D213 antagonist of D212
 	prospector libreprinter/ | grep "libreprinter/\|Line\|Missing docstring"
+
+debianize:
+	deactivate ; dpkg-buildpackage -us -uc -b -d

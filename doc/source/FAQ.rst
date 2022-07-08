@@ -52,6 +52,15 @@ Check this link for GNU/Linux compatible printers via CUPS:
 `openprinting.org <http://www.openprinting.org/printers>`_.
 
 
+Can I connect multiple printers/interfaces?
+-------------------------------------------
+
+Yes! Unlike the Retroprinter project which monopolizes one Raspberry Pi per
+printer you can support as many printers as available USB ports.
+
+See the chapter :ref:`setting_up_multiple_printers` for more info.
+
+
 .. _interface_type:
 
 How do I recognise my interface type?
