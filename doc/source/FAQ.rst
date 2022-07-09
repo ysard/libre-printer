@@ -52,6 +52,27 @@ Check this link for GNU/Linux compatible printers via CUPS:
 `openprinting.org <http://www.openprinting.org/printers>`_.
 
 
+Is the project compatible with RetroPrinter binaries?
+-----------------------------------------------------
+
+The project is designed as a drop-in replacement for RetroPrinter binaries.
+
+It should be noted that (in 2021) of all their binaries only `convert-escp2`
+(the Epson ESC instruction converter) is the one that is really useful.
+
+The other executables are only used to move the print files or to perform minor
+perform minor actions; they have all been reimplemented in the code of |project_name|.
+
+
+You can reuse the `convert-escp2` executable from Retroprinter as is in the
+provided disk image without moving it, as long as you enter its path in the
+configuration file for |project_name| (`/etc/libre-printer/libreprinter.conf`).
+
+You can also install the version we package for |project_name|.
+Note that in the later case the configuration files for the converter are
+located in XXX (TBR).
+
+
 Can I connect multiple printers/interfaces?
 -------------------------------------------
 
