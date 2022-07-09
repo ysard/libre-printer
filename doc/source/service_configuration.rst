@@ -11,7 +11,7 @@ The behavior of this service is configurable in a single file centralizing
 commands that are considered useful for the RetroPrinter project.
 
 Please note that the configuration of the ESC/P2 converter is always done through
-separate files files identical to the original project.
+separate files identical to the original project.
 Although this is noted on the list of things to fix one day.
 
 
@@ -41,12 +41,15 @@ It is currently split into 3 sections:
 
     Reset directories in output_path, and shared memory during startup.
 
-- **escp2_converter_path=**
+- **escp2_converter_path=/usr/bin/convert-escp2**
 
-    Path of espc2 converter. If the binary is not included in the path its expected
-    name is "convert-escp2".
+    Path of espc2 converter. If the binary is not at the end of the given path its
+    expected name is "convert-escp2".
 
-- **pcl_converter_path=**
+    - For the RetroPrinter image: /home/pi/temp/sdl/escparser/convert-escp2
+    - For the LibrePrinter Debian package: /usr/bin/convert-escp2
+
+- **pcl_converter_path=/usr/local/bin/gpcl6**
 
     Path of the GhostPCL binary used to convert HP PCL files with ghostscript
 
@@ -63,7 +66,7 @@ It is currently split into 3 sections:
     **no**                  waits for the pages one after the other
     ======================= =======================================
 
-    If `plain-stream` or `strip-escp2-stream`, output_printer option will be disabled.
+    If `plain-stream` or `strip-escp2-stream`, `output_printer` option will be disabled.
 
 - **line_ending=unix**
 
@@ -79,7 +82,7 @@ It is currently split into 3 sections:
     Possible values: "no" or any path even a printer path like "/dev/usb/lp0".
 
     WARNING: In this last example be warned that output_printer setting is *NOT*
-    disabled. It should be noted that any "raw" parallel interface like `/dev/usb/lpx`
+    disabled. It should be noted that any "raw" parallel interface like `/dev/usb/lp*`
     disappears when Cups is used on it. Thus it can't be used with this
     functionality anymore.
     TL;DR: Do not use the path of a printer whose name you have entered in
@@ -98,7 +101,7 @@ It is currently split into 3 sections:
 - **output_path=**
 
     Path where /raw /pdf /pcl /txt-jobs /txt-stream directories are created.
-    Default: current directory.
+    Default: current directory or /var/lib/libre-printer/ for the Debian package.
 
 - **end_page_timeout=2**
 
@@ -107,7 +110,14 @@ It is currently split into 3 sections:
 
 - **emulation=epson**
 
-    Emulation used. Possible values: epson/escp2 or hp/pcl (or auto Not implemented)
+    Emulation used.
+
+    ================== ================================================
+    **epson or escp2** For Epson ESC/P and ESC/P2 data (default)
+    **hp or pcl**      For HP PCL data
+    **text**           For raw text data from the printer (equivalent of epson + plain-jobs)
+    **auto**           (Not implemented)
+    ================== ================================================
 
 
 [parallel_printer]
