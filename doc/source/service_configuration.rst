@@ -11,7 +11,7 @@ The behavior of this service is configurable in a single file centralizing
 commands that are considered useful for the RetroPrinter project.
 
 Please note that the configuration of the ESC/P2 converter is always done through
-separate files files identical to the original project.
+separate files identical to the original project.
 Although this is noted on the list of things to fix one day.
 
 
