@@ -38,8 +38,15 @@ CATCHED_EVENTS = list()
 
 def mock_on_closed(self, event):
     """Show catched event, see :meth:`test_setup_watchdog`"""
-    print(event)
+    print("Catched event:", event)
     CATCHED_EVENTS.append(event)
+
+
+@pytest.fixture()
+def reset_catched_events():
+    """Reset the global CATCHED_EVENTS variable for the next test"""
+    global CATCHED_EVENTS
+    CATCHED_EVENTS = list()
 
 
 @pytest.mark.timeout(3)
@@ -51,29 +58,29 @@ def mock_on_closed(self, event):
         # Test the detection of a pdf file creation in /pdf
         (
             setup_watchdog,
-            {"misc": {"output_printer": None}},
-            ["pdf/aaa", "pdf/x.pdf"],
-            "pdf/x.pdf",
+            {"misc": {"output_printer": ""}},
+            ["pdf/aaa", "pdf/a.pdf"],  # Last file is the good one
+            None,  # File is sent to the printer via lpr => no expected file
         ),
         # Test the detection of pcl file creation in /pcl
         (
             setup_pcl_watchdog,
             {"misc": {"pcl_converter_path": PCL_CONVERTER}},
-            ["pcl/aaa", "pcl/x.pcl"],
-            "pdf/x.pdf",
+            ["pcl/aaa", "pcl/b.pcl"],  # Last file is the good one
+            "pdf/b.pdf",
         ),
     ],
     ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog"],
 )
-def test_setup_watchdog(watchdog, config, files_to_create, expected_file, temp_dir):
+def test_setup_watchdog(watchdog, config, files_to_create, expected_file, temp_dir, reset_catched_events):
     """Test the detection of pdf creation in /pdf
 
     `on_closed` method is modified to show catched event instead of doing things;
     see :meth:`mock_on_closed`.
 
-    .. note:: Only the watchdog behaviors are tested here. What the it does
-        after the event detection is not tested here
-        (see :meth:`test_interface` instead).
+    .. warning:: Only the watchdog behaviors are tested here. What they do
+        after the event detection is NOT tested here since `on_closed` callback
+        is mocked (see :meth:`test_interface` module instead for more global tests).
 
     :param watchdog: Function that setup a watchdog according to a given config
     :param config: Config in the format returned by a Configuration Parser.
@@ -82,11 +89,14 @@ def test_setup_watchdog(watchdog, config, files_to_create, expected_file, temp_d
     :param expected_file: Expected file in files_to_create that should recognized
         by the watchdog.
     :param temp_dir: (fixture) Create temp directory
+    :param reset_catched_events: (fixture) Force CATCHED_EVENTS global variable
+        to be reset for each test.
     :type watchdog: <function>
     :type config: <dict>
     :type files_to_create: <list <str>>
     :type expected_file: <str>
     :type temp_dir: <str>
+    :type reset_catched_events: <_pytest.logging.LogCaptureFixture>
     """
     init_directories(temp_dir)
 
@@ -101,10 +111,18 @@ def test_setup_watchdog(watchdog, config, files_to_create, expected_file, temp_d
     while not CATCHED_EVENTS:
         time.sleep(0.5)
 
-    assert expected_file in CATCHED_EVENTS[0].src_path
-
+    # Check detection of the correct file
     assert len(CATCHED_EVENTS) == 1
-    print(CATCHED_EVENTS)
+    good_created_file = files_to_create[-1]
+    assert good_created_file in CATCHED_EVENTS[0].src_path
+
+    # Check the watchdog processing => not the purpose of THIS test,
+    # but may be tested in another test that will not test only the on_closed callback!
+    # if expected_file:
+    #     time.sleep(2)
+    #     print(Path(temp_dir + "pdf/"))
+    #     found_files = list(str(path) for path in Path(temp_dir + "pdf/").glob("*"))[0]
+    #     assert expected_file in found_files
 
 
 def test_bad_printer(temp_dir, caplog):
