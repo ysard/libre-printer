@@ -83,12 +83,13 @@ def test_setup_watchdog(watchdog, config, files_to_create, expected_file, temp_d
         after the event detection is NOT tested here since `on_closed` callback
         is mocked (see :meth:`test_interface` module instead for more global tests).
 
-    :param watchdog: Function that setup a watchdog according to a given config
+    :param watchdog: Function that set up a watchdog according to a given config
     :param config: Config in the format returned by a Configuration Parser.
         Not all settings are required for a specific watchdog.
-    :param files_to_create: List of files to create to wake-up the watchdog
-    :param expected_file: Expected file in files_to_create that should recognized
-        by the watchdog.
+    :param files_to_create: List of files to create to wake up the watchdog.
+        Last file is the good one.
+    :param expected_file: Expected file in files_to_create that should be recognized
+        by the watchdog. (NOT used for now).
     :param temp_dir: (fixture) Create temp directory
     :param reset_catched_events: (fixture) Force CATCHED_EVENTS global variable
         to be reset for each test.
