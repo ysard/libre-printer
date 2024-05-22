@@ -21,7 +21,7 @@ import os
 import configparser
 
 # Custom imports
-from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER, PCL_CONVERTER
+from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER, PCL_CONVERTER, ENSCRIPT_BINARY
 
 FLOW_CTRL_MAPPING = {
     "hardware": 1,
@@ -74,6 +74,10 @@ def parse_config(config: configparser.ConfigParser):
     pcl_converter_path = misc_section.get("pcl_converter_path")
     if not pcl_converter_path:
         misc_section["pcl_converter_path"] = PCL_CONVERTER
+
+    enscript_path = misc_section.get("enscript_path")
+    if not enscript_path:
+        misc_section["enscript_path"] = ENSCRIPT_BINARY
 
     enscript_settings = misc_section.get("enscript_settings")
     if not enscript_settings:

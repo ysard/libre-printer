@@ -28,7 +28,7 @@ from watchdog.events import RegexMatchingEventHandler
 
 # Custom imports
 from libreprinter import plugins_handler
-from libreprinter.commons import logger, ENSCRIPT_BINARY
+from libreprinter.commons import logger
 
 LOGGER = logger()
 
@@ -66,11 +66,12 @@ class TxtEventHandler(RegexMatchingEventHandler):
 
     FILES_REGEX = [r".*\.txt$"]
 
-    def __init__(self, *args, enscript_settings=None, **kwargs):
+    def __init__(self, *args, enscript_path=None, enscript_settings=None, **kwargs):
         """Constructor override
         Just add Enscript settings attr and define watchdog regexes.
         """
         super().__init__(*args, regexes=self.FILES_REGEX, **kwargs)
+        self.enscript_path = enscript_path
         self.enscript_settings = enscript_settings
 
     def on_closed(self, event):
@@ -86,7 +87,7 @@ class TxtEventHandler(RegexMatchingEventHandler):
         src_path = Path(event.src_path)
         pdf_path = src_path.parent / "../pdf" / (src_path.stem + ".pdf")
         enscript_cmd = [
-            ENSCRIPT_BINARY,
+            self.enscript_path,
             self.enscript_settings,
             "-p",
             "-",
@@ -123,14 +124,17 @@ def setup_text_watchdog(config):
     """
     LOGGER.info("Launch text watchdog...")
 
-    # Test existence of binary
-    if not Path(ENSCRIPT_BINARY).exists():
-        LOGGER.error("Setting <Enscript:%s> doesn't exists!", ENSCRIPT_BINARY)
+    # Test existence of Enscript binary
+    enscript_path = config["misc"]["enscript_path"]
+    if not Path(enscript_path).exists():
+        LOGGER.error("Setting <enscript_path:%s> doesn't exists!", enscript_path)
         raise FileNotFoundError("enscript converter not found")
 
     enscript_settings = config["misc"]["enscript_settings"]
     event_handler = TxtEventHandler(
-        enscript_settings=enscript_settings, ignore_directories=True
+        enscript_path=enscript_path,
+        enscript_settings=enscript_settings,
+        ignore_directories=True
     )
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
