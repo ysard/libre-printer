@@ -28,6 +28,8 @@ from libreprinter.legacy_interprocess_com import (
 )
 from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
+from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
+
 import libreprinter.commons as cm
 
 # Import create dir fixture
