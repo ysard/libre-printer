@@ -28,6 +28,7 @@ from unittest.mock import patch
 from libreprinter.file_handler import init_directories
 from libreprinter.plugins.lp_jobs_to_printer_watchdog import setup_watchdog
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
+from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
 from libreprinter.commons import PCL_CONVERTER
 
 # Import create dir fixture
@@ -150,29 +151,54 @@ def test_bad_printer(temp_dir, caplog):
     assert "returned non-zero exit status 1" in caplog.text
 
 
-def test_bad_pcl_converter_path(temp_dir, caplog):
-    """Test with not existent pcl converter
+@pytest.mark.parametrize(
+    "watchdog, config, expected_exception_text, expected_log_text",
+    [
+        (
+            setup_pcl_watchdog,
+            {"misc": {"pcl_converter_path": "/usr/bin/Fake_Converter_Name"}},
+            r"pcl converter not found",
+            "Setting <pcl_converter_path:",
+        ),
+        (
+            setup_text_watchdog,
+            {"misc": {"enscript_path": "/usr/bin/Fake_Converter_Name"}},
+            r"enscript converter not found",
+            "Setting <enscript_path:",
+        ),
+    ],
+    ids=["bad_pcl_binary", "bad_enscript_binary"],
+)
+def test_bad_binary_path(
+    watchdog, config, expected_exception_text, expected_log_text, temp_dir, caplog
+):
+    """Test setup_*_watchdog functions with non-existent binaries
 
-    The watchdog should crash
+    The watchdog should crash emitting a FileNotFoundError exception.
 
+    :param watchdog: Function that set up a watchdog according to a given config
+    :param config: Config in the format returned by a Configuration Parser.
+        Not all settings are required for a specific watchdog.
+    :param expected_exception_text: Exception message in a raw string.
+    :param expected_log_text: Fragment of a message emitted by the logger.
     :param temp_dir: (fixture) Create temp directory
-    :param caplog: pytest caplog-fixture
+    :param caplog: (fixture) pytest caplog-fixture
+    :type watchdog: <function>
+    :type config: <dict>
+    :type expected_exception_text: <str>
+    :type expected_log_text: <str>
     :type temp_dir: <str>
     :type caplog: <_pytest.logging.LogCaptureFixture>
     """
     init_directories(temp_dir)
 
     # FileNotFoundError is expected when launching the watchdog
-    with pytest.raises(FileNotFoundError, match=r"pcl converter not found"):
-        setup_pcl_watchdog(
-            {
-                "misc": {
-                    "output_path": temp_dir,
-                    "pcl_converter_path": "/usr/bin/Fake_Converter_Name",
-                }
-            }
-        )
+    with pytest.raises(FileNotFoundError, match=expected_exception_text):
+        # Add temporary dir to config
+        config["misc"]["output_path"] = temp_dir
+        # Start watchdog
+        watchdog(config)
 
     # We expect an error in the logger
     print(caplog.text)
-    assert "Setting <pcl_converter_path:" in caplog.text
+    assert expected_log_text in caplog.text
