@@ -15,7 +15,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Parametrize and launch espc2 converter as subprocess"""
+"""Parametrize and launch espc2 converter binary as subprocess"""
 # Standard imports
 import shlex
 import subprocess
@@ -108,10 +108,10 @@ def launch_escp2_converter(config):
     # Launch as subprocess
     output_path = config["misc"]["output_path"]
     timeout     = 4  # Wait for more data in file; pause waiting new byte in file
-    retain_data = 1  # Useless param didn't used
+    retain_data = 1  # Useless param not used
     printing    = 0  # Do not let the converter send pdf to printer => see jobs_to_printer_watchdog
     endlesstext = ENDLESS_TEXT_VALUE_MAPPING[config["misc"]["endlesstext"]]
-    retain_pdf  = 1  # Useless param didn't used; endlesstext handles this behaviour
+    retain_pdf  = 1  # Useless param not used; endlesstext handles this behaviour
 
     cmd = "{}/{} {} {} {} {} {} {}".format(
         working_dir, binary, output_path, timeout, retain_data, printing, endlesstext, retain_pdf
@@ -119,7 +119,7 @@ def launch_escp2_converter(config):
     args = shlex.split(cmd)
     LOGGER.debug("Subprocess command: %s", cmd)
 
-    # Non blocking call => will be executed in background
+    # Non-blocking call => will be executed in background
     process = subprocess.Popen(args, cwd=working_dir)
     # 0 or -N if process is terminated (this should not be the case here)
     assert process.returncode is None
