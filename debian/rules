@@ -46,7 +46,7 @@ override_dh_virtualenv:
 	# Clean empty include dir
 	rmdir $(LOCAL_INSTALL_ROOT)/include/
 
-    # Remove useless executables
+	# Remove useless executables
 	rm $(LOCAL_INSTALL_ROOT)/bin/pyserial-miniterm
 	rm $(LOCAL_INSTALL_ROOT)/bin/pyserial-ports
 	rm $(LOCAL_INSTALL_ROOT)/bin/watchmedo

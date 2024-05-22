@@ -16,15 +16,15 @@ docstring_coverage:
 	    -e libreprinter/handlers/__init__.py \
 	    --badge-style flat --generate-badge images/
 
+black:
+	black libreprinter
+
 run:
 	-killall convert-escp2
 	python -m libreprinter
 
 update_firmware:
 	avrdude -v -patmega32u4 -cavr109 -P/dev/ttyACM0 -b57600 -D -Uflash:w:./firmware/libreprinter.ino.hex:i
-
-black:
-	black libreprinter
 
 clean:
 	rm -rf eps pcl pdf png raw txt txt_jobs txt_stream dist

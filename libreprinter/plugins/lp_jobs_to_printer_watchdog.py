@@ -77,7 +77,7 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
 
     def on_closed(self, event):
         """PDF or TXT creation is detected, send it to the configured printer"""
-        LOGGER.debug("Event detected: %s", event)
+        LOGGER.info("Event detected: %s", event)
 
         # Directly build arg list; enquote src_path to avoid lpr error:
         # "lpr: No file in print request."
