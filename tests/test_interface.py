@@ -422,7 +422,7 @@ def test_bad_serial_port():
     [config.add_section(section) for section in ("misc", "parallel_printer", "serial_printer")]
     config = parse_config(config)
 
-    # Replace replace serial_port setting with a non-existent port
+    # Replace serial_port setting with a non-existent port
     config["misc"]["serial_port"] = ""
 
     # 5 tries in 5 seconds before returning None

@@ -15,7 +15,10 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Watchdog for /txt_jobs directory that is able to convert new files into pdfs"""
+"""Watchdog for /txt_jobs directory that is able to convert new files into pdfs
+
+Convertions are made thanks to Enscript & Ghostscript.
+"""
 # Standard imports
 import shlex
 from pathlib import Path
@@ -97,6 +100,8 @@ class TxtEventHandler(RegexMatchingEventHandler):
             f"-sOutputFile={shlex.quote(str(pdf_path))}",
             "-",
         ]
+        LOGGER.debug("enscript command: %s", enscript_cmd)
+        LOGGER.debug("ghostscript command: %s", ghostscript_cmd)
         try:
             # We are in a child thread, we can have blocking calls like run()
             # Capture all outputs from the command in case of error with PIPE
@@ -114,7 +119,7 @@ def setup_text_watchdog(config):
     """Initialise a watchdog on `/txt_jobs` directory in configured `output_path`.
 
     Any txt file created in this directories will be converted in `/pdf` by
-    the Enscript binary installed on the system.
+    the Enscript & Ghostscript binaries installed on the system.
     """
     LOGGER.info("Launch text watchdog...")
 

@@ -22,8 +22,10 @@ import importlib
 from collections import namedtuple
 
 try:
+    # Starting from Python 3.7
     from importlib import resources
-except ImportError:
+except ImportError: # pragma: no cover
+    # Backport
     import importlib_resources as resources
 # Custom imports
 from libreprinter import commons as cm

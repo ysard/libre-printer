@@ -5,6 +5,7 @@ from libreprinter.legacy_interprocess_com import *
 
 @pytest.fixture()
 def init_interprocess():
+    """Purge previous jobs and init new interprocess shared memory"""
     # Erase shm file to purge previous jobs
     if os.path.exists("/dev/shm/" + cm.SHARED_MEM_NAME):
         os.remove("/dev/shm/" + cm.SHARED_MEM_NAME)
