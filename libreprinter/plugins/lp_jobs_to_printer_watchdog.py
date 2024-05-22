@@ -82,6 +82,7 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
         # Directly build arg list; enquote src_path to avoid lpr error:
         # "lpr: No file in print request."
         args = ["/usr/bin/lpr", "-P", self.printer_name, shlex.quote(event.src_path)]
+        LOGGER.debug("lpr command: %s", args)
         try:
             # We are in a child thread, we can have blocking calls like run()
             # Capture all outputs from lpr in case of error with PIPE

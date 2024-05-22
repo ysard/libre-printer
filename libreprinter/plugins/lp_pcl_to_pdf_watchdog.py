@@ -77,6 +77,7 @@ class PclEventHandler(RegexMatchingEventHandler):
             f"-sOutputFile={shlex.quote(str(pdf_path))}",
             shlex.quote(event.src_path)
         ]
+        LOGGER.debug("GhostPCL command: %s", args)
         try:
             # We are in a child thread, we can have blocking calls like run()
             # Capture all outputs from the command in case of error with PIPE
