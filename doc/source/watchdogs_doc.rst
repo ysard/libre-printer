@@ -20,6 +20,14 @@ PCL to PDF
 ESC & ESC/P2 converter
 ======================
 
-.. automodule:: libreprinter.plugins.lp_escp2_converter
+Interprocess communication
+--------------------------
+
+.. automodule:: libreprinter.legacy_interprocess_com
    :members:
 
+Converter wrapper
+-----------------
+
+.. automodule:: libreprinter.plugins.lp_escp2_converter
+   :members:
