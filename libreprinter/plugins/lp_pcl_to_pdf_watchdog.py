@@ -15,7 +15,11 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Watchdog for /pcl directory that is able to convert new files into pdfs"""
+"""Watchdog for /pcl directory that is able to convert new files into pdfs
+
+The conversion is made thanks to the `pcl_converter_path` setting pointing to
+the GhostPCL binary.
+"""
 # Standard imports
 import shlex
 from pathlib import Path
