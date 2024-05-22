@@ -19,7 +19,7 @@
 # Standard imports
 import os
 import mmap
-from numpy import frombuffer, uint32
+from numpy import frombuffer, int32
 
 # Custom imports
 import libreprinter.commons as cm
@@ -64,7 +64,7 @@ def initialize_interprocess_com():
     f_d = open(shared_mem_path, mode="rb+")
     m = mmap.mmap(f_d.fileno(), length=0, access=mmap.ACCESS_WRITE)
 
-    SHARED_MEM_BUFFER = frombuffer(m, dtype=uint32)
+    SHARED_MEM_BUFFER = frombuffer(m, dtype=int32)
 
     LOGGER.debug("Shared mem initialised")
     # print(SHARED_MEM_BUFFER[400:405])
