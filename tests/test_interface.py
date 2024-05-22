@@ -255,17 +255,25 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
     [
         ## Pdf files generation
         (("epson", "no"), "escp2_1.prn", "escp2_1.pdf", "pdf/page1-1.pdf", 1),
-        (("hp", "no"), "test_page_pcl.prn", 14141, "pdf/1.pdf", 1),
+        (("hp", "no"), "test_page_pcl.prn", 14206, "pdf/1.pdf", 1),
+        # Intermediary file produced in txt_jobs/
+        (("text", "no"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
         ## Plain text tests
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
         # 1 file plain text repeated 2 times in a stream
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 2),
         (("epson", "plain-jobs"), "escp2_1.prn", "escp2_1_plain.txt", "txt_jobs/1.txt", 1),
+        # Pdf should be also produced because txt file is generated
+        # But as there is no escp2 code processing I have to send stripped text;
+        # this test is currently similar to (text, no): "text-pdf" test
+        (("epson", "plain-jobs"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
         ## Stripped text tests
         (("epson", "strip-escp2-stream"), "escp2_1.prn", "escp2_1_strip.txt", "txt_stream/1.txt", 1),
         # 1 file stripped repeated 2 times in a stream
         (("epson", "strip-escp2-stream"), "escp2_1.prn", "escp2_1_strip.txt", "txt_stream/1.txt", 2),
         (("epson", "strip-escp2-jobs"), "escp2_1.prn", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
+        # Pdf should be also produced because txt file is generated
+        (("epson", "strip-escp2-jobs"), "escp2_1.prn", 6722, "pdf/1.pdf", 1),
         ## pcl data with epson config
         (("hp", "plain-stream"), "test_page_pcl.prn", "test_page_pcl.prn", "pcl/1.pcl", 1),
         # TODO: epson/hp/auto ?
@@ -273,8 +281,10 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
     # First param goes in the 'request' param of the fixture extra_config
     indirect=["extra_config"],
     ids=[
-        "epson-pdf", "hp-pdf", "plain-stream*1", "plain-stream*2", "plain-jobs",
-        "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "pcl"
+        "epson-pdf", "hp-pdf", "text-pdf",
+        "plain-stream*1", "plain-stream*2", "plain-jobs", "plain-jobs-pdf",
+        "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "strip-escp2-jobs-pdf",
+        "pcl"
     ]
 )
 def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repetitions, tmp_process):
@@ -336,7 +346,7 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
         print("Waiting dir tree: ", set(Path(tmp_dir).rglob("*")))
 
     ret = set(Path(tmp_dir).rglob("*"))
-    print("Dir tree: ", ret)
+    print("Test directory tree: ", ret)
     found_stats = processed_file.stat()
     print("Processed file & found stats:", processed_file, found_stats)
     if isinstance(expected_file, int):
