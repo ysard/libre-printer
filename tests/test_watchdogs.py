@@ -21,7 +21,6 @@ Test only file detections & startups.
 """
 # Standard imports
 import time
-from pathlib import Path
 import pytest
 from unittest.mock import patch
 
