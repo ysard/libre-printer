@@ -1,7 +1,7 @@
 # Libreprinter is a software allowing to use the Centronics and serial printing
 # functions of vintage computers on modern equipement through a tiny hardware
 # interface.
-# Copyright (C) 2020-2022  Ysard
+# Copyright (C) 2020-2024  Ysard
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by

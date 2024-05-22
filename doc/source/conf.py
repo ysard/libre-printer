@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'Libre-Printer'
-copyright = '2022, Ysard'
+copyright = '2024, Ysard'
 author = 'Ysard'
 
 # The full version, including alpha/beta/rc tags
