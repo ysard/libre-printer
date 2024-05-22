@@ -98,6 +98,9 @@ class TxtEventHandler(RegexMatchingEventHandler):
             "-dNOPAUSE",
             "-sDEVICE=pdfwrite",
             "-sColorConversionStrategy=RGB",
+            "-dCompatibilityLevel=1.7",  # Fix for reproductibility
+            "-dEmbedAllFonts=true",  # Increase the final size
+            "-dSubsetFonts=true",  # Reduce the final size
             f"-sOutputFile={shlex.quote(str(pdf_path))}",
             "-",
         ]

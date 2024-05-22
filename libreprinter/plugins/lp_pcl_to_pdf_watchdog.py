@@ -77,7 +77,12 @@ class PclEventHandler(RegexMatchingEventHandler):
         pdf_path = src_path.parent / "../pdf" / (src_path.stem + ".pdf")
         args = [
             self.converter_path,
-            "-dNOPAUSE", "-sDEVICE=pdfwrite", "-sColorConversionStrategy=RGB",
+            "-dNOPAUSE",
+            "-sDEVICE=pdfwrite",
+            "-sColorConversionStrategy=RGB",
+            "-dCompatibilityLevel=1.7",  # Fix for reproductibility
+            "-dEmbedAllFonts=true",  # Increase the final size
+            "-dSubsetFonts=true",  # Reduce the final size
             f"-sOutputFile={shlex.quote(str(pdf_path))}",
             shlex.quote(event.src_path)
         ]
