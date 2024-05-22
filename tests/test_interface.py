@@ -38,7 +38,7 @@ LOGGER = cm.logger()
 DIR_DATA = os.path.dirname(os.path.abspath(__file__)) + "/../test_data/"  # current package name
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 def init_virtual_interface(temp_dir):
     """Init virtual serial interface
 
@@ -105,7 +105,7 @@ def init_config(request, init_virtual_interface):
     return tmp_dir, config
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 def tmp_process():
     """Yield new process ready to be started
 
@@ -117,13 +117,13 @@ def tmp_process():
     process.terminate()
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 def slow_down_tests():
     yield
     time.sleep(1)
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 def extra_config(init_config, request):
     """Init configParser, init converter subprocess/watchdog if needed
 

@@ -3,7 +3,7 @@ import pytest
 from libreprinter.legacy_interprocess_com import *
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 def init_interprocess():
     # Erase shm file to purge previous jobs
     if os.path.exists("/dev/shm/" + cm.SHARED_MEM_NAME):

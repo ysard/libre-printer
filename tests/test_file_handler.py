@@ -18,7 +18,7 @@ from libreprinter.file_handler import (
 from libreprinter.commons import OUTPUT_DIRS
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 def temp_dir():
     """Create temp directory (with trailing "/")
 
