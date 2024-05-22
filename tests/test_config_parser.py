@@ -162,6 +162,7 @@ def test_default_settings(sample_config, expected):
     [
         # Config with user settings vs expected parsed settings
         (
+            # sample1
             """
             [misc]
             line_ending=windows
@@ -177,6 +178,7 @@ def test_default_settings(sample_config, expected):
             },
         ),
         (
+            # sample2
             """
             [misc]
             emulation=epson
