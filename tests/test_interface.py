@@ -345,7 +345,8 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
 
     # Check file content
     expected_content = Path(DIR_DATA + expected_file).read_bytes()
-    assert expected_content * repetitions == processed_file.read_bytes()
+    assert expected_content * repetitions == processed_file.read_bytes(), \
+        "Maybe a mismatch on the Haru Free PDF Library?"
 
 
 @pytest.mark.parametrize(
