@@ -73,7 +73,9 @@ def reset_catched_events():
     ],
     ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog"],
 )
-def test_setup_watchdog(watchdog, config, files_to_create, expected_file, temp_dir, reset_catched_events):
+def test_setup_watchdog(
+    watchdog, config, files_to_create, expected_file, temp_dir, reset_catched_events
+):
     """Test the detection of pdf creation in /pdf
 
     `on_closed` method is modified to show catched event instead of doing things;
@@ -133,7 +135,7 @@ def test_bad_printer(temp_dir, caplog):
     lpr program should return an error
 
     :param temp_dir: (fixture) Create temp directory
-    :param caplog: pytest caplog-fixture
+    :param caplog: (fixture) pytest caplog-fixture
     :type temp_dir: <str>
     :type caplog: <_pytest.logging.LogCaptureFixture>
     """
