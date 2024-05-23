@@ -26,7 +26,7 @@ from unittest.mock import patch
 
 # Custom imports
 from libreprinter.file_handler import init_directories
-from libreprinter.plugins.lp_jobs_to_printer_watchdog import setup_watchdog
+from libreprinter.plugins.lp_jobs_to_printer_watchdog import setup_pdf_watchdog
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
 from libreprinter.commons import PCL_CONVERTER, ENSCRIPT_BINARY
@@ -51,7 +51,7 @@ def reset_catched_events():
 
 
 @pytest.mark.timeout(3)
-@patch("libreprinter.plugins.lp_jobs_to_printer_watchdog.PdfTxtEventHandler.on_closed", mock_on_closed)
+@patch("libreprinter.plugins.lp_jobs_to_printer_watchdog.PdfEventHandler.on_closed", mock_on_closed)
 @patch("libreprinter.plugins.lp_pcl_to_pdf_watchdog.PclEventHandler.on_closed", mock_on_closed)
 @patch("libreprinter.plugins.lp_txt_converter.TxtEventHandler.on_closed", mock_on_closed)
 @pytest.mark.parametrize(
@@ -60,7 +60,7 @@ def reset_catched_events():
     [
         # lp_jobs_to_printer_watchdog: Test the detection of a pdf file creation in /pdf
         (
-            setup_watchdog,
+            setup_pdf_watchdog,
             {"misc": {"output_printer": ""}},
             ["pdf/aaa", "pdf/a.pdf"],  # Last file is the good one
             None,  # File is sent to the printer via lpr => no expected file
@@ -153,7 +153,7 @@ def test_bad_printer(temp_dir, caplog):
     """
     init_directories(temp_dir)
 
-    setup_watchdog(
+    setup_pdf_watchdog(
         {"misc": {"output_path": temp_dir, "output_printer": "Fake_Printer_Name"}}
     )
 
