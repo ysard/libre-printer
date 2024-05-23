@@ -20,7 +20,7 @@
 import functools
 import importlib
 from collections import namedtuple
-
+from watchdog.observers.inotify import InotifyObserver
 try:
     # Starting from Python 3.7
     from importlib import resources
@@ -64,13 +64,18 @@ def names(package, config):
 
 
 def get(package, plugin):
-    """Get the entry point function of the given plugin"""
-    _import(package, plugin)
+    """Get the entry point function of the given plugin
+
+    :rtype: Callable
+    """
     return _PLUGINS[package][plugin].func
 
 
-def call(package, plugin, *args, **kwargs):
-    """Execute the entry point function of the given plugin"""
+def call(package, plugin, *args, **kwargs) -> InotifyObserver:
+    """Execute the entry point function of the given plugin
+
+    :rtype: InotifyObserver
+    """
     plugin_func = get(package, plugin)
     return plugin_func(*args, **kwargs)
 
@@ -120,7 +125,7 @@ def _import_all(package, config):
 
 
 def is_plugin_compatible(current_config, plugin_config):
-    """Get the compatibility of a config from a plugin vs current user config
+    """Test the compatibility of a config from a plugin vs current user config
 
     :param current_config: ConfigParser object
     :param plugin_config: Dictionnary of sections and params
@@ -128,6 +133,7 @@ def is_plugin_compatible(current_config, plugin_config):
         .. note:: An empty plugin configuration will return True (permanent plugin)
     :type current_config: configparser.ConfigParser
     :type plugin_config: dict
+    :rtype: bool
     """
     for p_section_name, p_section in plugin_config.items():
         c_section = dict(current_config).get(p_section_name)
@@ -147,6 +153,7 @@ def is_plugin_compatible(current_config, plugin_config):
             elif callable(p_param):
                 # Execute the callable to get a test result
                 return p_param(c_section.get(p_param_name))
+    # Permanent plugin
     return True
 
 
@@ -158,6 +165,8 @@ def names_factory(package):
             `plugins = plugins_handler.names_factory(__package__)`
         After import:
             `plugins(args_for_names_function)`
+
+    :rtype: Callable
     """
     return functools.partial(names, package)
 
@@ -170,6 +179,8 @@ def get_factory(package):
             `get_functions = plugins_handler.get_factory(__package__)`
         After import:
             `get_functions(plugin_name)(args_for_plugin_function)`
+
+    :rtype: Callable
     """
     return functools.partial(get, package)
 
@@ -182,5 +193,7 @@ def call_factory(package):
             `call_functions = plugins_handler.call_factory(__package__)`
         After import:
             `call_functions(plugin_name, args_for_plugin_function)`
+
+    :rtype: Callable
     """
     return functools.partial(call, package)
