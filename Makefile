@@ -63,4 +63,7 @@ missing_doc:
 	prospector libreprinter/ | grep "libreprinter/\|Line\|Missing docstring"
 
 debianize:
-	deactivate ; dpkg-buildpackage -us -uc -b -d
+	dpkg-buildpackage -us -uc -b -d
+
+debcheck:
+	lintian -EvIL +pedantic ../libre-printer_*.deb
