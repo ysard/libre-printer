@@ -107,7 +107,7 @@ def test_setup_watchdog(
     # Add temporary dir to config
     config["misc"]["output_path"] = temp_dir
     # Start watchdog
-    watchdog(config)
+    ret = watchdog(config)
 
     # Only x.pdf should be catched
     [open(temp_dir + filename, "a").close() for filename in files_to_create]
@@ -119,6 +119,9 @@ def test_setup_watchdog(
     assert len(CATCHED_EVENTS) == 1
     good_created_file = files_to_create[-1]
     assert good_created_file in CATCHED_EVENTS[0].src_path
+
+    # Tear down the watchdog
+    ret.stop()
 
     # Check the watchdog processing => not the purpose of THIS test,
     # but may be tested in another test that will not test only the on_closed callback!
@@ -199,7 +202,8 @@ def test_bad_binary_path(
         # Add temporary dir to config
         config["misc"]["output_path"] = temp_dir
         # Start watchdog
-        watchdog(config)
+        _ = watchdog(config)
+        # Failure is expected: no need to stop the watchdog
 
     # We expect an error in the logger
     print(caplog.text)
