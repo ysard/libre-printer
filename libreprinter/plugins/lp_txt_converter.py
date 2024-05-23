@@ -17,7 +17,22 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Watchdog for /txt_jobs directory that is able to convert new files into pdfs
 
-Convertions are made thanks to Enscript & Ghostscript.
+Conversions are made thanks to Enscript & Ghostscript.
+
+As soon as a txt file is created, a pdf is created.
+
+Expected config (emulation + endlesstext):
+
+    - epson + plain-jobs
+    - epson + strip-escp2-jobs
+    - text + no
+
+Yes the following config targets also: `epson + no`, `text + plain-jobs`
+but in the first case there will be no text file, and in the 2nd case there
+will be a text file due to `text` (`plain-jobs` is only for epson emulations).
+
+So... The plugin is not compatible with `hp` emulation,
+nor with `*stream` in endlesstext setting.
 """
 # Standard imports
 import shlex
@@ -32,12 +47,6 @@ from libreprinter.commons import logger
 
 LOGGER = logger()
 
-# Expected config (emulation + endlesstext):
-# - epson + plain-jobs
-# - txt + no
-# Yes the following config targets also epson + no, txt + plain-jobs
-# but in the first case there will be no text file, and in the 2nd case there
-# will be a text file due to 'txt' (plain-jobs is only for epson emulations).
 CONFIG = {
     "misc": {
         "emulation": ("text", "epson"),
