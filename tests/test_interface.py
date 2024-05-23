@@ -274,6 +274,7 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
         (("epson", "no"), "escp2_1.prn", "escp2_1.pdf", "pdf/page1-1.pdf", 1),
         (("hp", "no"), "test_page_pcl.prn", 14206, "pdf/1.pdf", 1),
         # Intermediary file produced in txt_jobs/
+        (("text", "no"), "escp2_1_strip.txt", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
         (("text", "no"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
         ## Plain text tests
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
@@ -298,7 +299,7 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
     # First param goes in the 'request' param of the fixture extra_config
     indirect=["extra_config"],
     ids=[
-        "epson-pdf", "hp-pdf", "text-pdf",
+        "epson-pdf", "hp-pdf", "text-pdf", "text-intermediary-txt-file",
         "plain-stream*1", "plain-stream*2", "plain-jobs", "plain-jobs-pdf",
         "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "strip-escp2-jobs-pdf",
         "pcl"
