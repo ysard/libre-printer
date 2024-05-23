@@ -163,13 +163,28 @@ def extra_config(init_config, request):
     if "escp2" in endlesstext or (emulation == "epson" and endlesstext == "no"):
         # Launch escp2 converter
         converter_process = launch_escp2_converter(config)
+        observer = None
+        if endlesstext in ("plain-jobs", "strip-escp2-jobs"):
+            # Launch text to pdf converter
+            observer = setup_text_watchdog(config)
         yield (tmp_dir, config)
+        # Tear down
         converter_process.kill()
+        if observer:
+            observer.stop()
         return
 
     if emulation == "hp" and endlesstext == "no":
         # Launch pcl converter
         observer = setup_pcl_watchdog(config)
+        yield (tmp_dir, config)
+        observer.stop()
+        return
+
+    # TODO: remove support of 'plain-jobs' in favour of text emulation
+    if emulation == "text" or endlesstext == "plain-jobs":
+        # Launch text to pdf converter
+        observer = setup_text_watchdog(config)
         yield (tmp_dir, config)
         observer.stop()
         return
