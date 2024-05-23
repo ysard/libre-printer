@@ -111,6 +111,7 @@ def test_plugins_loading(sample_config, expected, handle_module_cache, temp_dir)
     init_directories(temp_dir)
 
     # Add temporary dir to config
+    # Only mandatory if we want to start the plugin later
     sample_config["misc"]["output_path"] = temp_dir
 
     assert expected == plugins.plugins(sample_config)

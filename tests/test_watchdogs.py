@@ -56,14 +56,14 @@ def reset_catched_events():
 @pytest.mark.parametrize(
     "watchdog, config, files_to_create, expected_file",
     [
-        # Test the detection of a pdf file creation in /pdf
+        # lp_jobs_to_printer_watchdog: Test the detection of a pdf file creation in /pdf
         (
             setup_watchdog,
             {"misc": {"output_printer": ""}},
             ["pdf/aaa", "pdf/a.pdf"],  # Last file is the good one
             None,  # File is sent to the printer via lpr => no expected file
         ),
-        # Test the detection of pcl file creation in /pcl
+        # lp_pcl_to_pdf_watchdog: Test the detection of pcl file creation in /pcl
         (
             setup_pcl_watchdog,
             {"misc": {"pcl_converter_path": PCL_CONVERTER}},

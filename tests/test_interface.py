@@ -26,6 +26,7 @@ from libreprinter.legacy_interprocess_com import (
     get_status_message,
     debug_shared_memory,
 )
+# Note: For each plugin loaded, don't forget to modify extra_config fixture
 from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
@@ -37,7 +38,8 @@ from .test_file_handler import temp_dir
 
 LOGGER = cm.logger()
 
-DIR_DATA = os.path.dirname(os.path.abspath(__file__)) + "/../test_data/"  # current package name
+# Test data path depends on the current package name
+DIR_DATA = os.path.dirname(os.path.abspath(__file__)) + "/../test_data/"
 
 
 @pytest.fixture()
