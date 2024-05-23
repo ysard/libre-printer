@@ -369,7 +369,15 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
     if isinstance(expected_file, int):
         # Fallback for pdfs from ghostscript (see doc)
         # Check only the expected size
-        assert found_stats.st_size == expected_file
+
+        # Keep track of the generated file in /tmp in case of error
+        backup_file = Path("/tmp/" + in_file + "_" + processed_file.name)
+        backup_file.write_bytes(processed_file.read_bytes())
+
+        assert found_stats.st_size == expected_file, \
+            f"Problematic file is saved at <{backup_file}> for further study."
+        # All is ok => delete the generated file
+        backup_file.unlink()
         return
 
     # Check file content
