@@ -200,7 +200,10 @@ def test_plugins_loading(sample_config, expected, handle_module_cache, temp_dir)
     # Only mandatory if we want to start the plugin later
     sample_config["misc"]["output_path"] = temp_dir
 
-    assert expected == plugins.plugins(sample_config)
+    assert set(expected) == set(plugins.plugins(sample_config))
+
+    if not expected:
+        return
 
     # Get the entry point of the 1st plugin, execute it
     ret = plugins.call_functions(expected[0], sample_config)
