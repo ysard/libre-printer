@@ -29,7 +29,7 @@ from libreprinter.file_handler import init_directories
 from libreprinter.plugins.lp_jobs_to_printer_watchdog import setup_watchdog
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
-from libreprinter.commons import PCL_CONVERTER
+from libreprinter.commons import PCL_CONVERTER, ENSCRIPT_BINARY
 
 # Import create dir fixture
 from .test_file_handler import temp_dir
@@ -53,7 +53,9 @@ def reset_catched_events():
 @pytest.mark.timeout(3)
 @patch("libreprinter.plugins.lp_jobs_to_printer_watchdog.PdfTxtEventHandler.on_closed", mock_on_closed)
 @patch("libreprinter.plugins.lp_pcl_to_pdf_watchdog.PclEventHandler.on_closed", mock_on_closed)
+@patch("libreprinter.plugins.lp_txt_converter.TxtEventHandler.on_closed", mock_on_closed)
 @pytest.mark.parametrize(
+    # WARNING: expected_file is currently NOT tested!
     "watchdog, config, files_to_create, expected_file",
     [
         # lp_jobs_to_printer_watchdog: Test the detection of a pdf file creation in /pdf
@@ -70,8 +72,15 @@ def reset_catched_events():
             ["pcl/aaa", "pcl/b.pcl"],  # Last file is the good one
             "pdf/b.pdf",
         ),
+        # lp_txt_converter: Test the detection of txt file creation in /txt_jobs
+        (
+            setup_text_watchdog,
+            {"misc": {"enscript_path": ENSCRIPT_BINARY, "enscript_settings": "-BR"}},
+            ["txt_jobs/aaa", "txt_jobs/c.txt"],  # Last file is the good one
+            "pdf/c.pdf",
+        ),
     ],
-    ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog"],
+    ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog", "txt_to_pdf_watchdog"],
 )
 def test_setup_watchdog(
     watchdog, config, files_to_create, expected_file, temp_dir, reset_catched_events
