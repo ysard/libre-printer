@@ -11,11 +11,11 @@ Package: libre-printer
 Architecture: all
 Depends: dpkg (>= 1.16.1), adduser (>= 3.11), python3 (>= 3.6), python3-venv, avrdude (>= 6.3), enscript (>= 1.6.5.90), ghostscript (>= 9.06), ${misc:Depends}
 Description:Parallel Centronics and Serial printing for vintage computers
-  This is a distribution of "Libre-Printer" as a self-contained
-  Python virtualenv wrapped into a Debian package.
+ This is a distribution of "Libre-Printer" as a self-contained
+ Python virtualenv wrapped into a Debian package.
  .
-  See https://github.com/spotify/dh-virtualenv for more details.
+ See https://github.com/spotify/dh-virtualenv for more details.
  .
-  Libre-Printer is a software allowing to use the Centronics and serial printing
-  functions of vintage computers on modern equipement through a tiny hardware
-  interface.
+ Libre-Printer is a software allowing to use the Centronics and serial printing
+ functions of vintage computers on modern equipement through a tiny hardware
+ interface.
