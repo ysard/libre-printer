@@ -2,10 +2,10 @@ libre-printer (1.0.0-2) UNRELEASED; urgency=medium
 
   * TODO
 
- -- Ysard <ysard@users.noreply.github.com>  Tues, 21 Jun 2022 15:43:18 +0200
+ -- Ysard <ysard@users.noreply.github.com>  Tue, 21 Jun 2022 15:43:18 +0200
 
 libre-printer (1.0.0-1) unstable; urgency=low
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
 
- -- Ysard <ysard@users.noreply.github.com>  Tues, 21 Jun 2022 15:20:06 +0200
+ -- Ysard <ysard@users.noreply.github.com>  Tue, 21 Jun 2022 15:20:06 +0200
