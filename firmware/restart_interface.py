@@ -1,3 +1,4 @@
+#!/usr/share/libre-printer/bin/python
 #!/usr/bin/env python3
 # Libreprinter is a software allowing to use the Centronics and serial printing
 # functions of vintage computers on modern equipement through a tiny hardware
@@ -13,7 +14,17 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-"""Script used to restart the Arduino interface"""
+"""Script used to restart the Arduino interface
+Note the shebang that uses the Python venv of the package
+
+Usage:
+
+    # Use /dev/ttyACM0 serial interface by default
+    ./restart_interface.py
+
+    # Use custom serial interface
+    ./restart_interface.py "/dev/my_tty"
+"""
 import sys
 from time import sleep
 import serial

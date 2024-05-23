@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/usr/bin/env python3
 # Libreprinter is a software allowing to use the Centronics and serial printing
 # functions of vintage computers on modern equipement through a tiny hardware
 # interface.
@@ -24,8 +23,8 @@ interface_name=$(basename $1)
 echo "Stopping the service"
 systemctl stop libre-printer@$interface_name.service
 
-echo "Flashing device..."
-./restart_interface.py $1
+echo "Restarting device..."
+/usr/share/libre-printer/bin/python ./restart_interface.py $1
 
 retVal=$?
 if [ $retVal -ne 0 ]; then
@@ -33,6 +32,7 @@ if [ $retVal -ne 0 ]; then
     exit $retVal
 fi
 
+echo "Flashing device..."
 avrdude -v -patmega32u4 -cavr109 -P$1 -b57600 -D -Uflash:w:./firmware/libreprinter.ino.hex:i
 
 echo "Restart the service"
