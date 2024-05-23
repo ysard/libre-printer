@@ -68,12 +68,13 @@ def handle_module_cache():
 @pytest.mark.parametrize(
     "sample_config,expected",
     [
+        # espc2_printer_enabled1: printer is not "no", txt file generated in txt_jobs/
         (
             """
             [misc]
             emulation=epson
             endlesstext=no
-            output_printer=xxx
+            output_printer=Fake_Printer_Name
             [parallel_printer]
             [serial_printer]
             """,
@@ -81,6 +82,75 @@ def handle_module_cache():
             # presence here
             ["lp_escp2_converter", "lp_jobs_to_printer_watchdog", "lp_txt_converter"],
         ),
+        # espc2_printer_enabled2: printer is not "no", txt file generated in txt_jobs/
+        (
+            """
+            [misc]
+            emulation=epson
+            endlesstext=strip-escp2-jobs
+            output_printer=Fake_Printer_Name
+            [parallel_printer]
+            [serial_printer]
+            """,
+            # See lp_txt_converter config note for the explanation of its
+            # presence here
+            ["lp_escp2_converter", "lp_jobs_to_printer_watchdog", "lp_txt_converter"],
+        ),
+        # escp2_printer_disabled: printer is "no", txt file generated in txt_jobs/
+        (
+            """
+            [misc]
+            emulation=epson
+            endlesstext=no
+            output_printer=no
+            [parallel_printer]
+            [serial_printer]
+            """,
+            # See lp_txt_converter config note for the explanation of its
+            # presence here
+            ["lp_escp2_converter", "lp_txt_converter"],
+        ),
+        # escp2_stream1: endlesstext is *stream: no txt in txt_jobs/, printer is disabled even if set
+        (
+            """
+            [misc]
+            emulation=epson
+            endlesstext=strip-escp2-stream
+            output_printer=Fake_Printer_Name
+            [parallel_printer]
+            [serial_printer]
+            """,
+            # See lp_txt_converter config note for the explanation of its
+            # presence here
+            ["lp_escp2_converter"],
+        ),
+        # escp2_stream2: endlesstext is *stream: no txt in txt_jobs/, printer is disabled even if set
+        # plain-stream = no escp2 processing: no converter
+        (
+            """
+            [misc]
+            emulation=epson
+            endlesstext=plain-stream
+            output_printer=Fake_Printer_Name
+            [parallel_printer]
+            [serial_printer]
+            """,
+            [],
+        ),
+        # only_text: similar to epson emulation + plain-jobs as endlesstext
+        # txt file generated in txt_jobs/
+        (
+            """
+            [misc]
+            emulation=text
+            endlesstext=no
+            output_printer=Fake_Printer_Name
+            [parallel_printer]
+            [serial_printer]
+            """,
+            ["lp_txt_converter", "lp_jobs_to_printer_watchdog"],
+        ),
+        # only_hp1: no txt in txt_jobs/
         (
             """
             [misc]
@@ -91,8 +161,24 @@ def handle_module_cache():
             """,
             ["lp_pcl_to_pdf_watchdog"],
         ),
+        # only_hp2: no txt in txt_jobs/, printer is not "no" & enabled
+        (
+            """
+            [misc]
+            emulation=hp
+            endlesstext=no
+            output_printer=Fake_Printer_Name
+            [parallel_printer]
+            [serial_printer]
+            """,
+            ["lp_pcl_to_pdf_watchdog", "lp_jobs_to_printer_watchdog"],
+        ),
     ],
-    ids=["multi_settings", "simple_settings"],
+    ids=[
+        "espc2_printer_enabled1", "espc2_printer_enabled2", "escp2_printer_disabled",
+        "escp2_stream1", "escp2_stream2",
+        "only_text", "only_hp1", "only_hp2"
+    ],
     indirect=["sample_config"],  # Send sample_config val to the fixture
 )
 def test_plugins_loading(sample_config, expected, handle_module_cache, temp_dir):
