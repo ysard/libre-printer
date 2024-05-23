@@ -17,13 +17,15 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Watchdog for /pdf directory that is able to sent new files to a printer
 
-Send new pdfs and txt files on the printer configured in Cups.
+Send new pdfs files on a printer configured in Cups.
 
-Expected settings: `output_printer` set and not `stream*`:
+Expected settings: `output_printer` set and not `*stream` as endlesstext setting;
 i.e. `output_printer` is defined; and it is not an infinite stream.
 
-=> send txt job to printer (settings "plain-jobs", "strip-escp2-jobs")
-=> send pdf to printer (setting != "no")
+In other terms, a pdf is sent to printer if:
+
+- `endlesstext` setting is `no`, `plain-jobs`, `strip-escp2-jobs`,
+- and `output_printer` setting is not `no`
 
 TODO: only "no" for endless config because strip wrongly builds empty pdf files
     => not any of ("plain-jobs", "strip-escp2-jobs", "no")
@@ -47,7 +49,7 @@ CONFIG = {
 }
 
 
-class PdfTxtEventHandler(RegexMatchingEventHandler):
+class PdfEventHandler(RegexMatchingEventHandler):
     """Watch a directory via a parent Observer and emit events accordingly
 
     This class only reimplement :meth:`on_created` event.
@@ -55,18 +57,17 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
     Watched directories:
 
         - `pdf`: `*.pdf`
-        - `txt_jobs`: `*.txt`
 
     Attribute:
         :param printer_name: Name of the CUPS printer which will receive files as jobs.
         :type printer_name: str
 
     Class attribute:
-        :param FILES_REGEX: Patterns to detect pdf and txt files.
+        :param FILES_REGEX: Patterns to detect pdf files.
         :type FILES_REGEX: list[str]
     """
 
-    FILES_REGEX = [r".*/pdf/.*\.pdf$", r".*/txt_jobs/.*\.txt$"]
+    FILES_REGEX = [r".*/pdf/.*\.pdf$",]
 
     def __init__(self, *args, printer_name=None, **kwargs):
         """Constructor override
@@ -76,7 +77,7 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
         self.printer_name = printer_name
 
     def on_closed(self, event):
-        """PDF or TXT creation is detected, send it to the configured printer"""
+        """PDF creation is detected, send it to the configured printer"""
         LOGGER.info("Event detected: %s", event)
 
         # Directly build arg list; enquote src_path to avoid lpr error:
@@ -96,19 +97,19 @@ class PdfTxtEventHandler(RegexMatchingEventHandler):
 
 
 @plugins_handler.register
-def setup_watchdog(config):
-    """Initialise a watchdog on `/pdf` `/txt_jobs` directories in configured
+def setup_pdf_watchdog(config):
+    """Initialise a watchdog on `/pdf` directory in configured
     `output_path`.
 
-    Any pdf or txt file created in these directories will be sent to the printer
+    Any pdf file created in these directories will be sent to the printer
     configured via `output_printer`.
 
     :return: Observer that is currently watching directories.
     :rtype: watchdog.Observer
     """
-    LOGGER.info("Launch pdf & txt watchdog...")
+    LOGGER.info("Launch pdf watchdog...")
 
-    event_handler = PdfTxtEventHandler(
+    event_handler = PdfEventHandler(
         printer_name=config["misc"]["output_printer"], ignore_directories=True
     )
     # Attach event handler to the configured output_path
@@ -120,7 +121,7 @@ def setup_watchdog(config):
 
 if __name__ == "__main__":  # pragma: no cover
 
-    obs = setup_watchdog(
+    obs = setup_pdf_watchdog(
         {"misc": {"output_path": "./", "output_printer": "TEST_PRINTER"}}
     )
     obs.join()
