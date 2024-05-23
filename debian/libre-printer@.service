@@ -17,5 +17,14 @@ RestartSec=1
 # Max restarts in StartLimitIntervalSec
 StartLimitBurst=3
 
+######################
+## Security Sandbox ##
+######################
+NoNewPrivileges=true
+# /home/, /root, /run/user are mounted read-only
+ProtectHome=read-only
+# /usr, /boot, /efi, /etc are mounted read-only
+ProtectSystem=full
+
 [Install]
 WantedBy=multi-user.target
