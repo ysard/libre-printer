@@ -16,7 +16,7 @@ DH_VERBOSE=1
 export DH_VIRTUALENV_INSTALL_ROOT=/usr/share
 PYTHON_BIN=$(shell which python3)
 EXTRA_REQUIREMENTS=--upgrade-pip --use-system-packages --preinstall "setuptools>=38" --preinstall "wheel"
-DH_VENV_ARGS=--setuptools --builtin-venv --python=$(PYTHON_BIN) $(EXTRA_REQUIREMENTS)
+DH_VENV_ARGS=--builtin-venv --python=$(PYTHON_BIN) $(EXTRA_REQUIREMENTS)
 PACKAGE=$(shell dh_listpackages)
 VERSION=$(shell $(PYTHON_BIN) setup.py --version)
 SDIST_DIR=debian/$(PACKAGE)-$(VERSION)
@@ -44,11 +44,9 @@ override_dh_virtualenv:
 	# Clean Python cache files
 	find $(DEB_DIR)/ -name "__pycache__" | xargs rm -rf
 	# Clean empty include dir
-	rmdir $(LOCAL_INSTALL_ROOT)/include/
+	rm -rf $(LOCAL_INSTALL_ROOT)/include/
 
 	# Remove useless executables
-	rm $(LOCAL_INSTALL_ROOT)/bin/pyserial-miniterm
-	rm $(LOCAL_INSTALL_ROOT)/bin/pyserial-ports
 	rm $(LOCAL_INSTALL_ROOT)/bin/watchmedo
 
 	# Create /etc directory for config file
@@ -60,7 +58,6 @@ override_dh_virtualenv:
 	cp firmware/firmware_updater.sh $(LOCAL_INSTALL_ROOT)/firmware/
 	cp firmware/restart_interface.py $(LOCAL_INSTALL_ROOT)/firmware/
 	cp firmware/libreprinter.ino.hex $(LOCAL_INSTALL_ROOT)/firmware/
-
 
 override_dh_link:
 	# Install symbolic links for scripts
