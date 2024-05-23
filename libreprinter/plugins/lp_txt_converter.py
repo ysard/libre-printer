@@ -41,7 +41,7 @@ LOGGER = logger()
 CONFIG = {
     "misc": {
         "emulation": ("text", "epson"),
-        "endlesstext": ("no", "plain-jobs"),
+        "endlesstext": ("no", "plain-jobs", "strip-escp2-jobs"),
     }
 }
 

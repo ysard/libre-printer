@@ -438,20 +438,15 @@ def read_interface(config):
                 "{}/pcl/{}.pcl".format(misc_section["output_path"], job_number),
             )
 
-        if epson_emulation and (misc_section["endlesstext"] == "plain-jobs"):
-            # plain-jobs
+        if (
+            config["misc"]["emulation"] == "text"
+            or (epson_emulation and (misc_section["endlesstext"] == "plain-jobs"))
+        ):
             # Process end of lines in raw file and copy it to /txt_jobs dir
             convert_file_line_ending(
                 "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
                 "{}/txt_jobs/{}.txt".format(misc_section["output_path"], job_number),
                 config["misc"]["line_ending"],
-            )
-
-        if config["misc"]["emulation"] == "text":
-            # Copy current file to txt_jobs folder
-            shutil.copy(
-                "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
-                "{}/txt_jobs/{}.txt".format(misc_section["output_path"], job_number),
             )
 
         if jobs_count >= 199:
