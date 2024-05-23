@@ -3,6 +3,7 @@ Description=LibrePrinter service
 Requires=systemd-udevd.service
 After=systemd-udevd.service
 StartLimitIntervalSec=30
+Documentation=https://readthedocs.org/projects/libre-printer/ https://github.com/ysard/libre-printer/
 
 [Service]
 Type=simple
