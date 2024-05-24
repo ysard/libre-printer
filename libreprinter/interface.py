@@ -208,6 +208,7 @@ def parse_buffer(serial_handler, job_number, config):
     STREAM_PLAIN_TEXT || STREAM_STRIP_ESCP2
         just put data in the same file during receiving
         and sync converter for STREAM_STRIP_ESCP2
+
     NO_PLAIN_TEXT || JOBS_TO_PLAIN_TEXT => parent loop
     JOBS_STRIP_ESCP2: handled by converter
 
