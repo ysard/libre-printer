@@ -11,7 +11,7 @@ sphinx:
 # Simulate pip install .[doc]
 python:
   install:
-    - path: .
-      method pip
+    - method: pip
+      path: .
       extra_requirements:
         - doc
