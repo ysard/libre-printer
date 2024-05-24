@@ -13,6 +13,11 @@ parce qu'il n'y a pas de justification de le faire. Ioutefois ils fonctionnent s
 en couples avec des imprimantes qui ne se fabriquent plus et qui sont bien souvent
 le point faible de l'installation car sujettes aux pannes et à l'abandon de la fabrication de leurs consommables.
 
+## Documentation
+
+La documentation complète pour le matériel et le logiciel est disponible en
+[en ligne readthedocs](https://libre-printer.readthedocs.io/en/latest/).
+
 ## Fonctionnalités
 
 ```mermaid

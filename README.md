@@ -12,6 +12,10 @@ Sometimes these devices cannot be replaced for cost reasons or simply because th
 However, they often work in pairs with printers that are no longer manufactured and are often the weak point of
 the installation because they are prone to breakdowns and the abandonment of the manufacture of their consumables.
 
+## Documentation
+
+Complete documentation about software & hardware is available
+[online at readthedocs](https://libre-printer.readthedocs.io/en/latest/).
 
 ## Features
 
