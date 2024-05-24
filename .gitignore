@@ -6,6 +6,7 @@ pcl/
 txt_jobs/
 txt_stream/
 doc/build/
+poc/
 
 # PyCharm
 .idea/
@@ -73,5 +74,6 @@ debian/libre-printer/
 debian/files
 debian/*.debhelper*
 debian/*.substvars
+debian/debhelper-build-stamp
 obj-*/
 .pc
