@@ -11,9 +11,9 @@ a computer.
 .. figure:: _static/misc/v1.0.0_components.webp
    :scale: 60 %
    :align: center
-   :alt: Arduino ProMicro pinout
+   :alt: Libre-Printer hardware interface for parallel & serial printer emulation; 3D visualisation with components
 
-   |project_name| interface
+   |project_name| interface (version 1.0.0)
 
 .. contents:: Summary
     :depth: 2
@@ -48,9 +48,9 @@ Datasheet & list of components
 .. figure:: _static/misc/v1.0.0.webp
    :scale: 60 %
    :align: center
-   :alt: Arduino ProMicro pinout
+   :alt: Libre-Printer hardware interface for parallel & serial printer emulation; 3D visualisation without components
 
-   |project_name| Printed Circuit Board design without components
+   |project_name| Printed Circuit Board design without components (version 1.0.0)
 
 
 The files required to build the project's electronic board are available on
