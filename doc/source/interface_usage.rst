@@ -105,12 +105,12 @@ then the number of possible combinations becomes very large.
   J2                    x           x
   J3                    x           x
   J4                    x           x
-  R1                                x
-  R2                                x
-  R3                                x
-  R4                                x
-  R6                                x
-  R7                                x
+  R1                    x*          x
+  R2                    x*          x
+  R3                    x*          x
+  R4                    x*          x
+  R6                    x*          x
+  R7                    x*          x
   D1                                x
 
   R8                    x                       x
@@ -124,18 +124,28 @@ then the number of possible combinations becomes very large.
   U1                                            x
  ===================== =========== =========== =======
 
+\*: Normal operation not guaranteed, see below.
+
 Parallel Interface
 -------------------
 
 The parallel interface is present via the CN36_LPT connector.
 Connectors J1, J2, and J3 are present for debugging or measurement purposes.
 
+Standard Pins:
+~~~~~~~~~~~~~~
+
+Protection resistors R1, R2, R3, R4 and pullup resistors R6,R7 *can* be removed;
+In this case, the first ones (R1-R4) must be bridged to allow the signal to pass.
+While it's allowed for test cases, the interface *should work™* most of the time
+but it's far from guaranteed...
+
 Unused Pins:
 ~~~~~~~~~~~~
 
 Some pins are not used or optional; thus `Autofeed`, `Reset`, `SelectIn`
 are not currently used although routed, protected, and kept high by
-pull-up resistors.
+pull-up resistors R6 & R7.
 
 Non-standard Pins:
 ~~~~~~~~~~~~~~~~~~
