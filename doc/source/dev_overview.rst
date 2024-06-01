@@ -152,3 +152,46 @@ Reporting bugs
 --------------
 
 Please `report bugs on GitHub <https://github.com/ysard/libre-printer/issues>`_.
+
+
+Test the project
+----------------
+
+The project frequently uses tricks to simulate the behavior of
+the hardware interface without having it on hand. This allows for
+many tests to be executed quickly and independently of the hardware.
+
+For this purpose, unit tests use a virtual serial interface
+initialized with the socat tool.
+
+It is also possible to run the service with a virtual interface during
+manual tests.
+
+- The following command will create a virtual interface named `virtual-tty` in the project directory:
+
+.. code-block:: bash
+
+   $ make test_tty_to_tty
+
+- Configure the path to the virtual interface via the `serial_port=`
+  parameter in the `libreprinter.conf` file.
+
+- Start the service:
+
+.. code-block:: bash
+
+   $ make run
+
+- Once launched, the service awaits an acknowledgment from the interface.
+  This is something you can simulate with the following command:
+
+.. code-block:: bash
+
+   $ make send_end_config
+
+- Then send the data as a computer does to a printer,
+  use the `input_tty_generator.py` script located in `tools/`:
+
+.. code-block:: bash
+
+   $ ./input_tty_generator.py
