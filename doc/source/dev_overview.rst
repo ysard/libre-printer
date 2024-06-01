@@ -54,9 +54,16 @@ Setting up the local copy of the code
 
       $ git checkout -b bugfix-#000
 
-   **Make small commits with explicit messages about why you do things as you progress** (``git add`` and ``git commit``).
+   **Make small commits with explicit messages about why you do things as you progress**
+   (``git add`` and ``git commit``).
 
    **Cover your code with unit tests and run them before submitting your contribution.**
+
+   The following Make command is here to run all the tests & coverage stats:
+
+   .. code-block:: bash
+
+      $ make coverage
 
 .. new line
 
