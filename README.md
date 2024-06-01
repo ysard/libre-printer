@@ -150,6 +150,9 @@ Libre Printer is distributed under two licenses: one for community use and one f
 
 Libre Printer is released under the AGPL (Affero General Public License).
 
+The hardware interface and its sources are published under a Creative Commons
+License CC BY-NC-SA 4.0.
+
 ### Commercial
 
 This is to limit the uses integrated in proprietary devices whose vendors would not participate in

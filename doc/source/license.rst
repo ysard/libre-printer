@@ -35,7 +35,7 @@ The community version of the |project_name| **software is released under the AGP
 
 
 The **hardware interface and its sources are published under a Creative Commons
-license  CC BY-NC-SA 4.0 License**. This means you can fork the project,
+License CC BY-NC-SA 4.0**. This means you can fork the project,
 but you must cite the sources and author, while retaining the same or a
 similar license.
 Any commercial use is forbidden without explicit authorization.

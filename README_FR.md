@@ -160,6 +160,9 @@ Libre Printer est diffusé sous deux licences : l'une communautaire et l'autre
 
 Libre Printer est diffusé sous licence AGPL (Affero General Public License).
 
+L'interface matérielle et ses sources sont publiées sous licence Creative Commons
+CC BY-NC-SA 4.0.
+
 ### Commerciale
 
 Il s'agit de limiter les usages intégrés dans des appareils propriétaires
