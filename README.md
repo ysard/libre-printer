@@ -60,13 +60,17 @@ The interfaces concerned are the following:
 Connections can be both serial RS-232 and parallel Centronics (DB-25 on one end, 36-pin Centronics on the other).
 
 Note that most DB-25 cables (25 pins) with DB25 connectors at both ends are serial cables.
-This was the standard RS-232 connector before the more compact DE-9 or erroneously called DB-9 (9-pin)
+This was the RS-232 connector before the more compact DE-9 or erroneously called DB-9 (9-pin)
 connectors were introduced in the 1980s, and sometimes for other purposes than a serial link
 ([cf. on Wikipedia: RS-232](https://fr.wikipedia.org/wiki/RS-232), [connecteurs D-sub](https://fr.wikipedia.org/wiki/D-sub)).
 
 ## Structure
 
 ### Hardware Interface
+
+<img 
+alt="Libre-Printer hardware interface for parallel &amp; serial printer emulation; 3D visualisation with components" src="doc/source/_static/misc/v1.0.0_components.webp" 
+style="display: block; margin: auto; width: 350px;">
 
 Instead of opting for an expensive, low scalability and reverse engineering hindering interface board
 like the original project, it is cheap chips from the Arduino ecosystem.

@@ -62,7 +62,7 @@ La connectique peut être aussi bien série RS-232 que parallèle de type Centro
 Centronics à 36 broches de l'autre).
 
 Notez que la plupart des câbles DB-25 (25 pins) avec des connecteurs DB25 aux 2 extrémités
-sont des câbles série. C'était en effet la connectique standardisée de la norme RS-232 avant que
+sont des câbles série. C'était en effet la connectique de la norme RS-232 avant que
 les connecteurs plus compacts DE-9 ou appelés à tort DB-9 (9 pins) n'aient été introduits dans les années 80;
 par ailleurs parfois pour d'autres rôles qu'une liaison série ([cf. sur Wikipédia : RS-232](https://fr.wikipedia.org/wiki/RS-232),
 [connecteurs D-sub](https://fr.wikipedia.org/wiki/D-sub)).
@@ -70,6 +70,10 @@ par ailleurs parfois pour d'autres rôles qu'une liaison série ([cf. sur Wikip�
 ## Structure
 
 ### Interface physique
+
+<img 
+alt="Libre-Printer hardware interface for parallel &amp; serial printer emulation; 3D visualisation with components" src="doc/source/_static/misc/v1.0.0_components.webp" 
+style="display: block; margin: auto; width: 350px;">
 
 Au lieu d'opter vers une carte d'interface coûteuse, peu évolutive et freinant la rétro-ingénierie
 comme le projet d'origine, il s'agit de puces bon marché de l'écosystème Arduino.
