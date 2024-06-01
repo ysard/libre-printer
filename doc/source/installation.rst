@@ -88,61 +88,15 @@ It is up to you to create a new udev rule and a service derived from the templat
 by specifying a new configuration file (`libreprinter.conf`) for your printer.
 
 
-.. _setting_up_a_virtual_environment:
-
-Setting up a virtual environment for the development
-----------------------------------------------------
-
-As always, the use of a Python virtual environment
-(via `virtualenvwrapper <https://docs.python-guide.org/dev/virtualenvs/>`_) is **strongly advised**
-at least for development purposes.
-
-This is not a mandatory step but it is a good and a **simple** practice to separate projects
-from each other in order to avoid conflicts between dependencies.
-
-* Install virtualenvwrapper:
-
-.. code-block:: bash
-
-   $ pip install --user virtualenvwrapper
-
-* Edit your ``~/.bashrc`` or ``~/.zshrc`` file to source the ``virtualenvwrapper.sh`` script with these lines:
-
-.. code-block:: bash
-
-   $ export PATH=$PATH:~/.local/bin
-   $ export WORKON_HOME=~/.virtualenvs
-   $ mkdir -p $WORKON_HOME
-   $ # The location of this script may vary depending on your GNU/Linux distro
-   $ # and depending of your installation procedure with pip.
-   $ # See ~/.local/bin/ or /usr/bin
-   $ source ~/.local/bin/virtualenvwrapper.sh
-
-* Restart your terminal or run:
-
-.. code-block:: bash
-
-   $ source ~/.bashrc
-
-* Create your virtualenv:
-
-.. code-block:: bash
-
-   $ mkvirtualenv libre-printer -p /usr/bin/python3
-
-* Later, if you want to work in the virtualenv:
-
-.. code-block:: bash
-
-   $ workon libre-printer
-
-
 Install the release version
 ---------------------------
 
 |project_name| package is available on PyPI (Python Package Index), the official
 third-party software repository for Python language:
 `LibrePrinter service <https://pypi.python.org/pypi/libre-printer>`_.
+
+First it is recommended to we recommend the use of a Python virtual environment;
+see the chapter below: :ref:`setting_up_a_virtual_environment`.
 
 You can install it with the following command on all systems with a Python environment with ``pip``:
 
@@ -171,6 +125,9 @@ Install from sources
 
 If you have Git installed on your system, it is also possible to install the development
 version of |project_name|.
+
+First it is recommended to we recommend the use of a Python virtual environment;
+see the chapter below: :ref:`setting_up_a_virtual_environment`.
 
 Before installing the development version, you may need to uninstall the standard version
 of |project_name| using ``pip``:
@@ -224,3 +181,52 @@ You can test the packages from the source directory with:
 .. code-block:: bash
 
    $ make tests
+
+
+.. _setting_up_a_virtual_environment:
+
+Setting up a Python virtual environment for a manual installation
+-----------------------------------------------------------------
+
+As always, the use of a Python virtual environment
+(via `virtualenvwrapper <https://docs.python-guide.org/dev/virtualenvs/>`_) is **strongly advised**
+at least for development purposes.
+
+This is not a mandatory step but it is a good and a **simple** practice to separate projects
+from each other in order to avoid conflicts between dependencies.
+
+* Install virtualenvwrapper:
+
+.. code-block:: bash
+
+   $ pip install --user virtualenvwrapper
+
+* Edit your ``~/.bashrc`` or ``~/.zshrc`` file to source the ``virtualenvwrapper.sh`` script with these lines:
+
+.. code-block:: bash
+
+   $ export PATH=$PATH:~/.local/bin
+   $ export WORKON_HOME=~/.virtualenvs
+   $ mkdir -p $WORKON_HOME
+   $ # The location of this script may vary depending on your GNU/Linux distro
+   $ # and depending of your installation procedure with pip.
+   $ # See ~/.local/bin/ or /usr/bin
+   $ source ~/.local/bin/virtualenvwrapper.sh
+
+* Restart your terminal or run:
+
+.. code-block:: bash
+
+   $ source ~/.bashrc
+
+* Create your virtualenv:
+
+.. code-block:: bash
+
+   $ mkvirtualenv libre-printer -p /usr/bin/python3
+
+* Later, if you want to work in the virtualenv:
+
+.. code-block:: bash
+
+   $ workon libre-printer
