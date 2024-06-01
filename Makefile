@@ -1,6 +1,7 @@
 # Workaround for targets with the same name as a directory
 .PHONY: doc tests
 
+# Tests
 tests:
 	pytest tests
 	@#python setup.py test --addopts "tests libreprinter -vv"
@@ -16,9 +17,11 @@ docstring_coverage:
 	    -e libreprinter/handlers/__init__.py \
 	    --badge-style flat --generate-badge images/
 
+# Code formatting
 black:
 	black libreprinter
 
+# Run the service locally
 run:
 	-killall convert-escp2
 	python -m libreprinter
