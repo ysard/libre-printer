@@ -70,3 +70,29 @@ debianize:
 
 debcheck:
 	lintian -EvIL +pedantic ../libre-printer_*.deb
+
+
+# development & testing
+test_std_tty:
+	# Allow stdin terminal to serial tty => manual debug
+	socat PTY,link=./virtual-tty,raw,echo=0 -
+
+test_tty_to_tty:
+	# serial tty to serial tty => automatic test
+	socat PTY,link=./virtual-tty,raw,echo=0 PTY,link=./input-tty,raw,echo=0
+
+test_tty_to_rpi:
+	# serial tty to serial tty => automatic test in chroot env
+	socat PTY,link=/mnt/raspbian/home/pi/libreprinter/virtual-tty,raw,echo=0 PTY,link=./input-tty,raw,echo=0
+
+prod_tty_to_tty:
+	# serial interface => serial tty
+	socat PTY,link=./virtual-tty,raw,echo=0 PTY,link=/dev/ttyUSB0,raw,echo=0
+
+send_tty_input:
+	# Send Test1.prn to ./virtual-tty
+	./input_tty_generator.py
+
+send_end_config:
+	# Send "end_config" word to end the interface configuration
+	echo "end_config" >> input-tty
