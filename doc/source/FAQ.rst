@@ -97,6 +97,10 @@ sometimes for other purposes than a serial link
 Some ressources for the serial connector pinouts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+- Norms: RS-232, EIA RS-232, EIA 232, TIA 232.
+- Connector names: DE-9 (male on the DTE (Data Terminal Equipment) side), DB-9 (wrongly named),
+  DB-25 or D-Sub 25 (female on the DTE side).
+
 .. figure:: _static/pinouts/DB25_RS232_cable.gif
    :scale: 75 %
    :align: center
@@ -117,6 +121,11 @@ Sources: `www.aggsoft.com <https://www.aggsoft.com/rs232-pinout-cable/RS232.htm>
 
 Some ressources for the Centronics/parallel connector pinouts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Norm: IEEE 1284.
+- Connector names: LPT (Line Printing Terminal), DB-25 or D-Sub 25 (female on the computer side),
+  Centronics or CN36 (female on the printer side).
+
 
 .. figure:: _static/pinouts/LPT_port_pinout.gif
    :scale: 75 %
@@ -141,10 +150,10 @@ Hardware test
 
 Test the DTR pin (pin 20) of the DB25 connector with a multimeter.
 If you found more than 5V on it (and by extension more than 5V on any pin),
-you have probably a Serial RS-232 interface.
+you have a Serial RS-232 interface.
 
 Software test
 ~~~~~~~~~~~~~
 
-Any configuration option that relates to the notions of parity, number of bits
-exchanged or transfer speed in bauds means that it is a serial link.
+Any configuration option that relates to the notions of **parity**, **number of bits**
+exchanged or **transfer speed in bauds** means that it is a serial RS-232 interface.
