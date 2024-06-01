@@ -71,9 +71,11 @@ par ailleurs parfois pour d'autres rôles qu'une liaison série ([cf. sur Wikip�
 
 ### Interface physique
 
+<p align="center">
 <img 
 alt="Libre-Printer hardware interface for parallel &amp; serial printer emulation; 3D visualisation with components" src="doc/source/_static/misc/v1.0.0_components.webp" 
-style="display: block; margin: auto; width: 350px;">
+width="350">
+</p>
 
 Au lieu d'opter vers une carte d'interface coûteuse, peu évolutive et freinant la rétro-ingénierie
 comme le projet d'origine, il s'agit de puces bon marché de l'écosystème Arduino.

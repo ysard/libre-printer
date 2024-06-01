@@ -68,9 +68,11 @@ connectors were introduced in the 1980s, and sometimes for other purposes than a
 
 ### Hardware Interface
 
+<p align="center">
 <img 
 alt="Libre-Printer hardware interface for parallel &amp; serial printer emulation; 3D visualisation with components" src="doc/source/_static/misc/v1.0.0_components.webp" 
-style="display: block; margin: auto; width: 350px;">
+width="350">
+</p>
 
 Instead of opting for an expensive, low scalability and reverse engineering hindering interface board
 like the original project, it is cheap chips from the Arduino ecosystem.
