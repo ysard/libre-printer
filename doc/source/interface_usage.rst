@@ -143,7 +143,7 @@ but it's far from guaranteed...
 Unused Pins:
 ~~~~~~~~~~~~
 
-Some pins are not used or optional; thus `Autofeed`, `Reset`, `SelectIn`
+Some pins are not used or optional; thus ``Autofeed``, ``Reset``, ``SelectIn``
 are not currently used although routed, protected, and kept high by
 pull-up resistors R6 & R7.
 
@@ -161,8 +161,8 @@ Options:
 ~~~~~~~~
 - Jumper 4 - Signal Select (output)
 
-  The `Select` pin signals to the computer that the printer is available,
-  the voltage level required for this signal is 5V. `Select` can be controlled
+  The ``Select`` pin signals to the computer that the printer is available,
+  the voltage level required for this signal is 5V. ``Select`` can be controlled
   by the firmware;
   in this case, a connection between pins 2 and 3 of jumper J4 should be made
   (this is the default case).
@@ -181,7 +181,7 @@ of the RS232 interface (so-called UART interface).
 - Jumper 5 - Signal RTS (output)
 
   Most serial printers require this pin to be high as soon as the printer
-  is connected. As with the `Select` pin for the parallel interface, the state
+  is connected. As with the ``Select`` pin for the parallel interface, the state
   of this pin is configurable: Either from the firmware for hardware flow control
   (by connecting pins 2 and 3 as is the default),
   or fixed to high permanently via a pull-up resistor R8 (by connecting pins 1 and 2).
