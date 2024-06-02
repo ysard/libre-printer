@@ -59,7 +59,7 @@ Setting up the local copy of the code
 
    **Cover your code with unit tests and run them before submitting your contribution.**
 
-   The following Make command is here to run all the tests & coverage stats:
+   The following Make command is here to run all the tests & produce coverage stats:
 
    .. code-block:: bash
 

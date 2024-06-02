@@ -24,7 +24,8 @@ hide their work and make their project not modifiable (ex: the binaries of Retro
 System requirements
 -------------------
 
-A functional Python3 environment must be installed on your computer.
+A functional Python3 environment must be installed on your computer if you
+choose to not install the Debian package (i.e. for manual installation).
 
 For the eventual compilation of external binaries, you may need a GCC/G++ based build chain.
 
@@ -34,7 +35,8 @@ For the eventual compilation of external binaries, you may need a GCC/G++ based 
 Install the Debian package (recommended)
 ----------------------------------------
 
-The Debian package comes with the preconfigured software and dependencies.
+The Debian package comes with the preconfigured software and automatic
+downloading of the dependencies.
 
 The project is designed to run as a background service.
 Once installed, a udev rule will detect the connection of an Arduino interface
@@ -132,7 +134,7 @@ Install from sources
 If you have Git installed on your system, it is also possible to install the development
 version of |project_name|.
 
-First it is recommended to we recommend the use of a Python virtual environment;
+First it is recommended to use a Python virtual environment;
 see the chapter below: :ref:`setting_up_a_virtual_environment`.
 
 Before installing the development version, you may need to uninstall the standard version
