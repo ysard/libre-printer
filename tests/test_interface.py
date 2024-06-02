@@ -275,13 +275,14 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
         (("hp", "no"), "test_page_pcl.prn", 14206, "pdf/1.pdf", 1),
         # Intermediary file produced in txt_jobs/
         (("text", "no"), "escp2_1_strip.txt", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
+        # ... and pdf by txt_converter plugin
         (("text", "no"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
         ## Plain text tests
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
         # 1 file plain text repeated 2 times in a stream
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 2),
         (("epson", "plain-jobs"), "escp2_1.prn", "escp2_1_plain.txt", "txt_jobs/1.txt", 1),
-        # Pdf should be also produced because txt file is generated
+        # Pdf should be also produced by txt_converter plugin because txt file is generated
         # But as there is no escp2 code processing I have to send stripped text;
         # this test is currently similar to (text, no): "text-pdf" test
         (("epson", "plain-jobs"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
@@ -290,7 +291,7 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
         # 1 file stripped repeated 2 times in a stream
         (("epson", "strip-escp2-stream"), "escp2_1.prn", "escp2_1_strip.txt", "txt_stream/1.txt", 2),
         (("epson", "strip-escp2-jobs"), "escp2_1.prn", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
-        # Pdf should be also produced because txt file is generated
+        # Pdf should be also produced by txt_converter plugin because txt file is generated
         (("epson", "strip-escp2-jobs"), "escp2_1.prn", 6722, "pdf/1.pdf", 1),
         ## pcl data with epson config
         (("hp", "plain-stream"), "test_page_pcl.prn", "test_page_pcl.prn", "pcl/1.pcl", 1),
