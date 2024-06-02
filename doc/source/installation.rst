@@ -24,7 +24,8 @@ hide their work and make their project not modifiable (ex: the binaries of Retro
 System requirements
 -------------------
 
-A functional Python3 environment must be installed on your computer.
+A functional Python3 environment must be installed on your computer if you
+choose to not install the Debian package (i.e. for manual installation).
 
 For the eventual compilation of external binaries, you may need a GCC/G++ based build chain.
 
@@ -34,7 +35,8 @@ For the eventual compilation of external binaries, you may need a GCC/G++ based 
 Install the Debian package (recommended)
 ----------------------------------------
 
-The Debian package comes with the preconfigured software and dependencies.
+The Debian package comes with the preconfigured software and automatic
+downloading of the dependencies.
 
 The project is designed to run as a background service.
 Once installed, a udev rule will detect the connection of an Arduino interface
@@ -59,6 +61,9 @@ List of files and folders of interest:
 `/usr/share/libre-printer/firmware/`         Firmware and update scripts.
 `/usr/sbin/libreprinter`                     Service executable.
 ============================================ =================================================
+
+After this simple step, you'll need to install a few dependencies that
+the project or your distribution does not include. See chapter :ref:`setting_up_dependencies`.
 
 
 .. _setting_up_multiple_printers:
@@ -88,10 +93,111 @@ It is up to you to create a new udev rule and a service derived from the templat
 by specifying a new configuration file (`libreprinter.conf`) for your printer.
 
 
+Install the release version
+---------------------------
+
+|project_name| package is available on PyPI (Python Package Index), the official
+third-party software repository for Python language:
+`LibrePrinter service <https://pypi.python.org/pypi/libre-printer>`_.
+
+First it is recommended to we recommend the use of a Python virtual environment;
+see the chapter below: :ref:`setting_up_a_virtual_environment`.
+
+You can install it with the following command on all systems with a Python environment with ``pip``:
+
+.. code-block:: bash
+
+   $ pip install libre-printer
+
+.. note:: Don't forget to add the flag ``--user`` to the command above if you don't use
+   virtual environment or if you do not have root privileges on your system.
+
+
+At this point a new command is available in your shell to launch the service:
+
+.. code-block:: bash
+
+    $ libre-printer
+
+After this step, you'll need to install a few dependencies that
+the project or your distribution does not include. See chapter :ref:`setting_up_dependencies`.
+
+
+.. _install_dev_version:
+
+Install the development version
+-------------------------------
+
+Install from sources
+~~~~~~~~~~~~~~~~~~~~
+
+If you have Git installed on your system, it is also possible to install the development
+version of |project_name|.
+
+First it is recommended to use a Python virtual environment;
+see the chapter below: :ref:`setting_up_a_virtual_environment`.
+
+Before installing the development version, you may need to uninstall the standard version
+of |project_name| using ``pip``:
+
+.. code-block:: bash
+
+   $ pip uninstall libre-printer
+
+Then do:
+
+.. code-block:: bash
+
+   $ git clone https://github.com/ysard/libre-printer
+   $ cd libre-printer
+   $ make dev_install
+
+
+The ``make dev_install`` command uses ``pip install -e .[dev]`` command which allows
+you to follow the development branch as it changes by creating links in the right places
+and installing the command line scripts to the appropriate locations.
+
+Moreover, it installs packages listed in the dev section of ``extras_require`` in
+``setup.py/setup.cfg``, in addition to any normal dependencies as necessary.
+
+Please note that your changes in the code are directly usable without having to reinstall the package.
+
+Then, if you want to update |project_name| at any time, in the same directory do:
+
+.. code-block:: bash
+
+   $ git pull
+
+After this simple step, you'll need to install a few dependencies that
+the project or your distribution does not include. See chapter :ref:`setting_up_dependencies`.
+
+
+Uninstall
+~~~~~~~~~
+
+Just do:
+
+.. code-block:: bash
+
+   $ make uninstall
+
+
+Testing
+~~~~~~~
+
+|project_name| uses the Python `pytest <https://pytest.org/>`_ testing package.
+
+You can test the packages from the source directory with:
+
+.. code-block:: bash
+
+   $ make tests
+
+
 .. _setting_up_a_virtual_environment:
 
-Setting up a virtual environment for the development
-----------------------------------------------------
+Setting up a Python virtual environment for a manual installation
+-----------------------------------------------------------------
 
 As always, the use of a Python virtual environment
 (via `virtualenvwrapper <https://docs.python-guide.org/dev/virtualenvs/>`_) is **strongly advised**
@@ -137,90 +243,38 @@ from each other in order to avoid conflicts between dependencies.
    $ workon libre-printer
 
 
-Install the release version
----------------------------
+.. _setting_up_dependencies:
 
-|project_name| package is available on PyPI (Python Package Index), the official
-third-party software repository for Python language:
-`LibrePrinter service <https://pypi.python.org/pypi/libre-printer>`_.
+Install the external dependencies
+---------------------------------
 
-You can install it with the following command on all systems with a Python environment with ``pip``:
+GhostPCL
+~~~~~~~~
 
-.. code-block:: bash
+If you plan to use LibrePrinter with a computer that sends data in the
+**HP PCL format**, you'll need the **GhostPCL** utility developed by the GhostScript team.
+This tool is not available in the Debian repositories because of conflicts with
+system libraries. However, you can download it here:
+`GhostPdl downloads on GitHub <https://github.com/ArtifexSoftware/ghostpdl-downloads/releases>`_
 
-   $ pip install libre-printer
+Please note that GhostScript no longer supplies compiled binaries for GNU/Linux
+since version 10.0.0 (2022).
+**You can download this version or a recent version and then compile the sources**.
 
-.. note:: Don't forget to add the flag ``--user`` to the command above if you don't use
-   virtual environment or if you do not have root privileges on your system.
+**The key is to specify the binary path** ``gpcl6-<version_number>-linux-<arch>``
+in the parameter ``pcl_converter_path`` of the config file ``libreprinter.conf``.
 
-
-At this point a new command is available in your shell to launch the service:
-
-.. code-block:: bash
-
-    $ libre-printer
-
-
-.. _install_dev_version:
-
-Install the development version
--------------------------------
-
-Install from sources
-~~~~~~~~~~~~~~~~~~~~
-
-If you have Git installed on your system, it is also possible to install the development
-version of |project_name|.
-
-Before installing the development version, you may need to uninstall the standard version
-of |project_name| using ``pip``:
+Compiling sources is easy; First download and extract the archive (for example:
+``ghostpdl-10.03.1.tar.xz``), then:
 
 .. code-block:: bash
 
-   $ pip uninstall libre-printer
-
-Then do:
-
-.. code-block:: bash
-
-   $ git clone https://github.com/ysard/libre-printer
-   $ cd libre-printer
-   $ make dev_install
+   $ ./configure
+   $ make -j 2
+   $ make install # Will install the binaries in /usr/local by default
 
 
-The ``make dev_install`` command uses ``pip install -e .[dev]`` command which allows
-you to follow the development branch as it changes by creating links in the right places
-and installing the command line scripts to the appropriate locations.
+RetroPrinter vendor blobs
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Moreover, it installs packages listed in the dev section of ``extras_require`` in
-``setup.py/setup.cfg``, in addition to any normal dependencies as necessary.
-
-Please note that your changes in the code are directly usable without having to reinstall the package.
-
-Then, if you want to update |project_name| at any time, in the same directory do:
-
-.. code-block:: bash
-
-   $ git pull
-
-
-Uninstall
-~~~~~~~~~
-
-Just do:
-
-.. code-block:: bash
-
-   $ make uninstall
-
-
-Testing
-~~~~~~~
-
-|project_name| uses the Python `pytest <https://pytest.org/>`_ testing package.
-
-You can test the packages from the source directory with:
-
-.. code-block:: bash
-
-   $ make tests
+TBR

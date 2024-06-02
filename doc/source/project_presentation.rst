@@ -63,8 +63,8 @@ See the chapter :ref:`interface_type` for more information.
 
 .. _project_structure:
 
-Structure
-=========
+Project Structure
+=================
 
 Hardware Interface
 ------------------
@@ -73,7 +73,7 @@ Instead of opting for an expensive, low scalability and reverse engineering
 hindering interface board like the original project, it is cheap chips from the
 Arduino ecosystem.
 
-Currently (and in a non-limited way) it is an Arduino ProMicro from Sparkfun,
+Currently (and in a non-limited way) it is an Arduino ProMicro from Sparkfun;
 copies of which are available on many resale sites.
 
 This chip has enough pins to accommodate a parallel interface without an intermediate

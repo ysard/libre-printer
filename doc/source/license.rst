@@ -1,3 +1,5 @@
+.. _licenses:
+
 ********
 Licenses
 ********
@@ -8,7 +10,7 @@ one for community use and one for commercial use.
 Community = Free and Open Source
 ================================
 
-The community version of |project_name| is released under the AGPL
+The community version of the |project_name| **software is released under the AGPL**
 (Affero General Public License).
 
 .. code-block:: text
@@ -30,6 +32,13 @@ The community version of |project_name| is released under the AGPL
 
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+The **hardware interface and its sources are published under a Creative Commons
+License CC BY-NC-SA 4.0**. This means you can fork the project,
+but you must cite the sources and author, while retaining the same or a
+similar license.
+Any commercial use is forbidden without explicit authorization.
 
 Commercial
 ==========

@@ -9,8 +9,17 @@ Frequently asked questions
     :local:
     :backlinks: top
 
+.. _usb_to_centronics_adapters:
+
 About the USB/Centronics adapters
 ---------------------------------
+
+.. figure:: _static/misc/usb_lpt_centronics_adapter.webp
+   :scale: 60 %
+   :align: center
+   :alt: usb to centronics printer adapter
+
+   USB to Centronics Printer Adapter; Yes they can be used to test the interface.
 
 They can be used to connect to a Centronics printer or to the |project_name| interface.
 Provided that this port is configured as an ESC or PCL printer in CUPS.
@@ -38,10 +47,13 @@ But you can also download them on this website:
 `Openprinting Epson Dot Matrix <https://www.openprinting.org/printer/Epson/Epson-Dot_Matrix>`_.
 
 
-About Modern Printer Support
-----------------------------
+About the support of the bridge with modern printers
+----------------------------------------------------
 
-This problem is not the responsibility of the project because this part is
+|project_name| offers a way to forward the data to be printed to another printer.
+
+The support of other printers can be a problem problem but
+it's not the responsibility of the project because this part is
 handled by CUPS and its embedded drivers on GNU/Linux distributions.
 However, it should be noted that new printers are quickly supported
 (within a few months) and that the standardization of GNU/Linux drivers has made
@@ -97,6 +109,10 @@ sometimes for other purposes than a serial link
 Some ressources for the serial connector pinouts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+- Norms: RS-232, EIA RS-232, EIA 232, TIA 232.
+- Connector names: DE-9 (male on the DTE (Data Terminal Equipment) side), DB-9 (wrongly named),
+  DB-25 or D-Sub 25 (female on the DTE side).
+
 .. figure:: _static/pinouts/DB25_RS232_cable.gif
    :scale: 75 %
    :align: center
@@ -117,6 +133,11 @@ Sources: `www.aggsoft.com <https://www.aggsoft.com/rs232-pinout-cable/RS232.htm>
 
 Some ressources for the Centronics/parallel connector pinouts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Norm: IEEE 1284.
+- Connector names: LPT (Line Printing Terminal), DB-25 or D-Sub 25 (female on the computer side),
+  Centronics or CN36 (female on the printer side).
+
 
 .. figure:: _static/pinouts/LPT_port_pinout.gif
    :scale: 75 %
@@ -141,10 +162,10 @@ Hardware test
 
 Test the DTR pin (pin 20) of the DB25 connector with a multimeter.
 If you found more than 5V on it (and by extension more than 5V on any pin),
-you have probably a Serial RS-232 interface.
+you have a Serial RS-232 interface.
 
 Software test
 ~~~~~~~~~~~~~
 
-Any configuration option that relates to the notions of parity, number of bits
-exchanged or transfer speed in bauds means that it is a serial link.
+Any configuration option that relates to the notions of **parity**, **number of bits**
+exchanged or **transfer speed in bauds** means that it is a serial RS-232 interface.

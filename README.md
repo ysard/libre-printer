@@ -60,13 +60,19 @@ The interfaces concerned are the following:
 Connections can be both serial RS-232 and parallel Centronics (DB-25 on one end, 36-pin Centronics on the other).
 
 Note that most DB-25 cables (25 pins) with DB25 connectors at both ends are serial cables.
-This was the standard RS-232 connector before the more compact DE-9 or erroneously called DB-9 (9-pin)
+This was the RS-232 connector before the more compact DE-9 or erroneously called DB-9 (9-pin)
 connectors were introduced in the 1980s, and sometimes for other purposes than a serial link
 ([cf. on Wikipedia: RS-232](https://fr.wikipedia.org/wiki/RS-232), [connecteurs D-sub](https://fr.wikipedia.org/wiki/D-sub)).
 
 ## Structure
 
 ### Hardware Interface
+
+<p align="center">
+<img 
+alt="Libre-Printer hardware interface for parallel &amp; serial printer emulation; 3D visualisation with components" src="doc/source/_static/misc/v1.0.0_components.webp" 
+width="350">
+</p>
 
 Instead of opting for an expensive, low scalability and reverse engineering hindering interface board
 like the original project, it is cheap chips from the Arduino ecosystem.
@@ -149,6 +155,9 @@ Libre Printer is distributed under two licenses: one for community use and one f
 ### Community = Free and Open Source
 
 Libre Printer is released under the AGPL (Affero General Public License).
+
+The hardware interface and its sources are published under a Creative Commons
+License CC BY-NC-SA 4.0.
 
 ### Commercial
 

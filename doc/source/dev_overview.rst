@@ -54,9 +54,16 @@ Setting up the local copy of the code
 
       $ git checkout -b bugfix-#000
 
-   **Make small commits with explicit messages about why you do things as you progress** (``git add`` and ``git commit``).
+   **Make small commits with explicit messages about why you do things as you progress**
+   (``git add`` and ``git commit``).
 
    **Cover your code with unit tests and run them before submitting your contribution.**
+
+   The following Make command is here to run all the tests & produce coverage stats:
+
+   .. code-block:: bash
+
+      $ make coverage
 
 .. new line
 
@@ -145,3 +152,53 @@ Reporting bugs
 --------------
 
 Please `report bugs on GitHub <https://github.com/ysard/libre-printer/issues>`_.
+
+
+Test the project
+----------------
+
+The project frequently uses tricks to simulate the behavior of
+the hardware interface without having it on hand. This allows for
+many tests to be executed quickly and independently of the hardware.
+
+For this purpose, unit tests use a virtual serial interface
+initialized with the socat tool.
+
+It is also possible to run the service with a virtual interface during
+manual tests.
+
+- The following command will create a virtual interface named ``virtual-tty`` in the project directory:
+
+.. code-block:: bash
+
+   $ make test_tty_to_tty
+
+- Configure the path to the virtual interface via the ``serial_port=``
+  parameter in the ``libreprinter.conf`` file.
+
+- Start the service:
+
+.. code-block:: bash
+
+   $ make run
+
+- Once launched, the service awaits an acknowledgment from the interface.
+  This is something you can simulate with the following command:
+
+.. code-block:: bash
+
+   $ make send_end_config
+
+- Then send the data as a computer does to a printer,
+  use the ``input_tty_generator.py`` script located in ``tools/``:
+
+.. code-block:: bash
+
+   $ ./input_tty_generator.py
+
+In addition, you can easily connect a USB-TTL (UART) converter to your computer
+and using it as a Serial printer once connected to the physical interface.
+
+As it is presented in the chapter :ref:`usb_to_centronics_adapters`, many
+printers can be configured in CUPS to send their data to a custom tty or LPT
+interface.

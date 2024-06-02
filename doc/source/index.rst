@@ -27,6 +27,7 @@ Basics
    project_presentation
    installation
    service_configuration
+   examples
    interface_usage
 
    FAQ
