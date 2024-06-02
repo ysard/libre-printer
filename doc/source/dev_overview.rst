@@ -195,3 +195,10 @@ manual tests.
 .. code-block:: bash
 
    $ ./input_tty_generator.py
+
+In addition, you can easily connect a USB-TTL (UART) converter to your computer
+and using it as a Serial printer once connected to the physical interface.
+
+As it is presented in the chapter :ref:`usb_to_centronics_adapters`, many
+printers can be configured in CUPS to send their data to a custom tty or LPT
+interface.

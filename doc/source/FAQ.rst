@@ -9,6 +9,8 @@ Frequently asked questions
     :local:
     :backlinks: top
 
+.. _usb_to_centronics_adapters:
+
 About the USB/Centronics adapters
 ---------------------------------
 
