@@ -60,6 +60,9 @@ List of files and folders of interest:
 `/usr/sbin/libreprinter`                     Service executable.
 ============================================ =================================================
 
+After this simple step, you'll need to install a few dependencies that
+the project or your distribution does not include. See chapter :ref:`setting_up_dependencies`.
+
 
 .. _setting_up_multiple_printers:
 
@@ -114,6 +117,9 @@ At this point a new command is available in your shell to launch the service:
 
     $ libre-printer
 
+After this step, you'll need to install a few dependencies that
+the project or your distribution does not include. See chapter :ref:`setting_up_dependencies`.
+
 
 .. _install_dev_version:
 
@@ -159,6 +165,9 @@ Then, if you want to update |project_name| at any time, in the same directory do
 .. code-block:: bash
 
    $ git pull
+
+After this simple step, you'll need to install a few dependencies that
+the project or your distribution does not include. See chapter :ref:`setting_up_dependencies`.
 
 
 Uninstall
@@ -230,3 +239,40 @@ from each other in order to avoid conflicts between dependencies.
 .. code-block:: bash
 
    $ workon libre-printer
+
+
+.. _setting_up_dependencies:
+
+Install the external dependencies
+---------------------------------
+
+GhostPCL
+~~~~~~~~
+
+If you plan to use LibrePrinter with a computer that sends data in the
+**HP PCL format**, you'll need the **GhostPCL** utility developed by the GhostScript team.
+This tool is not available in the Debian repositories because of conflicts with
+system libraries. However, you can download it here:
+`GhostPdl downloads on GitHub <https://github.com/ArtifexSoftware/ghostpdl-downloads/releases>`_
+
+Please note that GhostScript no longer supplies compiled binaries for GNU/Linux
+since version 10.0.0 (2022).
+**You can download this version or a recent version and then compile the sources**.
+
+**The key is to specify the binary path** ``gpcl6-<version_number>-linux-<arch>``
+in the parameter ``pcl_converter_path`` of the config file ``libreprinter.conf``.
+
+Compiling sources is easy; First download and extract the archive (for example:
+``ghostpdl-10.03.1.tar.xz``), then:
+
+.. code-block:: bash
+
+   $ ./configure
+   $ make -j 2
+   $ make install # Will install the binaries in /usr/local by default
+
+
+RetroPrinter vendor blobs
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+TBR
