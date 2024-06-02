@@ -46,7 +46,7 @@ ENDLESS_TEXT_VALUE_MAPPING = {
 # STREAM_PLAIN_TEXT   1  # Stream all incoming data to a single 1.txt file
 # STREAM_STRIP_ESCP2  2  # Stream all incoming data to a single 1.txt file but strip out ESC/P2 codes
 # JOBS_TO_PLAIN_TEXT  3  # Copy all incoming data to a txt file for each printjob
-# JOBS_STRIP_ESCP2    4  # Create a txt file for each printjob but strip out ESC/P2 codes
+# JOBS_STRIP_ESCP2    4  # Create a .txt file for each printjob but strip out ESC/P2 codes
 
 
 @plugins_handler.register
