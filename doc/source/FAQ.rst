@@ -12,6 +12,13 @@ Frequently asked questions
 About the USB/Centronics adapters
 ---------------------------------
 
+.. figure:: _static/misc/usb_lpt_centronics_adapter.webp
+   :scale: 60 %
+   :align: center
+   :alt: usb to centronics printer adapter
+
+   USB to Centronics Printer Adapter; Yes they can be used to test the interface.
+
 They can be used to connect to a Centronics printer or to the |project_name| interface.
 Provided that this port is configured as an ESC or PCL printer in CUPS.
 
@@ -38,10 +45,13 @@ But you can also download them on this website:
 `Openprinting Epson Dot Matrix <https://www.openprinting.org/printer/Epson/Epson-Dot_Matrix>`_.
 
 
-About Modern Printer Support
-----------------------------
+About the support of the bridge with modern printers
+----------------------------------------------------
 
-This problem is not the responsibility of the project because this part is
+|project_name| offers a way to forward the data to be printed to another printer.
+
+The support of other printers can be a problem problem but
+it's not the responsibility of the project because this part is
 handled by CUPS and its embedded drivers on GNU/Linux distributions.
 However, it should be noted that new printers are quickly supported
 (within a few months) and that the standardization of GNU/Linux drivers has made
