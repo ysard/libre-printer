@@ -45,7 +45,6 @@ def touchForCDCReset(port="/dev/ttyACM0", *args, **kwargs):
         stopbits=serial.STOPBITS_ONE,
         dsrdtr=True,
     )
-    serial_handler.open()
     assert serial_handler.is_open
 
     serial_handler.dtr=False
@@ -55,10 +54,11 @@ def touchForCDCReset(port="/dev/ttyACM0", *args, **kwargs):
     # otherwise assert DTR, which would cancel the WDT reset if
     # it happened within 250 ms. So we wait until the reset should
     # have already occurred before we start scanning.
-    sleep(250)
+    sleep(0.250)
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         touchForCDCReset()
+        raise SystemExit
     touchForCDCReset(sys.argv[1])
