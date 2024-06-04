@@ -137,7 +137,7 @@ def parse_config(config: configparser.ConfigParser):
         or not end_page_timeout.isnumeric()
         or int(end_page_timeout) <= 0.6
     ):
-        if int(end_page_timeout) <= 0.6:
+        if end_page_timeout and int(end_page_timeout) <= 0.6:
             LOGGER.warning(
                 "User defined a very small end_page_timeout (≤0.6) for serial "
                 "reception!\n"
