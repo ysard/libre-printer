@@ -135,8 +135,15 @@ def parse_config(config: configparser.ConfigParser):
     if (
         not end_page_timeout
         or not end_page_timeout.isnumeric()
-        or int(end_page_timeout) <= 0
+        or int(end_page_timeout) <= 0.6
     ):
+        if int(end_page_timeout) <= 0.6:
+            LOGGER.warning(
+                "User defined a very small end_page_timeout (≤0.6) for serial "
+                "reception!\n"
+                "The interface will not have enough time to empty its buffer. "
+                "Setting will be defined to 2."
+            )
         # Not able to detect end of page with a 0 timeout
         misc_section["end_page_timeout"] = "2"
 
