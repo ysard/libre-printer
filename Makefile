@@ -31,7 +31,7 @@ update_firmware:
 
 clean:
 	rm -rf eps pcl pdf png raw txt txt_jobs txt_stream dist
-	$(MAKE) -C ./doc clean
+	-$(MAKE) -C ./doc clean
 
 doc:
 	$(MAKE) -C ./doc html
