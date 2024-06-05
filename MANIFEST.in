@@ -4,8 +4,11 @@ exclude *.txt
 exclude *.yml
 exclude *.yaml
 exclude Makefile
+prune debian
+prune images
+prune tools
 prune .idea
-prune docs
+prune doc
 prune poc
 prune tests
 prune test_data
