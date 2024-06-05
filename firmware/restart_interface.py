@@ -1,4 +1,3 @@
-#!/usr/share/libre-printer/bin/python
 #!/usr/bin/env python3
 # Libreprinter is a software allowing to use the Centronics and serial printing
 # functions of vintage computers on modern equipement through a tiny hardware
