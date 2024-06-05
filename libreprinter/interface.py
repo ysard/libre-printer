@@ -24,6 +24,7 @@
 # Standard imports
 import shutil
 import logging
+from packaging.version import Version
 
 # Custom imports
 from libreprinter.file_handler import (
@@ -37,7 +38,7 @@ from libreprinter.legacy_interprocess_com import (
     debug_shared_memory,
 )
 from libreprinter.handlers import get_serial_handler, SerialException
-from libreprinter.commons import logger
+from libreprinter.commons import logger, LAST_HARDWARE_VERSION
 from libreprinter.config_parser import FLOW_CTRL_MAPPING
 
 LOGGER = logger()
@@ -128,6 +129,16 @@ def configure_interface(serial_handler, config):
             LOGGER.debug(response.rstrip())
         else:
             LOGGER.debug("Waiting config aknowledgment...")
+            continue
+
+        if response.startswith("Online version"):
+            remote_version = Version(response.split()[2])
+            if remote_version < Version(LAST_HARDWARE_VERSION):
+                LOGGER.warning(
+                    "The remote firmware is not up to date! (%s vs %s)",
+                    remote_version,
+                    LAST_HARDWARE_VERSION
+                )
 
         if response.startswith("end_config"):
             break
