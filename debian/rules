@@ -54,10 +54,10 @@ override_dh_virtualenv:
 	mv $(SDIST_DIR)/libreprinter.conf $(DEB_DIR)/etc/$(PACKAGE)/
 
 	# Create directory for firmware & updater
-	mkdir -p $(LOCAL_INSTALL_ROOT)/firmware/
+	mkdir -p $(LOCAL_INSTALL_ROOT)/firmware/bin
 	cp firmware/firmware_updater.sh $(LOCAL_INSTALL_ROOT)/firmware/
 	cp firmware/restart_interface.py $(LOCAL_INSTALL_ROOT)/firmware/
-	cp firmware/libreprinter.ino.hex $(LOCAL_INSTALL_ROOT)/firmware/
+	cp firmware/bin/libreprinter.ino.hex $(LOCAL_INSTALL_ROOT)/firmware/bin/
 
 override_dh_link:
 	# Install symbolic links for scripts
