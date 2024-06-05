@@ -267,6 +267,48 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
         # Check copy in pcl dir
         assert os.path.exists("pcl/1.pcl")
 
+def test_interface_firmware_version(init_config, slow_down_tests, caplog):
+    """Simulation of interface response with its firmware version
+
+    This test uses full pipeline with emulated serial interface.
+
+    .. note:: About the exception `device reports readiness to read but returned
+        no data (device disconnected or multiple access on port?)` from pyserial.
+        This exception occurs only (?) on simulated mode on a virtual tty via
+        socat.
+        It seems to be solved via a timeout between tests and just after
+        the start of the read_interface thread.
+
+    :param init_config: temporary working dir + initialized config.
+        See :meth:`init_config` fixture.
+    :param slow_down_tests: Slow down the tear down to clean child Thread
+    :param caplog: (fixture) pytest caplog-fixture
+    :type init_config: tuple[str, configparser.ConfigParser]
+    :type caplog: <_pytest.logging.LogCaptureFixture>
+    """
+    tmp_dir, config = init_config
+
+    debug_config_file(config)
+
+    # Launch interface reader (infinite loop)
+    interface_thread = Thread(target=partial(read_interface, config))
+    interface_thread.start()
+
+    LOGGER.debug("Thread started")
+    # Fix minor exception from pyserial (See docstring note)
+    time.sleep(3)
+    # Put data in input-tty
+    assert Path(tmp_dir + "input-tty").exists()
+    with open(tmp_dir + "input-tty", "wb") as tty_f_d:
+        tty_f_d.write(b"Online version: 0.0.0.dev0 fake compilation config\n")
+        tty_f_d.write(b"end_config\n")  # Cheat about config ack from interface
+
+    time.sleep(1)
+
+    # We expect an exception in the logger returned by the lpr program
+    print(caplog.text)
+    assert "The remote firmware is not up to date!" in caplog.text
+
 
 @pytest.mark.timeout(10)
 @patch("libreprinter.interface.get_serial_handler", lambda x: True)
