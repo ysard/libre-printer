@@ -123,6 +123,9 @@ def tmp_process():
 
 @pytest.fixture()
 def slow_down_tests():
+    """Slow down the tear down process by 1 second
+    Useful to be sure that files are cleaned and processes closed.
+    """
     yield
     time.sleep(1)
 
@@ -206,7 +209,7 @@ def extra_config(init_config, request):
 def test_interface_receiving(emulation, test_file, init_config, slow_down_tests):
     """Simulation of jobs with various emulation parameters
 
-    This tests uses full pipeline with emulated serial interface.
+    This test uses full pipeline with emulated serial interface.
 
     .. note:: About the exception `device reports readiness to read but returned
         no data (device disconnected or multiple access on port?)` from pyserial.
@@ -220,6 +223,7 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
         same. Files are stored in `<project_root_dir>/test_data/`.
     :param init_config: temporary working dir + initialized config.
         See :meth:`init_config` fixture.
+    :param slow_down_tests: Slow down the tear down to clean child Thread
     :type emulation: str
     :type test_file: str
     :type init_config: tuple[str, configparser.ConfigParser]
@@ -237,7 +241,7 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
 
     LOGGER.debug("Thread started")
     # Fix minor exception from pyserial (See docstring note)
-    time.sleep(2)
+    time.sleep(3)
     # Put data in input-tty
     with open(DIR_DATA + test_file, "rb") as f_d, \
             open(tmp_dir + "input-tty", "wb") as tty_f_d:
