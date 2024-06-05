@@ -1,6 +1,12 @@
+libre-printer (1.0.0-3) UNRELEASED; urgency=medium
+
+  * Release candidate; fix packaging; numerous bug fixes; hardware & firmware releases
+
+ -- Ysard <ysard@users.noreply.github.com>  Tue, 21 Jun 2022 15:43:18 +0200
+
 libre-printer (1.0.0-2) UNRELEASED; urgency=medium
 
-  * TODO
+  * Alpha candidate
 
  -- Ysard <ysard@users.noreply.github.com>  Tue, 21 Jun 2022 15:43:18 +0200
 
