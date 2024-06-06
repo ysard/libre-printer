@@ -23,14 +23,14 @@ SDIST_DIR=debian/$(PACKAGE)-$(VERSION)
 DEB_DIR=debian/$(PACKAGE)
 LOCAL_INSTALL_ROOT=$(DEB_DIR)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)
 
-.PHONY: clean build-arch override_dh_virtualenv
+.PHONY: clean build override_dh_virtualenv override_dh_link override_dh_fixperms override_dh_install
 
 clean:
 	test ! -d dist || rm -rf dist
 	test ! -d $(SDIST_DIR) || rm -rf $(SDIST_DIR)
 	dh $@ $(DH_VENV_ARGS)
 
-build-arch:
+build:
 	$(PYTHON_BIN) setup.py sdist --formats tar
 	mkdir -p $(SDIST_DIR)
 	tar -x -C $(SDIST_DIR) --strip-components=1 --exclude '*.egg-info' -f dist/*.tar
@@ -54,10 +54,10 @@ override_dh_virtualenv:
 	mv $(SDIST_DIR)/libreprinter.conf $(DEB_DIR)/etc/$(PACKAGE)/
 
 	# Create directory for firmware & updater
-	mkdir -p $(LOCAL_INSTALL_ROOT)/firmware/
+	mkdir -p $(LOCAL_INSTALL_ROOT)/firmware/bin
 	cp firmware/firmware_updater.sh $(LOCAL_INSTALL_ROOT)/firmware/
 	cp firmware/restart_interface.py $(LOCAL_INSTALL_ROOT)/firmware/
-	cp firmware/libreprinter.ino.hex $(LOCAL_INSTALL_ROOT)/firmware/
+	cp firmware/bin/libreprinter.ino.hex $(LOCAL_INSTALL_ROOT)/firmware/bin/
 
 override_dh_link:
 	# Install symbolic links for scripts

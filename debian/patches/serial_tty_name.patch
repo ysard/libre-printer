@@ -1,0 +1,28 @@
+Description: Update hardware interface tty dev name
+ Since udev configures our interface with a fixed name,
+ its the default path should be used.
+Last-Update: 2024-06-05
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/libreprinter.conf
++++ b/libreprinter.conf
+@@ -63,7 +63,7 @@
+ # Serial port on which the interface is connected.
+ # Default: /dev/ttyACM0 or /dev/ttyACMX if the project was installed
+ # via the Debian package and it's udev rule.
+-; serial_port=/dev/ttyACM0
++; serial_port=/dev/ttyACMX
+ 
+ # Path where /raw /pdf /pcl /txt-jobs /txt-stream directories are created.
+ # Default: current directory or /var/lib/libre-printer/ for the Debian package.
+--- a/libreprinter/config_parser.py
++++ b/libreprinter/config_parser.py
+@@ -113,7 +113,7 @@
+ 
+     serial_port = misc_section.get("serial_port")
+     if not serial_port:
+-        misc_section["serial_port"] = "/dev/ttyACM0"
++        misc_section["serial_port"] = "/dev/ttyACMX"
+ 
+     if misc_section.get("emulation") not in ("epson", "escp2", "hp", "pcl", "text"):
+         misc_section["emulation"] = "auto"

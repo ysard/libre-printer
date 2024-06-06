@@ -24,7 +24,7 @@ echo "Stopping the service"
 systemctl stop libre-printer@$interface_name.service
 
 echo "Restarting device..."
-/usr/share/libre-printer/bin/python ./restart_interface.py $1
+python ./restart_interface.py $1
 
 retVal=$?
 if [ $retVal -ne 0 ]; then
@@ -33,7 +33,7 @@ if [ $retVal -ne 0 ]; then
 fi
 
 echo "Flashing device..."
-avrdude -v -patmega32u4 -cavr109 -P$1 -b57600 -D -Uflash:w:./firmware/libreprinter.ino.hex:i
+avrdude -v -patmega32u4 -cavr109 -P$1 -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
 
 echo "Restart the service"
 systemctl start libre-printer@$interface_name.service

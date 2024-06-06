@@ -24,6 +24,7 @@
 # Standard imports
 import shutil
 import logging
+from packaging.version import Version
 
 # Custom imports
 from libreprinter.file_handler import (
@@ -37,7 +38,7 @@ from libreprinter.legacy_interprocess_com import (
     debug_shared_memory,
 )
 from libreprinter.handlers import get_serial_handler, SerialException
-from libreprinter.commons import logger
+from libreprinter.commons import logger, LAST_HARDWARE_VERSION
 from libreprinter.config_parser import FLOW_CTRL_MAPPING
 
 LOGGER = logger()
@@ -128,6 +129,16 @@ def configure_interface(serial_handler, config):
             LOGGER.debug(response.rstrip())
         else:
             LOGGER.debug("Waiting config aknowledgment...")
+            continue
+
+        if response.startswith("Online version"):
+            remote_version = Version(response.split()[2])
+            if remote_version < Version(LAST_HARDWARE_VERSION):
+                LOGGER.warning(
+                    "The remote firmware is not up to date! (%s vs %s)",
+                    remote_version,
+                    LAST_HARDWARE_VERSION
+                )
 
         if response.startswith("end_config"):
             break
@@ -181,8 +192,9 @@ def get_buffer(serial_handler, end_page_timeout):
     Serial read timeout = end_page_timeout defined in config.
 
     :param serial_handler: Serial port handler.
-    :param end_page_timeout: Timeout used to define the number of retries in case
-        of empty buffer. Serial read is in blocking mode (1sec per try).
+    :param end_page_timeout: Timeout in seconds used to define the number of
+        retries in case of empty buffer.
+        Serial read is in blocking mode (1sec per try).
     :type serial_handler: serial.Serial
     :type end_page_timeout: int
     :return: None in case of no response or timeout, a bytearray otherwise.
@@ -297,11 +309,11 @@ def parse_buffer(serial_handler, job_number, config):
 
         # TODO: autodetect epson_emulation based on init seq
         # TODO: starts_with ?
-        if not received_bytes and b"\x1B@\x1B" in databytes:
-            # Epson init command /end printing command
+        if not received_bytes and b"\x1B\x40\x1B" in databytes:
+            # Epson init command /end printing command (\x1B@\x1B)
             print("PROBE EPSON data")
-        if not received_bytes and b"\x1BE\x1B&l" in databytes:
-            # HP reset/init command (0x1B E)
+        if not received_bytes and b"\x1B\x45\x1B\x26\x6c" in databytes:
+            # HP reset/init command (\x1BE\x1B&l) (0x1B E)
             print("PROBE HP data")
 
         received_bytes = True

@@ -15,7 +15,7 @@ the charset (``./config/charset``) or the margins (``./config/default_margins``)
 
 - A Simple Epson 9 pins Serial printer
 
-  This printer sends escp2 commands and you want PDF files.
+  This printer sends ESCP2 commands and you want PDF files.
 
   .. code-block::
 
@@ -29,8 +29,7 @@ the charset (``./config/charset``) or the margins (``./config/default_margins``)
   levels, see the section ``[serial_printer]`` of the config file.
 
 
-- A printer that sends basic text or if you just want the text files
-  without escp2 commands in it
+- If you just want the text files without ESCP2 commands in it
 
   .. code-block::
 
@@ -41,10 +40,33 @@ the charset (``./config/charset``) or the margins (``./config/default_margins``)
     [serial_printer]
     enabled=yes
 
-    Note: A PDF will be also created
+  Note: A PDF will be also created
 
 
-- A parallel escp2 printer
+- A serial printer that sends basic text
+
+  .. code-block::
+
+    [misc]
+    emulation=text
+
+    [serial_printer]
+    enabled=yes
+
+
+- A serial printer that sends basic text indefinitely in a stream
+
+  .. code-block::
+
+    [misc]
+    emulation=text
+    endlesstext=plain-stream
+
+    [serial_printer]
+    enabled=yes
+
+
+- A parallel Epson ESCP2 printer
 
   .. code-block::
 
