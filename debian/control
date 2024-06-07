@@ -9,7 +9,7 @@ Vcs-Git: https://github.com/ysard/libre-printer
 
 Package: libre-printer
 Architecture: all
-Depends: dpkg (>= 1.16.1), adduser (>= 3.11), python3 (>= 3.6), python3-venv, avrdude (>= 6.3), enscript (>= 1.6.5.90), ghostscript (>= 9.06), ${misc:Depends}
+Depends: dpkg (>= 1.16.1), adduser (>= 3.11), python3 (>= 3.6), python3-venv, avrdude (>= 6.3), enscript (>= 1.6.5.90), ghostscript (>= 9.06), python3-packaging, python3-numpy, ${misc:Depends}
 Description:Parallel Centronics and Serial printing for vintage computers
  This is a distribution of "Libre-Printer" as a self-contained
  Python virtualenv wrapped into a Debian package.
