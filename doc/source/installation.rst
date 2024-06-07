@@ -46,7 +46,7 @@ Command:
 
 .. code-block:: bash
 
-    $ sudo dpkg -i libre-printer_1.0.0-2_all.deb
+    $ sudo apt install ./libre-printer_1.0.0-3_all.deb
 
 A new dedicated `libreprinter` user is created.
 
