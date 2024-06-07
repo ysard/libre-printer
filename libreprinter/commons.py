@@ -27,6 +27,7 @@ from pkg_resources import resource_filename
 BAUDRATE = 500000  # Yolo, it's USB CDC
 OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream", "txt_jobs")
 SHARED_MEM_NAME = "retroprinter-shared-mem"
+LAST_HARDWARE_VERSION = "1.0.0.rc1"
 
 # Paths
 DIR_LOGS = tempfile.gettempdir() + "/"
