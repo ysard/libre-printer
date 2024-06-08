@@ -20,8 +20,8 @@
 import configparser
 
 # Custom imports
-from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER, \
-    PCL_CONVERTER, ENSCRIPT_BINARY, DEFAULT_OUTPUT_PATH
+from libreprinter.commons import logger, log_level, CONFIG_FILE, ESCP2_CONVERTER, \
+    PCL_CONVERTER, ENSCRIPT_BINARY, DEFAULT_OUTPUT_PATH, LOG_LEVEL
 
 FLOW_CTRL_MAPPING = {
     "hardware": 1,
@@ -63,6 +63,12 @@ def parse_config(config: configparser.ConfigParser):
 
     ## Misc section
     misc_section = config["misc"]
+    loglevel = misc_section.get("loglevel")
+    # loglevel = loglevel.upper() if loglevel else None
+    if not loglevel:
+        misc_section["loglevel"] = LOG_LEVEL
+    log_level(misc_section["loglevel"])
+
     start_cleanup = misc_section.get("start_cleanup")
     if not start_cleanup:
         misc_section["start_cleanup"] = "no"
