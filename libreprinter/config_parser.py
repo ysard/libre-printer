@@ -64,7 +64,6 @@ def parse_config(config: configparser.ConfigParser):
     ## Misc section
     misc_section = config["misc"]
     loglevel = misc_section.get("loglevel")
-    # loglevel = loglevel.upper() if loglevel else None
     if not loglevel:
         misc_section["loglevel"] = LOG_LEVEL
     log_level(misc_section["loglevel"])
