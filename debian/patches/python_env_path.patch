@@ -1,17 +1,9 @@
 Description: Edit the execution paths of scripts and paths of files
- Since we work inside a venv and in an installed system-wide
+ Since we work inside an installed system-wide
  package, paths must be updated and not relative but absolute.
 Last-Update: 2024-06-05
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
---- a/firmware/restart_interface.py
-+++ b/firmware/restart_interface.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python3
-+#!/usr/share/libre-printer/bin/python
- # Libreprinter is a software allowing to use the Centronics and serial printing
- # functions of vintage computers on modern equipement through a tiny hardware
- # interface.
 --- a/firmware/firmware_updater.sh
 +++ b/firmware/firmware_updater.sh
 @@ -24,7 +24,7 @@
@@ -19,8 +11,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
  echo "Restarting device..."
 -python ./restart_interface.py $1
-+/usr/share/libre-printer/bin/python /usr/share/libre-printer/firmware/restart_interface.py $1
- 
++python /usr/share/libre-printer/firmware/restart_interface.py $1
+
  retVal=$?
  if [ $retVal -ne 0 ]; then
 @@ -33,7 +33,7 @@

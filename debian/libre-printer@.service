@@ -9,7 +9,7 @@ Documentation=https://readthedocs.org/projects/libre-printer/ https://github.com
 Type=simple
 User=libreprinter
 Group=libreprinter
-ExecStart=/usr/sbin/libreprinter -C /etc/libre-printer/libreprinter.conf
+ExecStart=/usr/bin/libreprinter -C /etc/libre-printer/libreprinter.conf
 
 # Circumstances under which systemd will attempt to restart
 Restart=on-failure
