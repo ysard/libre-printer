@@ -17,11 +17,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Load configuration file, check and set default values"""
 # Standard imports
-import os
 import configparser
 
 # Custom imports
-from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER, PCL_CONVERTER, ENSCRIPT_BINARY
+from libreprinter.commons import logger, CONFIG_FILE, ESCP2_CONVERTER, \
+    PCL_CONVERTER, ENSCRIPT_BINARY, DEFAULT_OUTPUT_PATH
 
 FLOW_CTRL_MAPPING = {
     "hardware": 1,
@@ -122,8 +122,8 @@ def parse_config(config: configparser.ConfigParser):
     if misc_section.get("emulation") in ("epson", "escp2"):
         misc_section["emulation"] = "epson"
 
-    output_path = misc_section.get("output_path", os.getcwd())
-    output_path = output_path if output_path else os.getcwd()
+    output_path = misc_section.get("output_path", DEFAULT_OUTPUT_PATH)
+    output_path = output_path or DEFAULT_OUTPUT_PATH
     output_path = output_path + "/" if output_path[-1] != "/" else output_path
     misc_section["output_path"] = output_path
 

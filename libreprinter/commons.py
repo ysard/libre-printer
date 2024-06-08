@@ -21,11 +21,13 @@ from logging.handlers import RotatingFileHandler
 import logging
 import datetime as dt
 import tempfile
+import os
 
 
 # Misc
 BAUDRATE = 500000  # Yolo, it's USB CDC
 OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream", "txt_jobs")
+DEFAULT_OUTPUT_PATH = os.getcwd()
 SHARED_MEM_NAME = "retroprinter-shared-mem"
 LAST_HARDWARE_VERSION = "1.0.0.rc1"
 
