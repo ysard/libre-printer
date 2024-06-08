@@ -15,7 +15,7 @@
 # GNU Affero General Public License for more details.
 
 if [ $# -eq 0 ]; then
-    echo "No arguments supplied; Expected udev fixed interface path (Ex: /dev/ttyACMX)."
+    echo "No arguments supplied; Expected udev fixed interface path (Ex: /dev/ttyACMX)." >&2
     exit 1
 fi
 
@@ -25,15 +25,15 @@ if [ -L $1 ] ; then
         :
     else
         # Link doesn't exist
-        echo "<$1> doesn't exist !"
+        echo "<$1> doesn't exist !" >&2
         exit 1
     fi
 elif [ -e $1 ] ; then
-    echo "<$1> is not a symbolic link handled by udev; use it or use a manual flash"
-    echo "procedure (turn off services and flash the hardware with avrdude)."
+    echo "<$1> is not a symbolic link handled by udev; use it or use a manual flash" >&2
+    echo "procedure (turn off services and flash the hardware with avrdude)." >&2
     exit 1
 else
-    echo "<$1> doesn't exist !"
+    echo "<$1> doesn't exist !" >&2
     exit 1
 fi
 
@@ -55,7 +55,7 @@ python ./restart_interface.py $1
 
 retVal=$?
 if [ $retVal -ne 0 ]; then
-    echo "Error. Nothing done."
+    echo "Error. Nothing done." >&2
     exit $retVal
 fi
 
