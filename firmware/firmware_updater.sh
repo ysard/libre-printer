@@ -15,7 +15,8 @@
 # GNU Affero General Public License for more details.
 
 if [ $# -eq 0 ]; then
-    echo "No arguments supplied; Expected interface path."
+    echo "No arguments supplied; Expected interface path (Ex: /dev/ttyACMX)."
+    exit 1
 fi
 
 interface_name=$(basename $1)
