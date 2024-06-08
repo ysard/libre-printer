@@ -1,0 +1,13 @@
+Change default output_path to /var/lib/libre-printer/ 
+instead of the current one.
+--- a/libreprinter/commons.py
++++ b/libreprinter/commons.py
+@@ -27,7 +27,7 @@
+ # Misc
+ BAUDRATE = 500000  # Yolo, it's USB CDC
+ OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream", "txt_jobs")
+-DEFAULT_OUTPUT_PATH = os.getcwd()
++DEFAULT_OUTPUT_PATH = "/var/lib/libre-printer/"
+ SHARED_MEM_NAME = "retroprinter-shared-mem"
+ LAST_HARDWARE_VERSION = "1.0.0.rc1"
+ 
