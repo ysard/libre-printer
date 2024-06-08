@@ -29,7 +29,7 @@ from time import sleep
 import serial
 
 
-def touchForCDCReset(port="/dev/ttyACM0", *args, **kwargs):
+def touchForCDCReset(port="/dev/ttyACM0"):
     """Toggle 1200 bps on selected serial port to force board reset.
 
     See Arduino IDE implementation:
@@ -60,4 +60,4 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         touchForCDCReset()
         raise SystemExit
-    touchForCDCReset(sys.argv[1])
+    touchForCDCReset(port=sys.argv[1])

@@ -21,12 +21,15 @@ from logging.handlers import RotatingFileHandler
 import logging
 import datetime as dt
 import tempfile
-from pkg_resources import resource_filename
+import os
+
 
 # Misc
 BAUDRATE = 500000  # Yolo, it's USB CDC
 OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream", "txt_jobs")
+DEFAULT_OUTPUT_PATH = os.getcwd()
 SHARED_MEM_NAME = "retroprinter-shared-mem"
+LAST_HARDWARE_VERSION = "1.0.0.rc1"
 
 # Paths
 DIR_LOGS = tempfile.gettempdir() + "/"
@@ -34,8 +37,6 @@ CONFIG_FILE = "./libreprinter.conf"
 ESCP2_CONVERTER = "/home/pi/temp/sdl/escparser/convert-escp2"
 PCL_CONVERTER = "/usr/local/bin/gpcl6"
 ENSCRIPT_BINARY = "/usr/bin/enscript"
-
-DIR_ASSETS = resource_filename(__name__, "assets/")  # current package name
 
 
 REPORT_BUG_URL = "https://github.com/ysard/libre-printer/issues/new"

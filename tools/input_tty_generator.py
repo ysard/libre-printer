@@ -13,6 +13,7 @@ import sys
 
 
 def write_tty(prn_file):
+    """Write the given file content to the virtual tty ./input-tty initialized with socat"""
     with open(prn_file, "rb") as f_d, open("./input-tty", "wb") as tty_d:
         # Dump per line
         for i in f_d:
