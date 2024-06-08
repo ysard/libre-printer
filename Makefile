@@ -1,3 +1,5 @@
+PROJECT_VERSION=$(shell python setup.py --version)
+
 # Workaround for targets with the same name as a directory
 .PHONY: doc tests
 
@@ -65,7 +67,11 @@ missing_doc:
 	# Remove D213 antagonist of D212
 	prospector libreprinter/ | grep "libreprinter/\|Line\|Missing docstring"
 
-debianize:
+archive:
+	# Create upstream src archive
+	git archive HEAD --prefix='libre-printer-$(PROJECT_VERSION).orig/' | gzip > ../libre-printer-$(PROJECT_VERSION).orig.tar.gz
+
+debianize: archive
 	dpkg-buildpackage -us -uc -b -d
 
 debcheck:
