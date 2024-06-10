@@ -42,7 +42,10 @@ The project is designed to run as a background service.
 Once installed, a udev rule will detect the connection of an Arduino interface
 on the machine and then start the service automatically.
 
-Command:
+Download the .deb package in the assets of a release on the
+`GitHub repository <https://github.com/ysard/libre-printer/releases>`__.
+
+Install it:
 
 .. code-block:: bash
 
@@ -253,19 +256,37 @@ GhostPCL
 
 If you plan to use LibrePrinter with a computer that sends data in the
 **HP PCL format**, you'll need the **GhostPCL** utility developed by the GhostScript team.
-This tool is not available in the Debian repositories because of conflicts with
-system libraries. However, you can download it here:
+
+There are currently 2 installation methods:
+
+* **If you choose to use |project_name| on an (Debian) image provided by the RetroPrinter
+  company** you have **nothing to do**, **GhostPCL** is integrated.
+
+* **If you're not using an image provided by the RetroPrinter company**, there is
+  a little work to do.
+
+**GhostPCL** is not available in the Debian repositories because of conflicts with
+system libraries. However, you can download the sources/some binaries here:
 `GhostPdl downloads on GitHub <https://github.com/ArtifexSoftware/ghostpdl-downloads/releases>`_
 
-Please note that GhostScript no longer supplies compiled binaries for GNU/Linux
-since version 10.0.0 (2022).
-**You can download this version or a recent version and then compile the sources**.
+Note that GhostScript no longer supplies compiled binaries for GNU/Linux
+since version 10.0.0 (Sept. 2022).
+**You can download this version, or a recent version to be compiled**.
 
-**The key is to specify the binary path** ``gpcl6-<version_number>-linux-<arch>``
-in the parameter ``pcl_converter_path`` of the config file ``libreprinter.conf``.
+**The key move is to always specify the path** of ``gpcl6`` binary
+in the parameter ``pcl_converter_path`` of the config file ``libreprinter.conf``
+(default is ``/usr/local/bin/gpcl6``).
 
-Compiling sources is easy; First download and extract the archive (for example:
-``ghostpdl-10.03.1.tar.xz``), then:
+Download compiled binaries
+**************************
+
+- `v10.0.0 linux-x86_64 (Artifex release) <https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/tag/gs1000>`_
+- `v10.03.1 linux-arm (LibrePrinter release) <TBA>`_
+
+Compilation
+***********
+Compiling sources is easy (but takes time); First, download and extract the archive
+(for example: ``ghostpdl-10.03.1.tar.xz``), then:
 
 .. code-block:: bash
 
@@ -277,4 +298,44 @@ Compiling sources is easy; First download and extract the archive (for example:
 RetroPrinter vendor blobs
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TBR
+.. warning:: Until now, only the ``convert-escp2`` binary v3.2 is available on x86_64.
+    Other binaries, updates & platforms should come, but in the meantime you will
+    have to use the ARM binaries vendor blobs provided by the RetroPrinter company.
+    Reverse-engineering is a tough job...
+
+    Keep up to date with the latest developments in the
+    `GitHub repository <https://github.com/ysard/libre-printer/>`__.
+
+There are currently 2 installation methods:
+
+* **If you're not using an image provided by the RetroPrinter company**,
+  you're free to place the binaries wherever you like, but don't forget these 2 points:
+
+  - Update the paths of the binaries in the file ``/etc/libreprinter.conf``
+  - Until now, RetroPrinter binaries have required assets (fonts, config, etc.)
+    to be placed in the folder ``/root/config``.
+    For this folder, see the ACL rights settings below.
+
+* **If you choose to use |project_name| on an (Debian) image provided by the RetroPrinter
+  company**, at the very least, you'll need to modify the rights of existing folders
+  so that converters launched by the |project_name| service can operate safely
+  with their needed assets.
+
+
+The paths involved are atypical, even amateurish and dangerous, but hey, it's not our fault!
+The ACLs (Access Control List) will correct the accesses for the user ``libreprinter``.
+
+.. code-block:: bash
+
+   # Install the ACL tools
+   $ apt-get install acl
+
+   # Fix access rights for the config files
+   $ setfacl -m u:libreprinter:x /root/
+   $ setfacl -m u:libreprinter:rx /root/config
+   $ setfacl -m u:libreprinter:r /root/config/*
+
+   # Fix access & execution rights for the converters and the fonts
+   $ setfacl -m u:libreprinter:x /home/pi
+   $ setfacl -R -m u:libreprinter:rx /home/pi/temp
+   $ find /home/pi/temp/sdl/escparser/fonts/ -type f -exec setfacl -m u:libreprinter:r {} \;
