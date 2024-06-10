@@ -48,7 +48,8 @@ Datasheet & list of components
 .. figure:: _static/misc/v1.0.0.webp
    :scale: 60 %
    :align: center
-   :alt: Libre-Printer hardware interface for parallel & serial printer emulation; 3D visualisation without components
+   :alt: Libre-Printer hardware interface for parallel & serial printer emulation;
+     3D visualisation without components
 
    |project_name| Printed Circuit Board design without components (version 1.0.0)
 
