@@ -40,16 +40,22 @@ def test_init_directories(temp_dir):
     """
     init_directories(temp_dir)
 
-    found = {path.name for path in pathlib.Path(temp_dir).glob("*")}
+    found_paths = {path for path in pathlib.Path(temp_dir).glob("*")}
+    found_dir_names = {path.name for path in found_paths}
 
-    print("temp_dir:", temp_dir, "found:", found)
-    assert set(OUTPUT_DIRS) == found
+    print("temp_dir:", temp_dir, "found:", found_dir_names)
+    assert set(OUTPUT_DIRS) == found_dir_names
 
     # Double init should not raise any error
     init_directories(temp_dir)
 
     # Init in directory that doesn't exist should not raise any error
     init_directories(temp_dir + "test/")
+
+    # Check rights
+    for path in found_paths:
+        found_permissions = path.stat().st_mode
+        assert "0o40755" == oct(found_permissions)
 
 
 @patch("libreprinter.file_handler.SHARED_MEM_NAME", "test")

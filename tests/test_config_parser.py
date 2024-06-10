@@ -1,17 +1,18 @@
 """Test config parser module"""
 # Standard imports
-import os
 import configparser
 import pytest
 
 # Custom imports
 from libreprinter.config_parser import parse_config, load_config
 from libreprinter.commons import ESCP2_CONVERTER, PCL_CONVERTER, ENSCRIPT_BINARY
+from libreprinter.commons import LOG_LEVEL, DEFAULT_OUTPUT_PATH
 
 
 def default_config():
     """Get default settings for different sections of the expected config file"""
     misc_section = {
+        "loglevel": LOG_LEVEL,
         "start_cleanup": "no",
         "escp2_converter_path": ESCP2_CONVERTER,
         "pcl_converter_path": PCL_CONVERTER,
@@ -22,7 +23,7 @@ def default_config():
         "usb_passthrough": "no",
         "output_printer": "no",
         "serial_port": "/dev/ttyACM0",
-        "output_path": os.getcwd() + "/",
+        "output_path": DEFAULT_OUTPUT_PATH + "/",
         "retain_data": "yes",
         "auto_end_page": "no",
         "end_page_timeout": "2",

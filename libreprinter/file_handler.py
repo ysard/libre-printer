@@ -38,7 +38,7 @@ def init_directories(output_path):
 
     for directory in OUTPUT_DIRS:
         try:
-            os.mkdir(output_path + directory, mode=0o744)
+            os.mkdir(output_path + directory, mode=0o755)
         except FileExistsError:
             pass
 

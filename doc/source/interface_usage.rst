@@ -48,7 +48,8 @@ Datasheet & list of components
 .. figure:: _static/misc/v1.0.0.webp
    :scale: 60 %
    :align: center
-   :alt: Libre-Printer hardware interface for parallel & serial printer emulation; 3D visualisation without components
+   :alt: Libre-Printer hardware interface for parallel & serial printer emulation;
+     3D visualisation without components
 
    |project_name| Printed Circuit Board design without components (version 1.0.0)
 
@@ -100,7 +101,6 @@ then the number of possible combinations becomes very large.
   Component part no.    Optional    Parallel    Serial
  ===================== =========== =========== =======
   INO1                              x           x
-  R5                    x           x
   J1                    x           x
   J2                    x           x
   J3                    x           x
@@ -150,11 +150,11 @@ pull-up resistors R6 & R7.
 Non-standard Pins:
 ~~~~~~~~~~~~~~~~~~
 
-Non-standard pins, normally unassigned, 18 and 35 are to be kept
+Non-standard pins, normally unassigned, can be kept
 high because some equipments require it (cables or devices).
 For example, the Commodore C64 seems to require a 5V voltage on pin 18.
 
-Pin 35 may also require a high state for some equipment.
+Pin 35 may may also require a high state for some equipment.
 The pad near pin 4 of resistor R7 should be connected for this purpose.
 
 Options:
@@ -169,7 +169,7 @@ Options:
 
   Otherwise, the interface should signal itself as a constantly connected printer.
   A bridge between pins 1 and 2 of jumper J4 should be made and the pull-up
-  resistor R5 should be present.
+  resistor R6 should be present.
 
 Serial Interface
 ----------------
@@ -178,6 +178,8 @@ The serial interface is present via the DB25 RS232 connector.
 The J7 connector is present for debugging purposes for the TTL levels (≤ 5V)
 of the RS232 interface (so-called UART interface).
 
+Options:
+~~~~~~~~
 - Jumper 5 - Signal RTS (output)
 
   Most serial printers require this pin to be high as soon as the printer
