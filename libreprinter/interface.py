@@ -159,14 +159,14 @@ def apply_msb_control(databyte, msbsetting):
     :rtype: int
     """
     if msbsetting == 0:
-        # Cancel MSB Control
+        # Cancel MSB Control: No control on bit 7
         return databyte
     elif msbsetting == 1:
         # MSB Control: clear bit 7 (to 0)
-        return (databyte[0] & ~128) % (1 << 8)  # Get only 8 bits: convert to unsigned int
+        return databyte[0] & 0x7f  # Get only 8 bits: convert to unsigned int
     elif msbsetting == 2:
         # MSB Control: set bit 7 (to 1)
-        return (databyte[0] | ~128) % (1 << 8)  # Get only 8 bits: convert to unsigned int
+        return databyte[0] | 0x80  # Get only 8 bits: convert to unsigned int
 
     raise ValueError("msbsetting value not expected: %s" % msbsetting)
 
