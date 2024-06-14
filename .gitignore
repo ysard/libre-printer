@@ -77,3 +77,4 @@ debian/*.substvars
 debian/debhelper-build-stamp
 obj-*/
 .pc
+.pybuild/

@@ -51,7 +51,7 @@ Install it:
 
     $ sudo apt install ./libre-printer_1.0.0-3_all.deb
 
-A new dedicated `libreprinter` user is created.
+A new dedicated ``libreprinter`` user will be created.
 
 List of files and folders of interest:
 
@@ -78,7 +78,7 @@ You can create one udev rule per interface to start a pre-configured instance of
 the service. Each interface can therefore have its own configuration.
 You can connect as many interfaces as there are available USB ports.
 
-The default udev rule is in `/lib/udev/rules.d/60-libre-printer.rules`:
+The default udev rule is in ``/lib/udev/rules.d/60-libre-printer.rules``:
 
 .. code-block::
 
@@ -86,27 +86,31 @@ The default udev rule is in `/lib/udev/rules.d/60-libre-printer.rules`:
 
 The Vendor ID and Product ID are the default values for an Arduino
 ProMicro. Such a configuration forces it to always appear with the path
-`/dev/ttyACMX`.
+``/dev/ttyACMX``.
 
-Upon connection the System D service `/lib/systemd/system/libre-printer@ttyACMX.service`
-will be called if it exists. Otherwise, the base template `/lib/systemd/system/libre-printer@.service`
-will be called.
+Upon connection, the System D service ``/lib/systemd/system/libre-printer@ttyACMX.service``
+will be called if it exists.
 
 It is up to you to create a new udev rule and a service derived from the template
-by specifying a new configuration file (`libreprinter.conf`) for your printer.
+``/lib/systemd/system/libre-printer@.service`` by specifying a new configuration
+file (``libreprinter.conf``) for your printer (configuration file can be passed
+to the libreprinter binary via its command line as you will see in the System D file).
 
 
-Install the release version
----------------------------
+
+Install the release version manually
+------------------------------------
+
+.. warning:: |project_name| is not published on PyPI for now.
 
 |project_name| package is available on PyPI (Python Package Index), the official
 third-party software repository for Python language:
 `LibrePrinter service <https://pypi.python.org/pypi/libre-printer>`_.
 
-First it is recommended to we recommend the use of a Python virtual environment;
+We recommend first the use of a Python virtual environment;
 see the chapter below: :ref:`setting_up_a_virtual_environment`.
 
-You can install it with the following command on all systems with a Python environment with ``pip``:
+You can install the project with the following command on all systems with a Python environment with ``pip``:
 
 .. code-block:: bash
 
@@ -120,10 +124,11 @@ At this point a new command is available in your shell to launch the service:
 
 .. code-block:: bash
 
-    $ libre-printer
+    $ libreprinter
 
 After this step, you'll need to install a few dependencies that
-the project or your distribution does not include. See chapter :ref:`setting_up_dependencies`.
+the project or your distribution does not include.
+See chapter :ref:`setting_up_dependencies`.
 
 
 .. _install_dev_version:
@@ -157,13 +162,13 @@ Then do:
 
 
 The ``make dev_install`` command uses ``pip install -e .[dev]`` command which allows
-you to follow the development branch as it changes by creating links in the right places
-and installing the command line scripts to the appropriate locations.
+you to follow the development of the git repository.
 
-Moreover, it installs packages listed in the dev section of ``extras_require`` in
-``setup.py/setup.cfg``, in addition to any normal dependencies as necessary.
+Moreover, it installs for you the dev packages listed in the ``extras_require``
+section of ``setup.py/setup.cfg``, in addition to any basic dependencies.
 
-Please note that your changes in the code are directly usable without having to reinstall the package.
+Please note that your changes in the code are directly testable without having
+to reinstall the package.
 
 Then, if you want to update |project_name| at any time, in the same directory do:
 
@@ -172,7 +177,8 @@ Then, if you want to update |project_name| at any time, in the same directory do
    $ git pull
 
 After this simple step, you'll need to install a few dependencies that
-the project or your distribution does not include. See chapter :ref:`setting_up_dependencies`.
+the project or your distribution does not include.
+See chapter :ref:`setting_up_dependencies`.
 
 
 Uninstall
@@ -237,13 +243,13 @@ from each other in order to avoid conflicts between dependencies.
 
 .. code-block:: bash
 
-   $ mkvirtualenv libre-printer -p /usr/bin/python3
+   $ mkvirtualenv libreprinter -p /usr/bin/python3
 
 * Later, if you want to work in the virtualenv:
 
 .. code-block:: bash
 
-   $ workon libre-printer
+   $ workon libreprinter
 
 
 .. _setting_up_dependencies:
@@ -259,21 +265,23 @@ If you plan to use LibrePrinter with a computer that sends data in the
 
 There are currently 2 installation methods:
 
-* **If you choose to use |project_name| on an (Debian) image provided by the RetroPrinter
+* **If you choose to use a (Raspbian) image provided by the RetroPrinter
   company** you have **nothing to do**, **GhostPCL** is integrated.
 
 * **If you're not using an image provided by the RetroPrinter company**, there is
-  a little work to do.
+  a little work to do (download our compiled version or compile it yourself).
 
 **GhostPCL** is not available in the Debian repositories because of conflicts with
 system libraries. However, you can download the sources/some binaries here:
 `GhostPdl downloads on GitHub <https://github.com/ArtifexSoftware/ghostpdl-downloads/releases>`_
 
-Note that GhostScript no longer supplies compiled binaries for GNU/Linux
-since version 10.0.0 (Sept. 2022).
-**You can download this version, or a recent version to be compiled**.
+.. warning::
 
-**The key move is to always specify the path** of ``gpcl6`` binary
+    Note that GhostScript no longer supplies compiled binaries for GNU/Linux
+    since version 10.0.0 (Sept. 2022).
+    **You can download this specific version, or a recent version to be compiled**.
+
+**The key move is to always sync the path** of the ``gpcl6`` binary
 in the parameter ``pcl_converter_path`` of the config file ``libreprinter.conf``
 (default is ``/usr/local/bin/gpcl6``).
 
@@ -282,6 +290,8 @@ Download compiled binaries
 
 - `v10.0.0 linux-x86_64 (Artifex release) <https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/tag/gs1000>`_
 - `v10.03.1 linux-arm (LibrePrinter release) <TBA>`_
+
+Then copy the ``gpcl6`` binary to ``/usr/local`` and make it executable (``chmod 755 /usr/local/gpcl6``).
 
 Compilation
 ***********
@@ -298,7 +308,7 @@ Compiling sources is easy (but takes time); First, download and extract the arch
 RetroPrinter vendor blobs
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. warning:: Until now, only the ``convert-escp2`` binary v3.2 is available on x86_64.
+.. warning:: Until now, only the ``convert-escp2`` binary v3.4 is available on x86_64.
     Other binaries, updates & platforms should come, but in the meantime you will
     have to use the ARM binaries vendor blobs provided by the RetroPrinter company.
     Reverse-engineering is a tough job...
@@ -306,24 +316,50 @@ RetroPrinter vendor blobs
     Keep up to date with the latest developments in the
     `GitHub repository <https://github.com/ysard/libre-printer/>`__.
 
-There are currently 2 installation methods:
+There are currently 3 installation methods.
+
+* **If you choose to use a (Raspbian) image provided by the RetroPrinter
+  company**, at the very least, **you'll need to modify the rights** of the existing
+  folders so that converters launched by the |project_name| service can operate
+  safely with their needed assets.
+
+
+* **You can use our packaged binaries, with an embedded installation script**.
+
+  - Just download the last ``vendor_blobs_xx.yy_armv6.tar.gz`` archive: `GitHub releases <https://github.com/ysard/libre-printer/releases>`__.
+
+  - Make sure ACLs are available on your system (``apt install acl``).
+  - Then:
+
+  .. code-block:: bash
+
+   $ tar xvf vendor_blobs_xx.yy_armv6.tar.gz
+   $ cd vendor_blobs/
+   $ sudo ./install_vendor_blobs.sh
+
+  You are ready to go!
+
 
 * **If you're not using an image provided by the RetroPrinter company**,
   you're free to place the binaries wherever you like, but don't forget these 2 points:
 
   - Update the paths of the binaries in the file ``/etc/libreprinter.conf``
-  - Until now, RetroPrinter binaries have required assets (fonts, config, etc.)
-    to be placed in the folder ``/root/config``.
-    For this folder, see the ACL rights settings below.
-
-* **If you choose to use |project_name| on an (Debian) image provided by the RetroPrinter
-  company**, at the very least, you'll need to modify the rights of existing folders
-  so that converters launched by the |project_name| service can operate safely
-  with their needed assets.
+  - Until now, RetroPrinter binaries require assets to be placed in specific
+    folders. The config files must be put in the folder ``/root/config``,
+    the fonts must be put in ``/home/pi/temp/sdl/escparser/fonts``.
+  - Access rights must be fixed (see below).
 
 
-The paths involved are atypical, even amateurish and dangerous, but hey, it's not our fault!
-The ACLs (Access Control List) will correct the accesses for the user ``libreprinter``.
+**If you choose a non-standard installation method, you will have to secure the
+accesses rights** of the assets by |project_name|.
+
+.. note::
+    The paths involved are atypical, even amateurish and dangerous (most of accesses are for root,
+    and their programs also run as root... like SysAdmins say, *using root or chmod 777
+    for everything is the best way to prove you don't know what you're doing*.),
+    but hey, it's not *our* fault!
+
+The following ACLs (Access Control List) rules will fix the rights for the user ``libreprinter``:
 
 .. code-block:: bash
 
@@ -333,7 +369,7 @@ The ACLs (Access Control List) will correct the accesses for the user ``librepri
    # Fix access rights for the config files
    $ setfacl -m u:libreprinter:x /root/
    $ setfacl -m u:libreprinter:rx /root/config
-   $ setfacl -m u:libreprinter:r /root/config/*
+   $ find /root/config/ -type f -exec setfacl -m u:libreprinter:r {} \;
 
    # Fix access & execution rights for the converters and the fonts
    $ setfacl -m u:libreprinter:x /home/pi
