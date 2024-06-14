@@ -316,24 +316,50 @@ RetroPrinter vendor blobs
     Keep up to date with the latest developments in the
     `GitHub repository <https://github.com/ysard/libre-printer/>`__.
 
-There are currently 2 installation methods:
+There are currently 3 installation methods.
+
+* **If you choose to use a (Raspbian) image provided by the RetroPrinter
+  company**, at the very least, **you'll need to modify the rights** of the existing
+  folders so that converters launched by the |project_name| service can operate
+  safely with their needed assets.
+
+
+* **You can use our packaged binaries, with an embedded installation script**.
+
+  - Just download the last ``vendor_blobs_xx.yy_armv6.tar.gz`` archive: `GitHub releases <https://github.com/ysard/libre-printer/releases>`__.
+
+  - Make sure ACLs are available on your system (``apt install acl``).
+  - Then:
+
+  .. code-block:: bash
+
+   $ tar xvf vendor_blobs_xx.yy_armv6.tar.gz
+   $ cd vendor_blobs/
+   $ sudo ./install_vendor_blobs.sh
+
+  You are ready to go!
+
 
 * **If you're not using an image provided by the RetroPrinter company**,
   you're free to place the binaries wherever you like, but don't forget these 2 points:
 
   - Update the paths of the binaries in the file ``/etc/libreprinter.conf``
-  - Until now, RetroPrinter binaries have required assets (fonts, config, etc.)
-    to be placed in the folder ``/root/config``.
-    For this folder, see the ACL rights settings below.
-
-* **If you choose to use |project_name| on an (Debian) image provided by the RetroPrinter
-  company**, at the very least, you'll need to modify the rights of existing folders
-  so that converters launched by the |project_name| service can operate safely
-  with their needed assets.
+  - Until now, RetroPrinter binaries require assets to be placed in specific
+    folders. The config files must be put in the folder ``/root/config``,
+    the fonts must be put in ``/home/pi/temp/sdl/escparser/fonts``.
+  - Access rights must be fixed (see below).
 
 
-The paths involved are atypical, even amateurish and dangerous, but hey, it's not our fault!
-The ACLs (Access Control List) will correct the accesses for the user ``libreprinter``.
+**If you choose a non-standard installation method, you will have to secure the
+accesses rights** of the assets by |project_name|.
+
+.. note::
+    The paths involved are atypical, even amateurish and dangerous (most of accesses are for root,
+    and their programs also run as root... like SysAdmins say, *using root or chmod 777
+    for everything is the best way to prove you don't know what you're doing*.),
+    but hey, it's not *our* fault!
+
+The following ACLs (Access Control List) rules will fix the rights for the user ``libreprinter``:
 
 .. code-block:: bash
 
@@ -343,7 +369,7 @@ The ACLs (Access Control List) will correct the accesses for the user ``librepri
    # Fix access rights for the config files
    $ setfacl -m u:libreprinter:x /root/
    $ setfacl -m u:libreprinter:rx /root/config
-   $ setfacl -m u:libreprinter:r /root/config/*
+   $ find /root/config/ -type f -exec setfacl -m u:libreprinter:r {} \;
 
    # Fix access & execution rights for the converters and the fonts
    $ setfacl -m u:libreprinter:x /home/pi
