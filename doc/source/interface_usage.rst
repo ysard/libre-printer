@@ -111,7 +111,7 @@ then the number of possible combinations becomes very large.
   R4                    x*          x
   R6                    x*          x
   R7                    x*          x
-  D1                                x
+  D1                    x*          x
 
   R8                    x                       x
   J5                    x                       x
@@ -135,7 +135,7 @@ Connectors J1, J2, and J3 are present for debugging or measurement purposes.
 Standard Pins:
 ~~~~~~~~~~~~~~
 
-Protection resistors R1, R2, R3, R4 and pullup resistors R6,R7 *can* be omitted;
+Protection resistors R1, R2, R3, R4 and pullup resistors R6, R7, D1 *can* be omitted;
 In this case, the first ones (R1-R4) must be bridged to allow the signals to pass.
 While it's allowed for test cases, the interface *should work™* most of the time
 but it's far from guaranteed...
