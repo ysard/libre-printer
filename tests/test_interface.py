@@ -161,8 +161,6 @@ def extra_config(init_config, request):
     config["misc"]["end_page_timeout"] = "1"
     # Add endless setting & converter path
     config["misc"]["endlesstext"] = endlesstext
-    config["misc"]["escp2_converter_path"] = cm.ESCP2_CONVERTER
-    config["misc"]["pcl_converter_path"] = cm.PCL_CONVERTER
 
     debug_config_file(config)
 
@@ -371,6 +369,9 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
         - configure_interface: do nothing
         - get_buffer: return simulated databytes
 
+    .. warning:: DO NOT forget to update extra_config fixture to manually launch
+        converters for your config!
+
     :param extra_config: (fixture) Temporary directory, configParser
         and converter launcher.
     :param in_file: File containing simulated input content
@@ -441,6 +442,8 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
 
     # Check file content
     expected_content = Path(DIR_DATA + expected_file).read_bytes()
+    print(expected_content[-100:])
+    print(processed_file.read_bytes()[-100:])
     assert expected_content * repetitions == processed_file.read_bytes(), \
         "Maybe a mismatch on the Haru Free PDF Library?"
 
