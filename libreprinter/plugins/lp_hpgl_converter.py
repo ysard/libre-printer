@@ -40,8 +40,8 @@ LOGGER = logger()
 
 CONFIG = {
     "misc": {
-        "emulation": ("hpgl",),
-        "endlesstext": ("no",),
+        "emulation": "hpgl",
+        "endlesstext": "no",
     }
 }
 
