@@ -20,8 +20,17 @@
 import configparser
 
 # Custom imports
-from libreprinter.commons import logger, log_level, CONFIG_FILE, ESCP2_CONVERTER, \
-    PCL_CONVERTER, ENSCRIPT_BINARY, DEFAULT_OUTPUT_PATH, LOG_LEVEL
+from libreprinter.commons import (
+    logger,
+    log_level,
+    CONFIG_FILE,
+    ESCP2_CONVERTER,
+    PCL_CONVERTER,
+    ENSCRIPT_BINARY,
+    HP2XX_BINARY,
+    DEFAULT_OUTPUT_PATH,
+    LOG_LEVEL,
+)
 
 FLOW_CTRL_MAPPING = {
     "hardware": 1,
@@ -89,7 +98,10 @@ def parse_config(config: configparser.ConfigParser):
         config["misc"]["enscript_settings"] = "-BR"
 
     if misc_section.get("endlesstext") not in (
-        "plain-stream", "strip-escp2-stream", "plain-jobs", "strip-escp2-jobs"
+        "plain-stream",
+        "strip-escp2-stream",
+        "plain-jobs",
+        "strip-escp2-jobs",
     ):
         misc_section["endlesstext"] = "no"
 
