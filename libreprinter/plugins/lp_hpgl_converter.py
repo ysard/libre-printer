@@ -133,11 +133,12 @@ class HpglEventHandler(RegexMatchingEventHandler):
             LOGGER.debug("ghostscript command: %s", ghostscript_cmd)
             ps = subprocess.Popen(ghostscript_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
             stdout_data, stderr_data = ps.communicate(input=stdout)
-            if stderr_data:
-                LOGGER.error(stderr_data)
-        except subprocess.CalledProcessError as e:
-            # process exits with a non-zero exit code
-            LOGGER.error("stdout: %s; stderr: %s", e.stdout, e.stderr)
+
+            if ps.returncode or stderr_data:
+                # GS process exits with a non-zero exit code
+                LOGGER.error("stdout: %s; stderr: %s", stdout_data, stderr_data)
+        except ValueError as e:
+            # Called if Popen args are invalid
             LOGGER.exception(e)
 
 
