@@ -160,6 +160,6 @@ def setup_text_watchdog(config):
 if __name__ == "__main__":  # pragma: no cover
 
     obs = setup_text_watchdog(
-        {"misc": {"output_path": "./txt_jobs/", "enscript_settings": ["-2Gr"]}}
+        {"misc": {"output_path": "./", "enscript_settings": "-2Gr"}}
     )
     obs.join()
