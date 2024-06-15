@@ -29,7 +29,8 @@ from libreprinter.file_handler import init_directories
 from libreprinter.plugins.lp_jobs_to_printer_watchdog import setup_pdf_watchdog
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
-from libreprinter.commons import PCL_CONVERTER, ENSCRIPT_BINARY
+from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
+from libreprinter.commons import PCL_CONVERTER, ENSCRIPT_BINARY, HP2XX_BINARY
 
 # Import create dir fixture
 from .test_file_handler import temp_dir
@@ -54,6 +55,7 @@ def reset_catched_events():
 @patch("libreprinter.plugins.lp_jobs_to_printer_watchdog.PdfEventHandler.on_closed", mock_on_closed)
 @patch("libreprinter.plugins.lp_pcl_to_pdf_watchdog.PclEventHandler.on_closed", mock_on_closed)
 @patch("libreprinter.plugins.lp_txt_converter.TxtEventHandler.on_closed", mock_on_closed)
+@patch("libreprinter.plugins.lp_hpgl_converter.HpglEventHandler.on_closed", mock_on_closed)
 @pytest.mark.parametrize(
     # WARNING: expected_file is currently NOT tested!
     "watchdog, config, files_to_create, expected_file",
@@ -79,8 +81,15 @@ def reset_catched_events():
             ["txt_jobs/aaa", "txt_jobs/c.txt"],  # Last file is the good one
             "pdf/c.pdf",
         ),
+        # lp_hpgl_converter: Test the detection of a hpgl file in /hpgl
+        (
+            setup_hpgl_watchdog,
+            {"misc": {"hp2xx_path": HP2XX_BINARY}},
+            ["hpgl/aaa", "hpgl/d.hpgl"],  # Last file is the good one
+            "pdf/h.pdf",
+        ),
     ],
-    ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog", "txt_to_pdf_watchdog"],
+    ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog", "txt_to_pdf_watchdog", "hpgl_to_pdf_watchdog"],
 )
 def test_setup_watchdog(
     watchdog, config, files_to_create, expected_file, temp_dir, reset_catched_events
@@ -180,8 +189,14 @@ def test_bad_printer(temp_dir, caplog):
             r"enscript converter not found",
             "Setting <enscript_path:",
         ),
+        (
+            setup_hpgl_watchdog,
+            {"misc": {"hp2xx_path": "/usr/bin/Fake_Converter_Name"}},
+            r"hp2xx converter not found",
+            "Setting <hp2xx_path:",
+        ),
     ],
-    ids=["bad_pcl_binary", "bad_enscript_binary"],
+    ids=["bad_pcl_binary", "bad_enscript_binary", "bad_hp2xx_binary"],
 )
 def test_bad_binary_path(
     watchdog, config, expected_exception_text, expected_log_text, temp_dir, caplog

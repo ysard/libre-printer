@@ -173,11 +173,22 @@ def handle_module_cache():
             """,
             ["lp_pcl_to_pdf_watchdog", "lp_jobs_to_printer_watchdog"],
         ),
+        # hpgl: no endlesstext
+        (
+            """
+            [misc]
+            emulation=hpgl
+            endlesstext=no
+            [parallel_printer]
+            [serial_printer]
+            """,
+            ["lp_hpgl_converter"],
+        ),
     ],
     ids=[
         "espc2_printer_enabled1", "espc2_printer_enabled2", "escp2_printer_disabled",
         "escp2_stream1", "escp2_stream2",
-        "only_text", "only_hp1", "only_hp2"
+        "only_text", "only_hp1", "only_hp2", "hpgl",
     ],
     indirect=["sample_config"],  # Send sample_config val to the fixture
 )
