@@ -455,6 +455,13 @@ def read_interface(config):
                 "{}/pcl/{}.pcl".format(misc_section["output_path"], job_number),
             )
 
+        if misc_section["emulation"] == "hpgl":
+            # Copy current file to pcl folder
+            shutil.copy(
+                "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
+                "{}/hpgl/{}.hpgl".format(misc_section["output_path"], job_number),
+            )
+
         if (
             config["misc"]["emulation"] == "text"
             or (epson_emulation and (misc_section["endlesstext"] == "plain-jobs"))
