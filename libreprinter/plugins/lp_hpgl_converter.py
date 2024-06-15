@@ -154,7 +154,7 @@ def setup_hpgl_watchdog(config):
     hp2xx_path = config["misc"]["hp2xx_path"]
     if not Path(hp2xx_path).exists():
         LOGGER.error("Setting <hp2xx_path:%s> doesn't exists!", hp2xx_path)
-        raise FileNotFoundError("hp2xx_path converter not found")
+        raise FileNotFoundError("hp2xx converter not found")
 
     # hp2xx_settings = config["misc"]["hp2xx_settings"]
     event_handler = HpglEventHandler(
