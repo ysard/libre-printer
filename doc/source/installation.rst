@@ -350,7 +350,7 @@ There are currently 3 installation methods.
   - Access rights must be fixed (see below).
 
 
-**If you choose a non-standard installation method, you will have to secure the
+**Depending on the method selected, you will have to secure the
 accesses rights** of the assets by |project_name|.
 
 .. note::
