@@ -51,7 +51,7 @@ def handle_module_cache():
         for elem in dir(plugins)
         if elem.startswith("lp_")
     ]
-    # Grap the functions to be registered (entry points of the plugins)
+    # Grab the functions to be registered (entry points of the plugins)
     funcs = [
         obj
         for elem in plugin_modules
