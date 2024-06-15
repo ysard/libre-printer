@@ -103,7 +103,7 @@ class TxtEventHandler(RegexMatchingEventHandler):
             shlex.quote(event.src_path),
         ]
         ghostscript_cmd = [
-            "gs",
+            "/usr/bin/gs",
             "-dNOPAUSE",
             "-sDEVICE=pdfwrite",
             "-sColorConversionStrategy=RGB",
