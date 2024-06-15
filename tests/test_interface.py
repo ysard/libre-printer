@@ -30,6 +30,7 @@ from libreprinter.legacy_interprocess_com import (
 from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
+from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
 
 import libreprinter.commons as cm
 
@@ -165,6 +166,12 @@ def extra_config(init_config, request):
 
     debug_config_file(config)
 
+    watchdog_mappings = {
+        "hp": setup_pcl_watchdog,
+        "text": setup_text_watchdog,
+        "hpgl": setup_hpgl_watchdog,
+    }
+
     if "escp2" in endlesstext or (emulation == "epson" and endlesstext == "no"):
         # Launch escp2 converter
         converter_process = launch_escp2_converter(config)
@@ -179,9 +186,9 @@ def extra_config(init_config, request):
             observer.stop()
         return
 
-    if emulation == "hp" and endlesstext == "no":
+    if emulation in ("hp", "hpgl") and endlesstext == "no":
         # Launch pcl converter
-        observer = setup_pcl_watchdog(config)
+        observer = watchdog_mappings[emulation](config)
         yield (tmp_dir, config)
         observer.stop()
         return
@@ -315,6 +322,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
 @patch("libreprinter.interface.configure_interface", lambda x, y: None)
 @pytest.mark.parametrize(
     "extra_config, in_file, expected_file, out_file, repetitions",
+    # extra_config: (emulation, endlesstext)
     [
         ## Pdf files generation
         (("epson", "no"), "escp2_1.prn", "escp2_1.pdf", "pdf/page1-1.pdf", 1),
@@ -323,6 +331,9 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         (("text", "no"), "escp2_1_strip.txt", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
         # ... and pdf by txt_converter plugin
         (("text", "no"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
+        # hpgl intermediary & pdf files
+        (("hpgl", "no"), "hpgl.hpgl", "hpgl.hpgl", "hpgl/1.hpgl", 1),
+        (("hpgl", "no"), "hpgl.hpgl", 17735, "pdf/1.pdf", 1),
         ## Plain text tests
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
         # 1 file plain text repeated 2 times in a stream
@@ -346,7 +357,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
     # First param goes in the 'request' param of the fixture extra_config
     indirect=["extra_config"],
     ids=[
-        "epson-pdf", "hp-pdf", "text-pdf", "text-intermediary-txt-file",
+        "epson-pdf", "hp-pdf", "text-pdf", "text-intermediary-txt-file", "hpgl-hpgl", "hpgl-pdf",
         "plain-stream*1", "plain-stream*2", "plain-jobs", "plain-jobs-pdf",
         "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "strip-escp2-jobs-pdf",
         "pcl"
