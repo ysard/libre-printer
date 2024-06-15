@@ -26,7 +26,7 @@ import os
 
 # Misc
 BAUDRATE = 500000  # Yolo, it's USB CDC
-OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream", "txt_jobs")
+OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream", "txt_jobs", "hpgl")
 DEFAULT_OUTPUT_PATH = os.getcwd()
 SHARED_MEM_NAME = "retroprinter-shared-mem"
 LAST_HARDWARE_VERSION = "1.0.0.rc1"
@@ -37,7 +37,7 @@ CONFIG_FILE = "./libreprinter.conf"
 ESCP2_CONVERTER = "/home/pi/temp/sdl/escparser/convert-escp2"
 PCL_CONVERTER = "/usr/local/bin/gpcl6"
 ENSCRIPT_BINARY = "/usr/bin/enscript"
-
+HP2XX_BINARY = "/usr/bin/hp2xx"
 
 REPORT_BUG_URL = "https://github.com/ysard/libre-printer/issues/new"
 

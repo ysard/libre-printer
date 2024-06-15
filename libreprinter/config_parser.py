@@ -97,6 +97,10 @@ def parse_config(config: configparser.ConfigParser):
     if not enscript_settings:
         config["misc"]["enscript_settings"] = "-BR"
 
+    hp2xx_path = misc_section.get("hp2xx_path")
+    if not hp2xx_path:
+        misc_section["hp2xx_path"] = HP2XX_BINARY
+
     if misc_section.get("endlesstext") not in (
         "plain-stream",
         "strip-escp2-stream",
@@ -132,7 +136,14 @@ def parse_config(config: configparser.ConfigParser):
     if not serial_port:
         misc_section["serial_port"] = "/dev/ttyACM0"
 
-    if misc_section.get("emulation") not in ("epson", "escp2", "hp", "pcl", "text"):
+    if misc_section.get("emulation") not in (
+        "epson",
+        "escp2",
+        "hp",
+        "pcl",
+        "text",
+        "hpgl",
+    ):
         misc_section["emulation"] = "auto"
     if misc_section.get("emulation") in ("hp", "pcl"):
         misc_section["emulation"] = "hp"
