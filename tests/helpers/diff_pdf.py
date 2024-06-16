@@ -60,5 +60,5 @@ def is_similar_pdfs(pdf_file_1, pdf_file_2):
 
 
 if __name__ == "__main__":
-    is_similar("/tmp/escp2_1_strip.ps_1.pdf", "/tmp/escp2_1_strip.txt_1.pdf")
-    is_similar("/tmp/escp2_1_strip.ps_1.pdf", "/tmp/test_page_pcl.prn_1.pdf")
+    is_similar_pdfs("/tmp/escp2_1_strip.ps_1.pdf", "/tmp/escp2_1_strip.txt_1.pdf")
+    is_similar_pdfs("/tmp/escp2_1_strip.ps_1.pdf", "/tmp/test_page_pcl.prn_1.pdf")
