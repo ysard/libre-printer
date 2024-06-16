@@ -118,7 +118,7 @@ def parse_config(config: configparser.ConfigParser):
 
     # Warning: If usb_passthrough is set, output_printer is not disabled.
     # It should be noted that any "raw" parallel interface like `/dev/usb/lpx`
-    # disappears when Cups is used on it. Thus it can't be used with this
+    # disappears when Cups is used on it. Thus, it can't be used with this
     # functionality anymore.
     usb_passthrough = misc_section.get("usb_passthrough")
     if not usb_passthrough:
