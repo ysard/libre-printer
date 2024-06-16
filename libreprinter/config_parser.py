@@ -143,6 +143,7 @@ def parse_config(config: configparser.ConfigParser):
         "pcl",
         "text",
         "hpgl",
+        "postscript"
     ):
         misc_section["emulation"] = "auto"
     if misc_section.get("emulation") in ("hp", "pcl"):

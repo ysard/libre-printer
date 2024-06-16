@@ -71,7 +71,7 @@ class PostscriptEventHandler(RegexMatchingEventHandler):
         Just add Ghostscript settings attr and define watchdog regexes.
         """
         super().__init__(*args, regexes=self.FILES_REGEX, **kwargs)
-        self.gs_settings = gs_settings
+        self.gs_settings = gs_settings or []
 
     def on_closed(self, event):
         """File creation is detected, convert it to PDF
@@ -95,9 +95,7 @@ class PostscriptEventHandler(RegexMatchingEventHandler):
             "-dSubsetFonts=true",  # Reduce the final size
             f"-sOutputFile={shlex.quote(str(pdf_path))}",
         ]
-        if self.gs_settings:
-            ghostscript_cmd += self.gs_settings
-
+        ghostscript_cmd += self.gs_settings
         ghostscript_cmd += [
             shlex.quote(event.src_path),
             "-c",
@@ -123,7 +121,7 @@ def setup_postscript_watchdog(config):
     Any ps file created in this directories will be converted in `/pdf` by
     the Ghostscript binary installed on the system.
     """
-    LOGGER.info("Launch text watchdog...")
+    LOGGER.info("Launch postscript watchdog...")
 
     # gs_settings = config["misc"]["gs_settings"]
     event_handler = PostscriptEventHandler(

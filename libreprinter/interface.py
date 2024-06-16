@@ -448,18 +448,27 @@ def read_interface(config):
             # strip-escp2-stream is made during the loop.
             sync_converters(jobs_count, job_number)
 
+        copy_args = (misc_section["output_path"], job_number)
+
         if misc_section["emulation"] == "hp":
             # Copy current file to pcl folder
             shutil.copy(
-                "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
-                "{}/pcl/{}.pcl".format(misc_section["output_path"], job_number),
+                "{}/raw/{}.raw".format(*copy_args),
+                "{}/pcl/{}.pcl".format(*copy_args),
             )
 
         if misc_section["emulation"] == "hpgl":
             # Copy current file to pcl folder
             shutil.copy(
-                "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
-                "{}/hpgl/{}.hpgl".format(misc_section["output_path"], job_number),
+                "{}/raw/{}.raw".format(*copy_args),
+                "{}/hpgl/{}.hpgl".format(*copy_args),
+            )
+
+        if misc_section["emulation"] == "postscript":
+            # Copy current file to pcl folder
+            shutil.copy(
+                "{}/raw/{}.raw".format(*copy_args),
+                "{}/ps/{}.ps".format(*copy_args),
             )
 
         if (
@@ -468,8 +477,8 @@ def read_interface(config):
         ):
             # Process end of lines in raw file and copy it to /txt_jobs dir
             convert_file_line_ending(
-                "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
-                "{}/txt_jobs/{}.txt".format(misc_section["output_path"], job_number),
+                "{}/raw/{}.raw".format(*copy_args),
+                "{}/txt_jobs/{}.txt".format(*copy_args),
                 config["misc"]["line_ending"],
             )
 
