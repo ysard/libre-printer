@@ -31,7 +31,7 @@ from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
 from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
-
+from libreprinter.plugins.lp_ps_converter import setup_postscript_watchdog
 import libreprinter.commons as cm
 
 # Import create dir fixture
@@ -168,6 +168,7 @@ def extra_config(init_config, request):
         "hp": setup_pcl_watchdog,
         "text": setup_text_watchdog,
         "hpgl": setup_hpgl_watchdog,
+        "postscript": setup_postscript_watchdog,
     }
 
     if "escp2" in endlesstext or (emulation == "epson" and endlesstext == "no"):
@@ -184,7 +185,7 @@ def extra_config(init_config, request):
             observer.stop()
         return
 
-    if emulation in ("hp", "hpgl") and endlesstext == "no":
+    if emulation in ("hp", "hpgl", "postscript") and endlesstext == "no":
         # Launch pcl converter
         observer = watchdog_mappings[emulation](config)
         yield (tmp_dir, config)
@@ -332,6 +333,8 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         # hpgl intermediary & pdf files
         (("hpgl", "no"), "hpgl.hpgl", "hpgl.hpgl", "hpgl/1.hpgl", 1),
         (("hpgl", "no"), "hpgl.hpgl", 17735, "pdf/1.pdf", 1),
+        # postscript to pdf
+        (("postscript", "no"), "escp2_1_strip.ps", 17735, "pdf/1.pdf", 1),
         ## Plain text tests
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
         # 1 file plain text repeated 2 times in a stream
@@ -356,6 +359,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
     indirect=["extra_config"],
     ids=[
         "epson-pdf", "hp-pdf", "text-pdf", "text-intermediary-txt-file", "hpgl-hpgl", "hpgl-pdf",
+        "postscript-pdf",
         "plain-stream*1", "plain-stream*2", "plain-jobs", "plain-jobs-pdf",
         "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "strip-escp2-jobs-pdf",
         "pcl"

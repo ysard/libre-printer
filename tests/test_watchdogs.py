@@ -30,6 +30,7 @@ from libreprinter.plugins.lp_jobs_to_printer_watchdog import setup_pdf_watchdog
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
 from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
+from libreprinter.plugins.lp_ps_converter import setup_postscript_watchdog
 from libreprinter.commons import PCL_CONVERTER, ENSCRIPT_BINARY, HP2XX_BINARY
 
 # Import create dir fixture
@@ -56,6 +57,7 @@ def reset_catched_events():
 @patch("libreprinter.plugins.lp_pcl_to_pdf_watchdog.PclEventHandler.on_closed", mock_on_closed)
 @patch("libreprinter.plugins.lp_txt_converter.TxtEventHandler.on_closed", mock_on_closed)
 @patch("libreprinter.plugins.lp_hpgl_converter.HpglEventHandler.on_closed", mock_on_closed)
+@patch("libreprinter.plugins.lp_ps_converter.PostscriptEventHandler.on_closed", mock_on_closed)
 @pytest.mark.parametrize(
     # WARNING: expected_file is currently NOT tested!
     "watchdog, config, files_to_create, expected_file",
@@ -88,8 +90,15 @@ def reset_catched_events():
             ["hpgl/aaa", "hpgl/d.hpgl"],  # Last file is the good one
             "pdf/h.pdf",
         ),
+        # lp_ps_converter: Test the detection of a hpgl file in /hpgl
+        (
+            setup_postscript_watchdog,
+            {"misc": {}},
+            ["ps/aaa", "ps/e.ps"],  # Last file is the good one
+            "pdf/e.pdf",
+        ),
     ],
-    ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog", "txt_to_pdf_watchdog", "hpgl_to_pdf_watchdog"],
+    ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog", "txt_to_pdf_watchdog", "hpgl_to_pdf_watchdog", "ps_to_pdf_watchdog"],
 )
 def test_setup_watchdog(
     watchdog, config, files_to_create, expected_file, temp_dir, reset_catched_events
