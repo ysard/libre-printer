@@ -26,6 +26,7 @@ from libreprinter.legacy_interprocess_com import (
     get_status_message,
     debug_shared_memory,
 )
+from .helpers.diff_pdf import is_similar_pdfs
 # Note: For each plugin loaded, don't forget to modify extra_config fixture
 from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
@@ -316,7 +317,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
     assert "The remote firmware is not up to date!" in caplog.text
 
 
-@pytest.mark.timeout(10)
+@pytest.mark.timeout(15)
 @patch("libreprinter.interface.get_serial_handler", lambda x: True)
 @patch("libreprinter.interface.configure_interface", lambda x, y: None)
 @pytest.mark.parametrize(
@@ -325,16 +326,16 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
     [
         ## Pdf files generation
         (("epson", "no"), "escp2_1.prn", "escp2_1.pdf", "pdf/page1-1.pdf", 1),
-        (("hp", "no"), "test_page_pcl.prn", 14206, "pdf/1.pdf", 1),
+        (("hp", "no"), "test_page_pcl.prn", "test_page_pcl.pdf", "pdf/1.pdf", 1),
         # Intermediary file produced in txt_jobs/
         (("text", "no"), "escp2_1_strip.txt", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
         # ... and pdf by txt_converter plugin
-        (("text", "no"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
+        (("text", "no"), "escp2_1_strip.txt", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
         # hpgl intermediary & pdf files
         (("hpgl", "no"), "hpgl.hpgl", "hpgl.hpgl", "hpgl/1.hpgl", 1),
-        (("hpgl", "no"), "hpgl.hpgl", 17735, "pdf/1.pdf", 1),
+        (("hpgl", "no"), "hpgl.hpgl", "hpgl.pdf", "pdf/1.pdf", 1),
         # postscript to pdf
-        (("postscript", "no"), "escp2_1_strip.ps", 17735, "pdf/1.pdf", 1),
+        (("postscript", "no"), "escp2_1_strip.ps", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
         ## Plain text tests
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
         # 1 file plain text repeated 2 times in a stream
@@ -343,14 +344,14 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         # Pdf should be also produced by txt_converter plugin because txt file is generated
         # But as there is no escp2 code processing I have to send stripped text;
         # this test is currently similar to (text, no): "text-pdf" test
-        (("epson", "plain-jobs"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
+        (("epson", "plain-jobs"), "escp2_1_strip.txt", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
         ## Stripped text tests
         (("epson", "strip-escp2-stream"), "escp2_1.prn", "escp2_1_strip.txt", "txt_stream/1.txt", 1),
         # 1 file stripped repeated 2 times in a stream
         (("epson", "strip-escp2-stream"), "escp2_1.prn", "escp2_1_strip.txt", "txt_stream/1.txt", 2),
         (("epson", "strip-escp2-jobs"), "escp2_1.prn", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
         # Pdf should be also produced by txt_converter plugin because txt file is generated
-        (("epson", "strip-escp2-jobs"), "escp2_1.prn", 6722, "pdf/1.pdf", 1),
+        (("epson", "strip-escp2-jobs"), "escp2_1.prn", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
         ## pcl data with epson config
         (("hp", "plain-stream"), "test_page_pcl.prn", "test_page_pcl.prn", "pcl/1.pcl", 1),
         # TODO: epson/hp/auto ?
@@ -430,26 +431,21 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
     print("Test directory tree: ", ret)
     found_stats = processed_file.stat()
     print("Processed file & found stats:", processed_file, found_stats)
-    if isinstance(expected_file, int):
-        # Fallback for pdfs from ghostscript (see doc)
-        # Check only the expected size
 
+    if ".pdf" in expected_file:
         # Keep track of the generated file in /tmp in case of error
         backup_file = Path("/tmp/" + in_file + "_" + processed_file.name)
         backup_file.write_bytes(processed_file.read_bytes())
 
-        assert found_stats.st_size == expected_file, \
-            f"Problematic file is saved at <{backup_file}> for further study."
+        ret = is_similar_pdfs(processed_file, Path(DIR_DATA + expected_file))
+        assert ret, f"Problematic file is saved at <{backup_file}> for further study."
         # All is ok => delete the generated file
         backup_file.unlink()
         return
 
     # Check file content
     expected_content = Path(DIR_DATA + expected_file).read_bytes()
-    print(expected_content[-100:])
-    print(processed_file.read_bytes()[-100:])
-    assert expected_content * repetitions == processed_file.read_bytes(), \
-        "Maybe a mismatch on the Haru Free PDF Library?"
+    assert expected_content * repetitions == processed_file.read_bytes()
 
 
 @pytest.mark.parametrize(
