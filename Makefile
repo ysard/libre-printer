@@ -97,7 +97,7 @@ prod_tty_to_tty:
 
 send_tty_input:
 	# Send Test1.prn to ./virtual-tty
-	./input_tty_generator.py
+	./tools/input_tty_generator.py
 
 send_end_config:
 	# Send "end_config" word to end the interface configuration
