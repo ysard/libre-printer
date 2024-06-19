@@ -89,7 +89,7 @@ test_tty_to_tty:
 
 test_tty_to_rpi:
 	# serial tty to serial tty => automatic test in chroot env
-	socat PTY,link=/mnt/raspbian/home/pi/libreprinter/virtual-tty,raw,echo=0 PTY,link=./input-tty,raw,echo=0
+	socat PTY,link=/mnt/raspbian/home/pi/virtual-tty,raw,echo=0 PTY,link=./input-tty,raw,echo=0
 
 prod_tty_to_tty:
 	# serial interface => serial tty
