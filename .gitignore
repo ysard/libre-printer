@@ -9,6 +9,7 @@ doc/build/
 poc/
 hpgl/
 ps/
+input-tty
 
 # PyCharm
 .idea/
