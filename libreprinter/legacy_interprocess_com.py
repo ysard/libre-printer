@@ -123,6 +123,7 @@ def debug_shared_memory():
         202: {
             0: "no data to process or data is processed",
             1: "data to process",
+            3: "end of job forced",
         },
     }
 
