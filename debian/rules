@@ -34,6 +34,6 @@ override_dh_python3:
 	# Script tools inherit the python2 shebang without explicit force...
 	dh_python3 --shebang=/usr/bin/python3
 
-	rm -rf debian/libre-printer/usr/lib/python3/dist-packages/doc/
-	rm -rf debian/libre-printer/usr/lib/python3/dist-packages/tools/
-	rm -rf debian/libre-printer/usr/lib/python3/dist-packages/firmware/
+	rm -rf $(DEB_DIR)/usr/lib/python3/dist-packages/doc/
+	rm -rf $(DEB_DIR)/usr/lib/python3/dist-packages/tools/
+	rm -rf $(DEB_DIR)/usr/lib/python3/dist-packages/firmware/
