@@ -308,7 +308,7 @@ Compiling sources is easy (but takes time); First, download and extract the arch
 RetroPrinter vendor blobs
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. warning:: Until now, only the ``convert-escp2`` binary v3.4 is available on x86_64.
+.. warning:: Until now, only the ``convert-escp2`` binary v3.7 is available on x86_64.
     Other binaries, updates & platforms should come, but in the meantime you will
     have to use the ARM binaries vendor blobs provided by the RetroPrinter company.
     Reverse-engineering is a tough job...
