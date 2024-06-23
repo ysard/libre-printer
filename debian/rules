@@ -2,7 +2,6 @@
 # Increase trace logging, see debhelper(7) (uncomment to enable)
 DH_VERBOSE=1
 export PYBUILD_DISABLE_python2=1
-# The resulting location will be $DH_VIRTUALENV_INSTALL_ROOT/<packagename>
 export PYBUILD_NAME=libreprinter
 PACKAGE=$(shell dh_listpackages)
 DEB_DIR=debian/$(PACKAGE)
