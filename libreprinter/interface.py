@@ -458,14 +458,14 @@ def read_interface(config):
             )
 
         if misc_section["emulation"] == "hpgl":
-            # Copy current file to pcl folder
+            # Copy current file to hpgl folder
             shutil.copy(
                 "{}/raw/{}.raw".format(*copy_args),
                 "{}/hpgl/{}.hpgl".format(*copy_args),
             )
 
         if misc_section["emulation"] == "postscript":
-            # Copy current file to pcl folder
+            # Copy current file to ps folder
             shutil.copy(
                 "{}/raw/{}.raw".format(*copy_args),
                 "{}/ps/{}.ps".format(*copy_args),
