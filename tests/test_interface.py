@@ -505,7 +505,7 @@ def test_apply_msb_control():
 
     # MSB is set: bit 7 to 1
     # /!\ Beware of this one, we want an unsigned int: 255, not -1
-    found = apply_msb_control(b"\xfe", msbsetting=2)
+    found = apply_msb_control(b"\x7f", msbsetting=2)
     assert found == 0b11111111  # 254 => 255
 
     # Wrong msbsetting
