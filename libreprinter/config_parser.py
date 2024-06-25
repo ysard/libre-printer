@@ -143,7 +143,8 @@ def parse_config(config: configparser.ConfigParser):
         "pcl",
         "text",
         "hpgl",
-        "postscript"
+        "postscript",
+        "seiko-qt2100"
     ):
         misc_section["emulation"] = "auto"
     if misc_section.get("emulation") in ("hp", "pcl"):
@@ -179,6 +180,22 @@ def parse_config(config: configparser.ConfigParser):
     retain_data = misc_section.get("retain_data")
     if not retain_data:
         misc_section["retain_data"] = "yes"
+
+    ## Seiko plugin
+    seiko_settings = config["seiko-qt2100"]
+    for conf in ("enable-csv", "enable-graph", "vertical"):
+        param = seiko_settings.get(conf, "yes")
+        seiko_settings[conf] = param if param == "yes" else "no"
+
+    graph_cutoff = seiko_settings.get("cutoff")
+    try:
+        _ = float(graph_cutoff)
+    except (ValueError, TypeError):
+        # Not numeric, maybe boolean ?
+        cutoff_flag = seiko_settings.getboolean("cutoff")
+        if cutoff_flag is None:
+            # Still not boolean or not defined: default value
+            seiko_settings["cutoff"] = "true"
 
     ## Parallel printer
     parallel_section = config["parallel_printer"]

@@ -110,8 +110,17 @@ def setup_seiko_watchdog(config):
         LOGGER.error("<seiko_converter> module is not installed!")
         return
 
+    # Format values from the config files (especially the cutoff numeric value)
+    temp_config = dict()
+    for key in config["seiko-qt2100"].keys():
+        try:
+            temp_config[key] = config["seiko-qt2100"].getboolean(key, True)
+        except ValueError:
+            temp_config[key] = config["seiko-qt2100"].getfloat(key)
+
+    print(temp_config)
     event_handler = SeikoEventHandler(
-        seiko_settings=config["seiko-qt2100"], ignore_directories=True
+        seiko_settings=temp_config, ignore_directories=True
     )
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
