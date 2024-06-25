@@ -246,4 +246,63 @@ def test_default_settings(sample_config, expected):
 def test_specific_settings(sample_config, expected_settings):
     """Test user settings vs parsed ones"""
     for k, v in expected_settings.items():
-        assert sample_config["misc"][k] == v
+        assert sample_config["misc"][k] == v, f"Fault key: {k}"
+
+
+@pytest.mark.parametrize(
+    "sample_config,expected_settings",
+    [
+        # Config with user settings vs expected parsed settings
+        (
+            # default-settings
+            """
+            [misc]
+            [parallel_printer]
+            [serial_printer]
+            [seiko-qt2100]
+            """,
+            {
+                "enable-csv": "yes",
+                "enable-graph": "yes",
+                "vertical": "yes",
+                "cutoff": "true",
+            },
+        ),
+        (
+            # edited-settings
+            """
+            [misc]
+            [parallel_printer]
+            [serial_printer]
+            [seiko-qt2100]
+            enable-graph=xxx
+            cutoff=false
+            vertical=no
+            """,
+            {
+                "enable-csv": "yes",
+                "enable-graph": "no",  # garbage fixed
+                "vertical": "no",
+                "cutoff": "false",
+            },
+        ),
+        (
+            # numeric-cutoff
+            """
+            [misc]
+            [parallel_printer]
+            [serial_printer]
+            [seiko-qt2100]
+            cutoff=1.0
+            """,
+            {
+                "cutoff": "1.0",  # tristate variable parsed (bool, float, int)
+            },
+        ),
+    ],
+    ids=["default-settings", "edited-settings", "numeric-cutoff"],
+    indirect=["sample_config"],  # Send sample_config val to the fixture
+)
+def test_seiko_default_settings(sample_config, expected_settings):
+    for k, v in expected_settings.items():
+        assert sample_config["seiko-qt2100"][k] == v, f"Fault key: {k}"
