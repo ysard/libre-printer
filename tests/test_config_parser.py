@@ -257,9 +257,9 @@ def test_specific_settings(sample_config, expected_settings):
             # default-settings
             """
             [misc]
+            emulation=seiko-qt2100
             [parallel_printer]
             [serial_printer]
-            [seiko-qt2100]
             """,
             {
                 "enable-csv": "yes",
@@ -272,6 +272,7 @@ def test_specific_settings(sample_config, expected_settings):
             # edited-settings
             """
             [misc]
+            emulation=seiko-qt2100
             [parallel_printer]
             [serial_printer]
             [seiko-qt2100]
@@ -290,6 +291,7 @@ def test_specific_settings(sample_config, expected_settings):
             # numeric-cutoff
             """
             [misc]
+            emulation=seiko-qt2100
             [parallel_printer]
             [serial_printer]
             [seiko-qt2100]

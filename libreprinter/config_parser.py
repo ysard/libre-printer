@@ -215,7 +215,10 @@ def parse_config(config: configparser.ConfigParser):
 
     ## Optional sections
     ## Seiko plugin
-    if "seiko-qt2100" in config.sections():
+    if misc_section["emulation"] == "seiko-qt2100":
+        if "seiko-qt2100" not in config.sections():
+            config.add_section("seiko-qt2100")
+
         seiko_settings = config["seiko-qt2100"]
         # yes by default
         for conf in ("enable-csv", "enable-graph", "vertical"):

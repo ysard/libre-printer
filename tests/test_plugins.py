@@ -195,11 +195,21 @@ def handle_module_cache():
             """,
             ["lp_ps_converter"],
         ),
+        # seiko-qt2100: one plugin only
+        (
+            """
+            [misc]
+            emulation=seiko-qt2100
+            [parallel_printer]
+            [serial_printer]
+            """,
+            ["lp_seiko_qt2100_converter"],
+        ),
     ],
     ids=[
         "espc2_printer_enabled1", "espc2_printer_enabled2", "escp2_printer_disabled",
         "escp2_stream1", "escp2_stream2",
-        "only_text", "only_hp1", "only_hp2", "hpgl", "postscript",
+        "only_text", "only_hp1", "only_hp2", "hpgl", "postscript", "only_seiko-qt2100",
     ],
     indirect=["sample_config"],  # Send sample_config val to the fixture
 )
