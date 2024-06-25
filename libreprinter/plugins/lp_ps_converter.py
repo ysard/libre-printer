@@ -74,7 +74,7 @@ class PostscriptEventHandler(RegexMatchingEventHandler):
         self.gs_settings = gs_settings or []
 
     def on_closed(self, event):
-        """File creation is detected, convert it to PDF
+        """File closing is detected, convert it to PDF
 
         Minimal command::
 

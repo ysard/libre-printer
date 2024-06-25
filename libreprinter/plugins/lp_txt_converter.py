@@ -58,14 +58,16 @@ CONFIG = {
 class TxtEventHandler(RegexMatchingEventHandler):
     """Watch a directory via a parent Observer and emit events accordingly
 
-    This class only reimplement :meth:`on_created` event.
+    This class only reimplement :meth:`on_closed` event.
 
     Watched directory:
 
         - `txt_jobs`: `*.txt`
 
-    Attribute:
+    Attributes:
+        :param enscript_path: Path of the Enscript binary from the config file.
         :param enscript_settings: Command line settings for Enscript binary.
+        :type enscript_path: str
         :type enscript_settings: str
 
     Class attribute:
@@ -84,7 +86,7 @@ class TxtEventHandler(RegexMatchingEventHandler):
         self.enscript_settings = enscript_settings
 
     def on_closed(self, event):
-        """File creation is detected, convert it to PDF
+        """File closing is detected, convert it to PDF
 
         Minimal command::
 
@@ -160,6 +162,6 @@ def setup_text_watchdog(config):
 if __name__ == "__main__":  # pragma: no cover
 
     obs = setup_text_watchdog(
-        {"misc": {"output_path": "./", "enscript_settings": "-2Gr"}}
+        {"misc": {"output_path": "./", "enscript_path": "/usr/bin/enscript", "enscript_settings": "-2Gr"}}
     )
     obs.join()

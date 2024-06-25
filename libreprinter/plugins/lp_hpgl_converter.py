@@ -75,7 +75,7 @@ class HpglEventHandler(RegexMatchingEventHandler):
         self.hp2xx_settings = hp2xx_settings
 
     def on_closed(self, event):
-        """File creation is detected, convert it to PDF
+        """File closing is detected, convert it to PDF
 
         Minimal command::
 
