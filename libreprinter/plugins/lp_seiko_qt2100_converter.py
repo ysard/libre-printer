@@ -28,6 +28,7 @@ configured on the QT-2100 device.
 # Standard imports
 from importlib.util import find_spec
 from pathlib import Path
+from datetime import datetime
 from watchdog.observers.inotify import InotifyObserver
 from watchdog.events import RegexMatchingEventHandler, FileSystemEvent
 
@@ -53,9 +54,12 @@ class SeikoEventHandler(RegexMatchingEventHandler):
 
         - `raw`: `*.raw`
 
-    Attribute:
+    Attributes:
         :param seiko_settings: Settings of the seiko-qt2100 section from the config file.
+        :param last_timestamp: Keep the timestamp of the last modified file event.
+            Used to reduce overhead.
         :type seiko_settings: dict
+        :type last_timestamp: float
 
     Class attribute:
         :param FILES_REGEX: Patterns to detect files.
@@ -70,10 +74,14 @@ class SeikoEventHandler(RegexMatchingEventHandler):
         """
         super().__init__(*args, regexes=self.FILES_REGEX, **kwargs)
         self.seiko_settings = seiko_settings
+        self.last_timestamp = datetime.now().timestamp()
 
     def on_modified(self, event: FileSystemEvent) -> None:
         """File is modified, generate partial files"""
-        self.build_data(event)
+        timestamp = datetime.now().timestamp()
+        if timestamp - self.last_timestamp > 4:
+            self.last_timestamp = timestamp
+            self.build_data(event)
 
     def on_closed(self, event):
         """File creation is detected, generate full files"""
