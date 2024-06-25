@@ -181,22 +181,6 @@ def parse_config(config: configparser.ConfigParser):
     if not retain_data:
         misc_section["retain_data"] = "yes"
 
-    ## Seiko plugin
-    seiko_settings = config["seiko-qt2100"]
-    for conf in ("enable-csv", "enable-graph", "vertical"):
-        param = seiko_settings.get(conf, "yes")
-        seiko_settings[conf] = param if param == "yes" else "no"
-
-    graph_cutoff = seiko_settings.get("cutoff")
-    try:
-        _ = float(graph_cutoff)
-    except (ValueError, TypeError):
-        # Not numeric, maybe boolean ?
-        cutoff_flag = seiko_settings.getboolean("cutoff")
-        if cutoff_flag is None:
-            # Still not boolean or not defined: default value
-            seiko_settings["cutoff"] = "true"
-
     ## Parallel printer
     parallel_section = config["parallel_printer"]
 
@@ -228,6 +212,26 @@ def parse_config(config: configparser.ConfigParser):
     flow_control = serial_section.get("flow_control")
     if flow_control not in ("hardware", "software", "both"):
         serial_section["flow_control"] = "hardware"
+
+    ## Optional sections
+    ## Seiko plugin
+    if "seiko-qt2100" in config.sections():
+        seiko_settings = config["seiko-qt2100"]
+        # yes by default
+        for conf in ("enable-csv", "enable-graph", "vertical"):
+            param = seiko_settings.get(conf, "yes")
+            seiko_settings[conf] = param if param == "yes" else "no"
+
+        # true by default
+        graph_cutoff = seiko_settings.get("cutoff")
+        try:
+            _ = float(graph_cutoff)
+        except (ValueError, TypeError):
+            # Not numeric, maybe boolean ?
+            cutoff_flag = seiko_settings.getboolean("cutoff")
+            if cutoff_flag is None:
+                # Still not boolean or not defined: default value
+                seiko_settings["cutoff"] = "true"
 
     debug_config_file(config)
     return config
