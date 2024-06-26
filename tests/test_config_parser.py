@@ -165,19 +165,32 @@ def test_default_settings(sample_config, expected):
     [
         # Config with user settings vs expected parsed settings
         (
-            # sample1
+            # sample1: mainly test end_page_timeout restrictions
+            # + various changed default settings
             """
             [misc]
             line_ending=windows
             emulation=hp
             end_page_timeout=-1
+            usb_passthrough=yes
+            auto_end_page=yes
+            retain_data=no
+            loglevel=info
+            enscript_settings=XXX
             [parallel_printer]
+            delayprinter=4
             [serial_printer]
             """,
             {
                 "line_ending": "\r\n",  # line ending is updated internally
                 "emulation": "hp",
                 "end_page_timeout": "2",  # <= 0 is not allowed
+                "usb_passthrough": "yes",
+                "auto_end_page": "yes",
+                "retain_data": "no",
+                "loglevel": "info",
+                "enscript_settings": "XXX",
+                "delayprinter": "4",
             },
         ),
         (
@@ -246,6 +259,10 @@ def test_default_settings(sample_config, expected):
 def test_specific_settings(sample_config, expected_settings):
     """Test user settings vs parsed ones"""
     for k, v in expected_settings.items():
+        # Temporary workaround for settings from another section...
+        if k == "delayprinter":
+            assert sample_config["parallel_printer"][k] == v, f"Fault key: {k}"
+            continue
         assert sample_config["misc"][k] == v, f"Fault key: {k}"
 
 
