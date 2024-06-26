@@ -21,6 +21,8 @@ Test only file detections & startups.
 """
 # Standard imports
 import time
+
+import libreprinter.plugins.lp_seiko_qt2100_converter
 import pytest
 from unittest.mock import patch
 
@@ -31,6 +33,7 @@ from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
 from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
 from libreprinter.plugins.lp_ps_converter import setup_postscript_watchdog
+from libreprinter.plugins.lp_seiko_qt2100_converter import setup_seiko_watchdog
 from libreprinter.commons import PCL_CONVERTER, ENSCRIPT_BINARY, HP2XX_BINARY
 
 # Import create dir fixture
@@ -97,6 +100,7 @@ def reset_catched_events():
             ["ps/aaa", "ps/e.ps"],  # Last file is the good one
             "pdf/e.pdf",
         ),
+        # lp_seiko_qt2100_converter: Not tested here, doesn't accept empty raw file
     ],
     ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog", "txt_to_pdf_watchdog", "hpgl_to_pdf_watchdog", "ps_to_pdf_watchdog"],
 )
@@ -234,6 +238,45 @@ def test_bad_binary_path(
     with pytest.raises(FileNotFoundError, match=expected_exception_text):
         # Add temporary dir to config
         config["misc"]["output_path"] = temp_dir
+        # Start watchdog
+        _ = watchdog(config)
+        # Failure is expected: no need to stop the watchdog
+
+    # We expect an error in the logger
+    print(caplog.text)
+    assert expected_log_text in caplog.text
+
+@patch("libreprinter.plugins.lp_seiko_qt2100_converter.EXTERNAL_PACKAGE", "FAKE_PACKAGE")
+@pytest.mark.parametrize(
+    "watchdog, config, expected_exception_text, expected_log_text",
+    [
+        (
+            setup_seiko_watchdog,
+            {},  # Config is unimportant: it should crash before that it's used
+            r"<FAKE_PACKAGE> package is not installed!",
+            "<FAKE_PACKAGE> package is not installed!",
+        ),
+    ],
+    ids=["missing-seiko_converter"]
+)
+def test_missing_external_module(watchdog, config, expected_exception_text, expected_log_text, caplog):
+    """Test setup_*_watchdog functions with non-existent external packages requirements
+
+    The watchdog should crash emitting a ImportError exception.
+
+    :param watchdog: Function that set up a watchdog according to a given config
+    :param config: Config in the format returned by a Configuration Parser.
+        Not all settings are required for a specific watchdog.
+    :param expected_exception_text: Exception message in a raw string.
+    :param expected_log_text: Fragment of a message emitted by the logger.
+    :param caplog: (fixture) pytest caplog-fixture
+    :type watchdog: <function>
+    :type config: <dict>
+    :type expected_exception_text: <str>
+    :type expected_log_text: <str>
+    :type caplog: <_pytest.logging.LogCaptureFixture>
+    """
+    with pytest.raises(ImportError, match=expected_exception_text):
         # Start watchdog
         _ = watchdog(config)
         # Failure is expected: no need to stop the watchdog
