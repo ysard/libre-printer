@@ -19,24 +19,26 @@
 # Standard imports
 import os
 import shutil
-import glob
-import itertools as it
+from pathlib import Path
 
 # Custom imports
 from libreprinter.commons import OUTPUT_DIRS, SHARED_MEM_NAME
 
 
-def init_directories(output_path):
-    """Init output directories (raw, png, pdf, txt, pcl)
+def init_directories(output_path, output_dirs=OUTPUT_DIRS):
+    """Init default output directories (raw, png, pdf, txt, pcl)
 
     :param output_path: Path were directories will be created.
+    :param output_dirs: Override default output directories. Useful if callled
+        by plugins during their initialisation.
     :type output_path: str
+    :type output_dirs: list[str]
     """
     # test if output path exists
     if not os.path.isdir(output_path):
         os.mkdir(output_path)
 
-    for directory in OUTPUT_DIRS:
+    for directory in output_dirs:
         try:
             os.mkdir(output_path + directory, mode=0o755)
         except FileExistsError:
@@ -64,7 +66,7 @@ def cleanup_directories(output_path):
         pass
 
 
-def get_job_number(output_path):
+def get_job_number(output_path, extensions=(".txt", ".raw", ".eps", ".csv", ".hpgl", ".ps")):
     """Return the number of the current job based on files found in output directories
 
     - Get only non empty files
@@ -72,27 +74,22 @@ def get_job_number(output_path):
     - Search highest file number in all folders
 
     TODO: handle properly pdf dir data: page1-1.pdf, page1-2.pdf, page2-1.pdf, ...
+    TODO: handle new naming convention based on the date to avoid overwriting
+        if raw files are deleted.
+        => will allow to only search raw files
     :return: Current job number
     :rtype: int
     """
-    # Search files in folders with an extension which equals the folder's name
-    # => temp/trash files are avoided
-    g = it.chain(
-        *(
-            glob.glob(output_path + directory + "/*.*")
-            for directory in OUTPUT_DIRS
-            if directory != "pdf"
-        )
-    )
+    g = Path(output_path).rglob("*.*")
     # Prune empty files, get basenames and filter extensions
-    pruned = (
-        os.path.splitext(filepath) for filepath in g if os.path.getsize(filepath) != 0
-    )
-    pruned = (
-        os.path.basename(filename) for filename, extension in pruned
-        if extension in (".txt", ".raw", ".eps")
-    )
-    pruned = sorted(int(val) for val in pruned if val.isnumeric())
+    pruned = [
+        filepath.stem for filepath in g
+        if filepath.suffix in extensions  # Filter extensions
+        and filepath.stem.isnumeric()  # Get only files named with digits
+        and filepath.stat().st_size  # Get non empty files
+    ]
+    # Get the higher name
+    pruned = sorted(map(int, pruned))
     # Increment the value to get the current job number
     return int(pruned[-1]) + 1 if pruned else 1
 
