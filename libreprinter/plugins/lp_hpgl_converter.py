@@ -122,6 +122,8 @@ class HpglEventHandler(RegexMatchingEventHandler):
             if len(header_lines) >= 6 and b"BoundingBox" in header_lines[5]:
                 # Extract the 2 last values
                 width, height = map(int, header_lines[5].decode().split()[-2:])
+            else:
+                LOGGER.warning("HPGL BoudingBox not found!")
             if width:
                 # Insert the values in the GhostScript command
                 ghostscript_cmd = ghostscript_cmd[:-1] + [
