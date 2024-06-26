@@ -13,6 +13,9 @@ coverage:
 	@#python setup.py test --addopts "--cov libreprinter tests"
 	@-coverage-badge -f -o images/coverage.svg
 
+branch_coverage:
+	pytest --cov=libreprinter --cov-report term-missing --cov-branch -vv
+
 docstring_coverage:
 	interrogate -v libreprinter/ \
 	    -e libreprinter/__init__.py \
