@@ -51,7 +51,7 @@ Le fonctionnement peut être résumé en 3 étapes clés :
 
 ## Types d'imprimantes & protocoles supportés
 
-Les interfaces concernées sont les suivantes :
+Les interfaces et appareils concernés sont les suivants :
 
 - Imprimantes Epson : ESC/P - ESC/P2, 9 & 24 pins
 - Imprimantes HP PCL :

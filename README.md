@@ -50,7 +50,7 @@ The operation can be summarized in 3 key steps:
 
 ## Printer types & protocols supported
 
-The interfaces concerned are the following:
+The supported interfaces & devices are the following:
 
 - Epson printers:
     ESC/P - ESC/P2, 9 & 24 pins
