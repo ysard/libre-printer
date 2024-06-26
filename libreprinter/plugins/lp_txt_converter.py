@@ -34,6 +34,7 @@ will be a text file due to `text` (`plain-jobs` is only for epson emulations).
 So... The plugin is not compatible with `hp` emulation,
 nor with `*stream` in endlesstext setting.
 """
+
 # Standard imports
 import shlex
 from pathlib import Path
@@ -152,7 +153,7 @@ def setup_text_watchdog(config):
     event_handler = TxtEventHandler(
         enscript_path=enscript_path,
         enscript_settings=enscript_settings,
-        ignore_directories=True
+        ignore_directories=True,
     )
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
@@ -164,8 +165,13 @@ def setup_text_watchdog(config):
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     obs = setup_text_watchdog(
-        {"misc": {"output_path": "./", "enscript_path": "/usr/bin/enscript", "enscript_settings": "-2Gr"}}
+        {
+            "misc": {
+                "output_path": "./",
+                "enscript_path": "/usr/bin/enscript",
+                "enscript_settings": "-2Gr",
+            }
+        }
     )
     obs.join()

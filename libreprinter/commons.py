@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Logger settings and project constants"""
+
 # Standard imports
 from logging.handlers import RotatingFileHandler
 import logging

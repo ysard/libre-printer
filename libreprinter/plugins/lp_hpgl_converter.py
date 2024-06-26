@@ -25,6 +25,7 @@ Expected config (emulation + endlesstext):
 
     - hpgl + no
 """
+
 # Standard imports
 import shlex
 from pathlib import Path
@@ -45,7 +46,7 @@ CONFIG = {
         "endlesstext": "no",
     }
 }
-REQUIRED_DIRS = ["hpgl", ]
+REQUIRED_DIRS = ["hpgl"]
 
 
 class HpglEventHandler(RegexMatchingEventHandler):

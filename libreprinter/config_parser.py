@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Load configuration file, check and set default values"""
+
 # Standard imports
 import configparser
 
@@ -144,7 +145,7 @@ def parse_config(config: configparser.ConfigParser):
         "text",
         "hpgl",
         "postscript",
-        "seiko-qt2100"
+        "seiko-qt2100",
     ):
         misc_section["emulation"] = "auto"
     if misc_section.get("emulation") in ("hp", "pcl"):

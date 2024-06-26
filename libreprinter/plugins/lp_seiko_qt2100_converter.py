@@ -44,8 +44,9 @@ CONFIG = {
         "emulation": "seiko-qt2100",
     }
 }
-REQUIRED_DIRS = ["csv", ]
+REQUIRED_DIRS = ["csv"]
 EXTERNAL_PACKAGE = "seiko_converter"
+
 
 class SeikoEventHandler(RegexMatchingEventHandler):
     """Watch a directory via a parent Observer and emit events accordingly

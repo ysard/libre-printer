@@ -30,6 +30,7 @@ In other terms, a pdf is sent to printer if:
 TODO: only "no" for endless config because strip wrongly builds empty pdf files
     => not any of ("plain-jobs", "strip-escp2-jobs", "no")
 """
+
 # Standard imports
 import shlex
 import subprocess
@@ -121,7 +122,6 @@ def setup_pdf_watchdog(config):
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     obs = setup_pdf_watchdog(
         {"misc": {"output_path": "./", "output_printer": "TEST_PRINTER"}}
     )

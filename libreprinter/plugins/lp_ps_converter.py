@@ -25,6 +25,7 @@ Expected config (emulation + endlesstext):
 
     - postscript + no
 """
+
 # Standard imports
 import shlex
 from pathlib import Path
@@ -45,7 +46,7 @@ CONFIG = {
         "endlesstext": ("no",),
     }
 }
-REQUIRED_DIRS = ["ps", ]
+REQUIRED_DIRS = ["ps"]
 
 
 class PostscriptEventHandler(RegexMatchingEventHandler):
@@ -98,11 +99,7 @@ class PostscriptEventHandler(RegexMatchingEventHandler):
             f"-sOutputFile={shlex.quote(str(pdf_path))}",
         ]
         ghostscript_cmd += self.gs_settings
-        ghostscript_cmd += [
-            shlex.quote(event.src_path),
-            "-c",
-            "quit"
-        ]
+        ghostscript_cmd += [shlex.quote(event.src_path), "-c", "quit"]
         LOGGER.debug("ghostscript command: %s", ghostscript_cmd)
         try:
             # We are in a child thread, we can have blocking calls like run()
@@ -128,10 +125,7 @@ def setup_postscript_watchdog(config):
     init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
     # gs_settings = config["misc"]["gs_settings"]
-    event_handler = PostscriptEventHandler(
-        gs_settings=None,
-        ignore_directories=True
-    )
+    event_handler = PostscriptEventHandler(gs_settings=None, ignore_directories=True)
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
     observer.schedule(
@@ -142,8 +136,12 @@ def setup_postscript_watchdog(config):
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     obs = setup_postscript_watchdog(
-        {"misc": {"output_path": "./", "gs_settings": ["-sPAPERSIZE=b5", "-dFIXEDMEDIA"]}}
+        {
+            "misc": {
+                "output_path": "./",
+                "gs_settings": ["-sPAPERSIZE=b5", "-dFIXEDMEDIA"],
+            }
+        }
     )
     obs.join()

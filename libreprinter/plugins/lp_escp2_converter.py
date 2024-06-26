@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Parametrize and launch espc2 converter binary as subprocess"""
+
 # Standard imports
 import shlex
 import subprocess

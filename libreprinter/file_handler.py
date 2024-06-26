@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Gestion of files (creation and processing) and directories used by the project"""
+
 # Standard imports
 import os
 import shutil
@@ -66,7 +67,9 @@ def cleanup_directories(output_path):
         pass
 
 
-def get_job_number(output_path, extensions=(".txt", ".raw", ".eps", ".csv", ".hpgl", ".ps")):
+def get_job_number(
+    output_path, extensions=(".txt", ".raw", ".eps", ".csv", ".hpgl", ".ps")
+):
     """Return the number of the current job based on files found in output directories
 
     - Get only non empty files

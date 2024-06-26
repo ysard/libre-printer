@@ -20,6 +20,7 @@
 The conversion is made thanks to the `pcl_converter_path` setting pointing to
 the GhostPCL binary.
 """
+
 # Standard imports
 import shlex
 from pathlib import Path
@@ -84,7 +85,7 @@ class PclEventHandler(RegexMatchingEventHandler):
             "-dEmbedAllFonts=true",  # Increase the final size
             "-dSubsetFonts=true",  # Reduce the final size
             f"-sOutputFile={shlex.quote(str(pdf_path))}",
-            shlex.quote(event.src_path)
+            shlex.quote(event.src_path),
         ]
         LOGGER.debug("GhostPCL command: %s", args)
         try:
@@ -115,9 +116,7 @@ def setup_pcl_watchdog(config):
     # Test existence of pcl converter binary
     converter_path = config["misc"]["pcl_converter_path"]
     if not Path(converter_path).exists():
-        LOGGER.error(
-            "Setting <pcl_converter_path:%s> doesn't exists!", converter_path
-        )
+        LOGGER.error("Setting <pcl_converter_path:%s> doesn't exists!", converter_path)
         raise FileNotFoundError("pcl converter not found")
 
     event_handler = PclEventHandler(

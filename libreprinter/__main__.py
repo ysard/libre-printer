@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Libreprinter entry point"""
+
 # Standard imports
 import argparse
 from pathlib import Path

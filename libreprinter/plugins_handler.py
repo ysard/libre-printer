@@ -16,15 +16,17 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Handle the dynamic loading of plugins"""
+
 # Standard imports
 import functools
 import importlib
 from collections import namedtuple
 from watchdog.observers.inotify import InotifyObserver
+
 try:
     # Starting from Python 3.7
     from importlib import resources
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     # Backport
     import importlib_resources as resources
 # Custom imports
@@ -120,7 +122,7 @@ def _import_all(package, config):
 
     LOGGER.info(
         "Plugins loaded: %s",
-        [name for plugins in _PLUGINS.values() for name in plugins.keys()]
+        [name for plugins in _PLUGINS.values() for name in plugins.keys()],
     )
 
 

@@ -21,6 +21,7 @@
 - configuration
 - data receiving
 """
+
 # Standard imports
 import shutil
 import logging
@@ -115,7 +116,10 @@ def configure_interface(serial_handler, config):
     """
     LOGGER.debug("Send config to the interface...")
 
-    [serial_handler.write(param.encode()) for param in build_interface_config_settings(config)]
+    [
+        serial_handler.write(param.encode())
+        for param in build_interface_config_settings(config)
+    ]
     # Signal end of config
     serial_handler.write(b"end_config\n")
 
@@ -137,7 +141,7 @@ def configure_interface(serial_handler, config):
                 LOGGER.warning(
                     "The remote firmware is not up to date! (%s vs %s)",
                     remote_version,
-                    LAST_HARDWARE_VERSION
+                    LAST_HARDWARE_VERSION,
                 )
 
         if response.startswith("end_config"):
@@ -163,7 +167,7 @@ def apply_msb_control(databyte, msbsetting):
         return databyte
     elif msbsetting == 1:
         # MSB Control: clear bit 7 (to 0)
-        return databyte[0] & 0x7f  # Get only 8 bits: convert to unsigned int
+        return databyte[0] & 0x7F  # Get only 8 bits: convert to unsigned int
     elif msbsetting == 2:
         # MSB Control: set bit 7 (to 1)
         return databyte[0] | 0x80  # Get only 8 bits: convert to unsigned int
@@ -242,9 +246,7 @@ def parse_buffer(serial_handler, job_number, config):
     if config["misc"]["usb_passthrough"] != "no":
         # Epson + HP
         # => write directly in /dev/ interface
-        usb_printer_dev_f_d = open(
-            config["misc"]["usb_passthrough"], "wb"
-        )
+        usb_printer_dev_f_d = open(config["misc"]["usb_passthrough"], "wb")
 
     epson_emulation = config["misc"]["emulation"] == "epson"
 
@@ -309,17 +311,16 @@ def parse_buffer(serial_handler, job_number, config):
 
         # TODO: autodetect epson_emulation based on init seq
         # TODO: starts_with ?
-        if not received_bytes and b"\x1B\x40\x1B" in databytes:
+        if not received_bytes and b"\x1b\x40\x1b" in databytes:
             # Epson init command /end printing command (\x1B@\x1B)
             print("PROBE EPSON data")
-        if not received_bytes and b"\x1B\x45\x1B\x26\x6c" in databytes:
+        if not received_bytes and b"\x1b\x45\x1b\x26\x6c" in databytes:
             # HP reset/init command (\x1BE\x1B&l) (0x1B E)
             print("PROBE HP data")
 
         received_bytes = True
 
         if epson_emulation:
-
             for index, databyte in enumerate(databytes):
                 if msbsetting != 0:
                     databyte = apply_msb_control(databyte, msbsetting)
@@ -333,7 +334,6 @@ def parse_buffer(serial_handler, job_number, config):
                 if (databyte == 27) and not print_controlcodes:
                     escmode = True
                 elif escmode:
-
                     if databyte == ord("#"):
                         # Cancel MSB Control; escp2 line 3437
                         msbsetting = 0
