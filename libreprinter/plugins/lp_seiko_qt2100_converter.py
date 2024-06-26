@@ -43,7 +43,7 @@ CONFIG = {
         "emulation": "seiko-qt2100",
     }
 }
-
+EXTERNAL_PACKAGE = "seiko_converter"
 
 class SeikoEventHandler(RegexMatchingEventHandler):
     """Watch a directory via a parent Observer and emit events accordingly
@@ -114,9 +114,10 @@ def setup_seiko_watchdog(config):
     LOGGER.info("Launch seiko watchdog...")
 
     # Test the existence of the external module
-    if find_spec("seiko_converter") is None:
-        LOGGER.error("<seiko_converter> module is not installed!")
-        return
+    if find_spec(EXTERNAL_PACKAGE) is None:
+        msg = f"<{EXTERNAL_PACKAGE}> package is not installed!"
+        LOGGER.error(msg)
+        raise ImportError(msg)
 
     # Format values from the config files (especially the cutoff numeric value)
     temp_config = dict()
@@ -126,7 +127,6 @@ def setup_seiko_watchdog(config):
         except ValueError:
             temp_config[key] = config["seiko-qt2100"].getfloat(key)
 
-    print(temp_config)
     event_handler = SeikoEventHandler(
         seiko_settings=temp_config, ignore_directories=True
     )
