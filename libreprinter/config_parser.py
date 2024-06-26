@@ -215,7 +215,7 @@ def parse_config(config: configparser.ConfigParser):
 
     ## Optional sections
     ## Seiko plugin
-    if misc_section["emulation"] == "seiko-qt2100":
+    if misc_section["emulation"] in ("seiko-qt2100", "auto"):
         if "seiko-qt2100" not in config.sections():
             config.add_section("seiko-qt2100")
 

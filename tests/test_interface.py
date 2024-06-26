@@ -33,6 +33,7 @@ from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
 from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
 from libreprinter.plugins.lp_ps_converter import setup_postscript_watchdog
+from libreprinter.plugins.lp_seiko_qt2100_converter import setup_seiko_watchdog
 import libreprinter.commons as cm
 
 # Import create dir fixture
@@ -74,6 +75,7 @@ def init_virtual_interface(temp_dir):
     params=[
         """
         [misc]
+        emulation=auto
         [parallel_printer]
         [serial_printer]
         """,
@@ -82,6 +84,10 @@ def init_virtual_interface(temp_dir):
 )
 def init_config(request, init_virtual_interface):
     """Return temporary working dir + initialized config
+
+    .. note:: "emulation=auto" allows to load all plugins specific config
+        that would not be loaded by default. The emulation setting will be
+        modified/redifined per test, later in the extra_config fixture.
 
     :return: Temp dir, thanks to :meth:`init_virtual_interface` fixture,
         and initialized config.
@@ -141,7 +147,7 @@ def extra_config(init_config, request):
 
     :param init_config: temporary working dir + initialized config.
         See :meth:`init_config` fixture.
-    :param request: Type of emulation (epson/hp/auto) and endlesstext param.
+    :param request: Type of emulation (epson/hp/auto) and endlesstext param + extra dict of params.
         These settings are added in config.
         With epson emulation, if endlesstext is "strip-escp2-stream"
         "strip-escp2-jobs" or "no", espc2 converter is launched in background.
@@ -149,12 +155,12 @@ def extra_config(init_config, request):
         background.
         See `indirect` keyword arg of parametrized test
     :type init_config: tuple[str, configparser.ConfigParser]
-    :type request: tuple[str, str]
+    :type request: tuple[str, str, dict]
     :return: Yield temporary directory and configParser
     :rtype: generator[tuple[str, configparser.ConfigParser]]
     """
     tmp_dir, config = init_config
-    emulation, endlesstext = request.param
+    emulation, endlesstext, *extra = request.param
 
     # Add current emulation setting
     config["misc"]["emulation"] = emulation
@@ -163,6 +169,12 @@ def extra_config(init_config, request):
     # Add endless setting & converter path
     config["misc"]["endlesstext"] = endlesstext
 
+    if extra:
+        # Merge extra config with the various ConfigParser sections
+        for section, settings in extra[0].items():
+            for name, value in settings.items():
+                config[section][name] = value
+
     debug_config_file(config)
 
     watchdog_mappings = {
@@ -170,6 +182,7 @@ def extra_config(init_config, request):
         "text": setup_text_watchdog,
         "hpgl": setup_hpgl_watchdog,
         "postscript": setup_postscript_watchdog,
+        "seiko-qt2100": setup_seiko_watchdog,
     }
 
     if "escp2" in endlesstext or (emulation == "epson" and endlesstext == "no"):
@@ -186,7 +199,7 @@ def extra_config(init_config, request):
             observer.stop()
         return
 
-    if emulation in ("hp", "hpgl", "postscript") and endlesstext == "no":
+    if emulation not in ("text", ) and endlesstext == "no":
         # Launch pcl converter
         observer = watchdog_mappings[emulation](config)
         yield (tmp_dir, config)
@@ -336,6 +349,11 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         (("hpgl", "no"), "hpgl.hpgl", "hpgl.pdf", "pdf/1.pdf", 1),
         # postscript to pdf
         (("postscript", "no"), "escp2_1_strip.ps", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
+        # seiko qt2100 to graph in pdf
+        (("seiko-qt2100", "no"), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S.raw_1.pdf", "pdf/1.pdf", 1),
+        (("seiko-qt2100", "no", {"seiko-qt2100": {"cutoff": "10.0", "enable-csv": "false"}}), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S_cutoff_10s.raw_1.pdf", "pdf/1.pdf", 1),
+        # CSV only
+        (("seiko-qt2100", "no", {"seiko-qt2100": {"enable-graph": "false"}}), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S.csv", "csv/1.csv", 1),
         ## Plain text tests
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
         # 1 file plain text repeated 2 times in a stream
@@ -360,7 +378,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
     indirect=["extra_config"],
     ids=[
         "epson-pdf", "hp-pdf", "text-pdf", "text-intermediary-txt-file", "hpgl-hpgl", "hpgl-pdf",
-        "postscript-pdf",
+        "postscript-pdf", "seiko-qt2100-pdf", "seiko-qt2100-cutoff-pdf", "seiko-qt2100-csv",
         "plain-stream*1", "plain-stream*2", "plain-jobs", "plain-jobs-pdf",
         "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "strip-escp2-jobs-pdf",
         "pcl"
