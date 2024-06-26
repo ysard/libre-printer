@@ -23,6 +23,8 @@ Features
         Raw --> D[fa:fa-file-pdf PDF]
         Raw --> E[fa:fa-align-justify Text]
         Raw --> F[fa:fa-file-image PNG]
+        Raw --> H[fa:fa-file-csv CSV]
+        Raw --> I[fa:fa-chart-line Charts]
         Raw -->|fa:fa-usb USB| G[fa:fa-print Modern printer]
         Raw -->|fa:fa-network-wired Network| G
 
@@ -44,7 +46,7 @@ The operation can be summarized in 3 key steps:
 Printer types & protocols supported
 ===================================
 
-The interfaces concerned are the following:
+The supported interfaces & devices are the following:
 
 - Epson printers:
     ESC/P - ESC/P2, 9 & 24 pins
@@ -52,6 +54,16 @@ The interfaces concerned are the following:
     Any resolution and format (Ex: 150dpi, 300dpi, 600dpi), color or grayscale
     thanks to the project
     `GhostPCL <https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL>`_.
+- HP-PGL (Pen Plotters), HP-GL/2-Compatible Instruments, Instruments with GPIB/HP-IB interfaces:
+    HP 7470A plotter, oscilloscopes (Tektronix, HP), spectrum analyzers and signal analyzers.
+    Thanks to the Free and Open Source Software:
+    `hp2xx <https://www.gnu.org/software/hp2xx/>`_.
+- Seiko Quartz Watch Tester Printers:
+    Specifically the Seiko Qt-2100 Timegrapher device.
+    Thanks to our own project: `Seiko Converter <https://github.com/ysard/seiko_qt2100_converter>`_
+
+Much more will come depending on the community's participation in terms
+of funding, developing or sharing raw device output data for retroengineering purposes.
 
 Connectivity
 ============

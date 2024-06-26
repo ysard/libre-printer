@@ -22,13 +22,15 @@ La documentation complète pour le matériel et le logiciel est disponible en
 
 ```mermaid
 graph TD
-    A[fa:fa-computer-classic Host] -->|Serial RS-232 data| B[fa:fa-microchip Libre Printer interface]
+    A[fa:fa-computer-classic Host] -->|Serial RS-232 data| B[fa:fa-microchip Libre-Printer interface]
     A --> |Parallel Centronics data| B
     B -->|fa:fa-usb USB| C[fa:fa-laptop RaspberryPi or Computer]
     C --> Raw[fa:fa-file Raw file]
     Raw --> D[fa:fa-file-pdf PDF]
     Raw --> E[fa:fa-align-justify Text]
     Raw --> F[fa:fa-file-image PNG]
+    Raw --> H[fa:fa-file-csv CSV]
+    Raw --> I[fa:fa-chart-line Charts]
     Raw -->|fa:fa-usb USB| G[fa:fa-print Modern printer]
     Raw -->|fa:fa-network-wired Network| G
 ```
@@ -55,6 +57,17 @@ Les interfaces concernées sont les suivantes :
 - Imprimantes HP PCL :
     Toute résolution et tout format (Ex: 150dpi, 300dpi, 600dpi), couleur ou nuance de gris
     Merci au projet [GhostPCL](https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL).
+- HP-PGL (Pen Plotters), instruments compatibles HP-GL/2, instruments possédant l'interface GPIB/HP-IB :
+    HP 7470A plotter, oscilloscopes (Tektronix, HP), analyseurs de spectres et de signaux.
+    Grâce au projet Libre et Open Source :
+    [hp2xx](https://www.gnu.org/software/hp2xx/).
+- Testeurs de montres et horloges Seiko :
+    Spécifiquement le chronographe Seiko Qt-2100.
+    Grâce à notre propre projet : [Seiko Converter](https://github.com/ysard/seiko_qt2100_converter).
+
+Bien plus de matériels peuvent être supportés; le tout dépend de la participation
+de la communauté en termes de développement du code, financement ou juste partage
+des données brutes à des fins de rétro-ingénierie.
 
 ## Connectique
 
