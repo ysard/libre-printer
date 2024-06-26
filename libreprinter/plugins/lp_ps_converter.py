@@ -34,6 +34,7 @@ from watchdog.events import RegexMatchingEventHandler
 
 # Custom imports
 from libreprinter import plugins_handler
+from libreprinter.file_handler import init_directories
 from libreprinter.commons import logger
 
 LOGGER = logger()
@@ -44,6 +45,7 @@ CONFIG = {
         "endlesstext": ("no",),
     }
 }
+REQUIRED_DIRS = ["ps", ]
 
 
 class PostscriptEventHandler(RegexMatchingEventHandler):
@@ -122,6 +124,8 @@ def setup_postscript_watchdog(config):
     the Ghostscript binary installed on the system.
     """
     LOGGER.info("Launch postscript watchdog...")
+
+    init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
     # gs_settings = config["misc"]["gs_settings"]
     event_handler = PostscriptEventHandler(

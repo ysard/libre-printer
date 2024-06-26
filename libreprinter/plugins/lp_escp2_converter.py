@@ -23,6 +23,7 @@ import pathlib
 
 # Custom imports
 from libreprinter import plugins_handler
+from libreprinter.file_handler import init_directories
 from libreprinter.commons import logger
 
 LOGGER = logger()
@@ -33,6 +34,7 @@ CONFIG = {
         "endlesstext": ("strip-escp2-stream", "strip-escp2-jobs", "no"),
     }
 }
+REQUIRED_DIRS = ["txt_stream", "txt_jobs", "png", "eps"]
 
 ENDLESS_TEXT_VALUE_MAPPING = {
     "no": 0,
@@ -80,6 +82,7 @@ def launch_escp2_converter(config):
     :rtype: subprocess.Popen
     """
     # Handle configuration filepaths
+    init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
     converter_path = pathlib.Path(config["misc"]["escp2_converter_path"])
 
     if not converter_path.exists():

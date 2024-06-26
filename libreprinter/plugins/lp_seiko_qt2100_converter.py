@@ -34,6 +34,7 @@ from watchdog.events import RegexMatchingEventHandler, FileSystemEvent
 
 # Custom imports
 from libreprinter import plugins_handler
+from libreprinter.file_handler import init_directories
 from libreprinter.commons import logger
 
 LOGGER = logger()
@@ -43,6 +44,7 @@ CONFIG = {
         "emulation": "seiko-qt2100",
     }
 }
+REQUIRED_DIRS = ["csv", ]
 EXTERNAL_PACKAGE = "seiko_converter"
 
 class SeikoEventHandler(RegexMatchingEventHandler):
@@ -118,6 +120,8 @@ def setup_seiko_watchdog(config):
         msg = f"<{EXTERNAL_PACKAGE}> package is not installed!"
         LOGGER.error(msg)
         raise ImportError(msg)
+
+    init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
     # Format values from the config files (especially the cutoff numeric value)
     temp_config = dict()

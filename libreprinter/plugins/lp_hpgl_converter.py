@@ -34,6 +34,7 @@ from watchdog.events import RegexMatchingEventHandler
 
 # Custom imports
 from libreprinter import plugins_handler
+from libreprinter.file_handler import init_directories
 from libreprinter.commons import logger
 
 LOGGER = logger()
@@ -44,6 +45,7 @@ CONFIG = {
         "endlesstext": "no",
     }
 }
+REQUIRED_DIRS = ["hpgl", ]
 
 
 class HpglEventHandler(RegexMatchingEventHandler):
@@ -158,6 +160,8 @@ def setup_hpgl_watchdog(config):
     if not Path(hp2xx_path).exists():
         LOGGER.error("Setting <hp2xx_path:%s> doesn't exists!", hp2xx_path)
         raise FileNotFoundError("hp2xx converter not found")
+
+    init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
     # hp2xx_settings = config["misc"]["hp2xx_settings"]
     event_handler = HpglEventHandler(

@@ -43,6 +43,7 @@ from watchdog.events import RegexMatchingEventHandler
 
 # Custom imports
 from libreprinter import plugins_handler
+from libreprinter.file_handler import init_directories
 from libreprinter.commons import logger
 
 LOGGER = logger()
@@ -53,6 +54,7 @@ CONFIG = {
         "endlesstext": ("no", "plain-jobs", "strip-escp2-jobs"),
     }
 }
+REQUIRED_DIRS = ["txt_jobs"]
 
 
 class TxtEventHandler(RegexMatchingEventHandler):
@@ -143,6 +145,8 @@ def setup_text_watchdog(config):
     if not Path(enscript_path).exists():
         LOGGER.error("Setting <enscript_path:%s> doesn't exists!", enscript_path)
         raise FileNotFoundError("enscript converter not found")
+
+    init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
     enscript_settings = config["misc"]["enscript_settings"]
     event_handler = TxtEventHandler(
