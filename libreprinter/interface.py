@@ -26,6 +26,8 @@
 import shutil
 import logging
 from packaging.version import Version
+from datetime import datetime
+import struct
 
 # Custom imports
 from libreprinter.file_handler import (
@@ -278,6 +280,10 @@ def parse_buffer(serial_handler, job_number, config):
     masterfontmode = False
     msbsetting = 0
 
+    # Seiko qt2100 control
+    job_timestamp = None
+    probe_seiko = None
+
     # Misc
     received_bytes = False
     end_page_timeout = config["misc"].getint("end_page_timeout")
@@ -372,6 +378,59 @@ def parse_buffer(serial_handler, job_number, config):
                 # plain-stream
                 plain_stream_f_d.write(convert_data_line_ending(databytes, line_ending))
 
+        if config["misc"]["emulation"] == "seiko-qt2100":
+            # Add timestamp before each new values in an ESC T message
+            # AND cut a stream with multiple successive data analysis
+            edited_databytes = bytearray()
+            for index, databyte in enumerate(databytes):
+                if databyte == 27:
+                    escmode = True
+                elif escmode and databyte == ord("0"):
+                    if probe_seiko:
+                        # At least a second data stream is received
+                        # Dump the end of the previous one
+                        raw_f_d.write(edited_databytes[:-1])
+                        # Keep the start of the next one
+                        edited_databytes = edited_databytes[-1:]
+                        raw_f_d.close()
+
+                        # Hijack the normal execution flow by creating a new file
+                        # without having to return to the read_interface function
+                        job_number += 1
+                        raw_filepath = f"{config['misc']['output_path']}raw/{job_number}.raw"
+                        raw_f_d = open(raw_filepath, "wb")
+
+                    job_timestamp = None
+                    probe_seiko = True
+                elif escmode and databyte == ord("1"):
+                    if not job_timestamp:
+                        # First ESC sequence seen
+                        # Initialise a job start timestamp
+                        job_timestamp = datetime.now()
+                        delta = 0
+                    else:
+                        delta = (datetime.now() - job_timestamp).seconds
+                    # Note: Difference with the Retroprinter implementation!
+                    # We prefix ALL values with a delta, including the first one
+                    # (with a delta of 0 for this one)
+                    hours, minutes, seconds = (
+                        (delta // 3600) & 0xFF,
+                        delta % 3600 // 60,
+                        delta % 60,
+                    )
+                    timestamp = struct.pack("BBB", hours, minutes, seconds)
+                    # Insert timestamp
+                    edited_databytes += b"T" + timestamp + b"\x1b"
+                else:
+                    escmode = False
+
+                edited_databytes += databyte.to_bytes(1)
+
+            # Save edited data
+            databytes = edited_databytes
+            # Flush previous data & trigger file parsing
+            raw_f_d.flush()
+
         # Save received data
         # print("out:", databytes)
         raw_f_d.write(databytes)
@@ -411,17 +470,17 @@ def read_interface(config):
     # Signal the conversion program that it can control leds
     # send_status_message(200, 1)
 
-    job_number = get_job_number(misc_section["output_path"])
-    # TODO: Set job_number according to pending jobs in shared memory and
-    #   real pending files in /raw dir
-    LOGGER.debug("Current job number: %s", job_number)
-
     # Number of jobs for the current session (equiv "cnt" variable in legacy prog)
     # jobs_count: slot in shared memory
     # job_number: job number used in page naming by converters
     # TODO: set job_count according to free slots in shared memory
     jobs_count = 0
     while True:
+        job_number = get_job_number(misc_section["output_path"])
+        # TODO: Set job_number according to pending jobs in shared memory and
+        #   real pending files in /raw dir
+        LOGGER.debug("Current job number: %s", job_number)
+
         # TODO: epson: jobs | no plain text: verif slot: get_status_message(cnt) == 0 => boucle while d'attente ?
 
         # TODO: redéfinier emulation à l'origine ?
