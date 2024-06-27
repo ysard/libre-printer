@@ -35,7 +35,7 @@ update_firmware:
 	avrdude -v -patmega32u4 -cavr109 -P/dev/ttyACM0 -b57600 -D -Uflash:w:./firmware/libreprinter.ino.hex:i
 
 clean:
-	rm -rf eps pcl pdf png raw txt txt_jobs hpgl ps txt_stream dist
+	rm -rf eps pcl pdf png raw txt txt_jobs hpgl ps txt_stream dist csv libreprinter.egg-info
 	-$(MAKE) -C ./doc clean
 
 doc:
