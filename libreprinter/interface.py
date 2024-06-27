@@ -317,12 +317,15 @@ def parse_buffer(serial_handler, job_number, config):
 
         # TODO: autodetect epson_emulation based on init seq
         # TODO: starts_with ?
-        if not received_bytes and b"\x1b\x40\x1b" in databytes:
-            # Epson init command /end printing command (\x1B@\x1B)
-            print("PROBE EPSON data")
-        if not received_bytes and b"\x1b\x45\x1b\x26\x6c" in databytes:
-            # HP reset/init command (\x1BE\x1B&l) (0x1B E)
-            print("PROBE HP data")
+        if not received_bytes:
+            if b"\x1b\x40\x1b" in databytes:
+                # Epson init command /end printing command (\x1B@\x1B)
+                LOGGER.debug("PROBE EPSON data")
+            if b"\x1b\x45\x1b\x26\x6c" in databytes:
+                # HP reset/init command (\x1BE\x1B&l) (0x1B E)
+                LOGGER.debug("PROBE HP data")
+            if b"\x1b\x30" in databytes:
+                LOGGER.debug("PROBE SEIKO data ")
 
         received_bytes = True
 
