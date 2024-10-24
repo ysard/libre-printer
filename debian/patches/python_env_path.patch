@@ -6,21 +6,21 @@ Last-Update: 2024-06-05
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/firmware/firmware_updater.sh
 +++ b/firmware/firmware_updater.sh
-@@ -24,7 +24,7 @@
- systemctl stop libre-printer@$interface_name.service
- 
+@@ -51,7 +51,7 @@
+ sleep 2
+
  echo "Restarting device..."
 -python ./restart_interface.py $1
 +python /usr/share/libre-printer/firmware/restart_interface.py $1
 
  retVal=$?
  if [ $retVal -ne 0 ]; then
-@@ -33,7 +33,7 @@
- fi
- 
+@@ -67,7 +67,7 @@
+ }
+
  echo "Flashing device..."
 -avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
 +avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:/usr/share/libre-printer/firmware/bin/libreprinter.ino.hex:i
+ sleep 7
 
  echo "Restart the service"
- systemctl start libre-printer@$interface_name.service
