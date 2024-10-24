@@ -74,7 +74,11 @@ archive:
 	# Create upstream src archive
 	git archive HEAD --prefix='libre-printer-$(PROJECT_VERSION).orig/' | gzip > ../libre-printer-$(PROJECT_VERSION).orig.tar.gz
 
-debianize: archive
+reset_patches:
+	# Force the removal of the current patches
+	quilt pop -af
+
+debianize: archive reset_patches
 	dpkg-buildpackage -us -uc -b -d
 
 debcheck:
