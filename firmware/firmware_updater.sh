@@ -20,8 +20,8 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-if [ -L $1 ] ; then
-    if [ -e $1 ] ; then
+if [ -L "$1" ] ; then
+    if [ -e "$1" ] ; then
         # Good link: no-op
         :
     else
@@ -29,7 +29,7 @@ if [ -L $1 ] ; then
         echo "<$1> doesn't exist !" >&2
         exit 1
     fi
-elif [ -e $1 ] ; then
+elif [ -e "$1" ] ; then
     echo "<$1> is not a symbolic link handled by udev; use it or use a manual flash" >&2
     echo "procedure (turn off services and flash the hardware with avrdude)." >&2
     exit 1
@@ -42,17 +42,17 @@ fi
 # But we still need to totally disable systemd service during the flash,
 # so we still need to get the fixed udev interface name.
 real_hardware_device=$( basename "$( readlink -f "$1" )" )
-interface_name=$(basename $1)
+interface_name=$(basename "$1")
 echo "Working on <$interface_name> -> <$real_hardware_device>"
 
 echo "Stopping the service"
-/usr/bin/systemctl stop libre-printer@$interface_name.service
+/usr/bin/systemctl stop "libre-printer@$interface_name.service"
 # Avoid restart from udev
-/usr/bin/systemctl mask libre-printer@$interface_name.service
+/usr/bin/systemctl mask "libre-printer@$interface_name.service"
 sleep 2
 
 echo "Restarting device..."
-python ./restart_interface.py $1
+python ./restart_interface.py "$1"
 
 retVal=$?
 if [ $retVal -ne 0 ]; then
@@ -68,9 +68,9 @@ echo "Waiting for the device restart..."
 }
 
 echo "Flashing device..."
-/usr/bin/avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
+/usr/bin/avrdude -v -patmega32u4 -cavr109 -P/dev/"$real_hardware_device" -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
 sleep 7
 
 echo "Restart the service"
-/usr/bin/systemctl unmask libre-printer@$interface_name.service
-/usr/bin/systemctl start libre-printer@$interface_name.service
+/usr/bin/systemctl unmask "libre-printer@$interface_name.service"
+/usr/bin/systemctl start "libre-printer@$interface_name.service"
