@@ -19,8 +19,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  }
 
  echo "Flashing device..."
--avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
-+avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:/usr/share/libre-printer/firmware/bin/libreprinter.ino.hex:i
+-/usr/bin/avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
++/usr/bin/avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:/usr/share/libre-printer/firmware/bin/libreprinter.ino.hex:i
  sleep 7
 
  echo "Restart the service"
