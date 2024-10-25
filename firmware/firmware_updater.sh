@@ -13,6 +13,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
+set -eu
 
 if [ $# -eq 0 ]; then
     echo "No arguments supplied; Expected udev fixed interface path (Ex: /dev/ttyACMX)." >&2
@@ -45,9 +46,9 @@ interface_name=$(basename $1)
 echo "Working on <$interface_name> -> <$real_hardware_device>"
 
 echo "Stopping the service"
-systemctl stop libre-printer@$interface_name.service
+/usr/bin/systemctl stop libre-printer@$interface_name.service
 # Avoid restart from udev
-systemctl mask libre-printer@$interface_name.service
+/usr/bin/systemctl mask libre-printer@$interface_name.service
 sleep 2
 
 echo "Restarting device..."
@@ -60,16 +61,16 @@ if [ $retVal -ne 0 ]; then
 fi
 
 echo "Waiting for the device restart..."
-inotifywait --timeout 4 --include "$real_hardware_device" --event create /dev/ >/dev/null || {
+/usr/bin/inotifywait --timeout 4 --include "$real_hardware_device" --event create /dev/ >/dev/null || {
     (( $? == 2 ))  ## inotify exit status 2 means timeout expired
     echo "Unable to detect the interface!" >&2
     exit 1
 }
 
 echo "Flashing device..."
-avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
+/usr/bin/avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
 sleep 7
 
 echo "Restart the service"
-systemctl unmask libre-printer@$interface_name.service
-systemctl start libre-printer@$interface_name.service
+/usr/bin/systemctl unmask libre-printer@$interface_name.service
+/usr/bin/systemctl start libre-printer@$interface_name.service
