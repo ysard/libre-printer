@@ -76,7 +76,7 @@ archive:
 
 reset_patches:
 	# Force the removal of the current patches
-	quilt pop -af
+	-quilt pop -af
 
 debianize: archive reset_patches
 	dpkg-buildpackage -us -uc -b -d
