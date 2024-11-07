@@ -137,6 +137,12 @@ void loop()
 
     // Set all output pins to LOW
     for (uint8_t i = 0; i < sizeof(output_pins); i++) {
+      // Avoid short circuit DTR-REV if they are physically connected
+      // Previous config is -9V on DTR, and we are setting REV to 9V...
+      if (output_pins[i] == SERIAL_REV_OUT_PIN) {
+        digitalWrite(SERIAL_DTR_PIN, LOW);
+      }
+
       digitalWrite(output_pins[i], LOW);
       
       SerialCDC.print(F("+ Expect LOW on: "));
@@ -161,6 +167,11 @@ void loop()
 
     // Set all ouput pins to HIGH
     for (uint8_t i = 0; i < sizeof(output_pins); i++) {
+      // Avoid short circuit DTR-REV if they are physically connected
+      // Previous config is 9V on DTR, and we are setting REV to -9V...
+      if (output_pins[i] == SERIAL_REV_OUT_PIN) {
+        digitalWrite(SERIAL_DTR_PIN, HIGH);
+      }
       digitalWrite(output_pins[i], HIGH);
       
       SerialCDC.print(F("+ Expect HIGH on: "));
