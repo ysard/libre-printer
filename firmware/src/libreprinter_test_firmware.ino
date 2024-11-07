@@ -183,7 +183,7 @@ void loop()
     for (uint8_t i = 0; i < sizeof(input_pins); i++) {
       // Current value
       // Note: all values should be HIGH/1 since all pins are pulled-up internally
-      pin_value = digitalRead(input_pins[i]);
+      previous_pin_value = digitalRead(input_pins[i]);
 
       snprintf(buffer, sizeof buffer, "+ Current value on %s: %s", input_pin_names[i], (previous_pin_value) ? "HIGH" : "LOW");
       SerialCDC.println(buffer);
@@ -196,7 +196,7 @@ void loop()
       SerialCDC.print(F("detected value: "));
       SerialCDC.println((pin_value) ? "HIGH" : "LOW");
 
-      if (pin_value == HIGH) {
+      if (pin_value == previous_pin_value) {
         SerialCDC.println(F("ERROR: pin didn't changed!!!"));
 
         if (!retry_flag) {
