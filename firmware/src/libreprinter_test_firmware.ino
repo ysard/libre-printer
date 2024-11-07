@@ -56,12 +56,12 @@
 uint8_t incomingByte = 0;
 uint8_t pin_value = 0;
 uint8_t total_errors = 0;
-char buffer[50];
+char buffer[60];
 
 // Test dataset
 const char* default_pin_names[] = { "RST/Reset", "AFD/Autofeed", "ERR/Error", "S.IN/SelectIn", "18" };
 const uint8_t output_pins[] = { SERIAL_TX_PIN, SERIAL_REV_OUT_PIN, SERIAL_DTR_PIN, SERIAL_RTS_PIN, ACK_PIN, BUSY_PIN, SELECT_PIN };
-const char* output_pin_names[] = { "SERIAL_TX_PIN:D1:DB25_2", "SERIAL_REV_OUT_PIN:D8:J6", "SERIAL_DTR_PIN:D7:DB25_20", "SERIAL_RTS_PIN:D9:J5", "ACK_PIN", "BUSY_PIN", "SELECT_PIN" };
+const char* output_pin_names[] = { "SERIAL_TX_PIN:D1:DB25_2", "SERIAL_REV_OUT_PIN:D8:J6", "SERIAL_DTR_PIN:D7:DB25_20", "SERIAL_RTS_PIN:D9:J5:DB25_4", "ACK_PIN", "BUSY_PIN", "SELECT_PIN" };
 const uint8_t input_pins[]  = { SERIAL_RX_PIN, SERIAL_DSR_DCD_PIN, STROBE_PIN, DATA0_PIN, DATA1_PIN, DATA2_PIN, DATA3_PIN, DATA4_PIN, DATA5_PIN, DATA6_PIN, DATA7_PIN };
 const char* input_pin_names[]  = { "SERIAL_RX_PIN:D0:DB25_3", "SERIAL_DSR_DCD_PIN:D2:DB25_6-8", "STROBE_PIN", "DATA0_PIN", "DATA1_PIN", "DATA2_PIN", "DATA3_PIN", "DATA4_PIN", "DATA5_PIN", "DATA6_PIN", "DATA7_PIN" };
 
@@ -179,27 +179,29 @@ void loop()
     SerialCDC.println(F("==============="));
 
     bool retry_flag = 0;
+    uint8_t previous_pin_value = 0;
     for (uint8_t i = 0; i < sizeof(input_pins); i++) {
       // Current value
       // Note: all values should be HIGH/1 since all pins are pulled-up internally
       pin_value = digitalRead(input_pins[i]);
 
-      snprintf(buffer, sizeof buffer, "+ Read value on %s: %d", input_pin_names[i], pin_value);
+      snprintf(buffer, sizeof buffer, "+ Current value on %s: %s", input_pin_names[i], (previous_pin_value) ? "HIGH" : "LOW");
       SerialCDC.println(buffer);
 
       SerialCDC.println(F("Waiting manual pin change..."));
       wait_serial_input();
 
       pin_value = digitalRead(input_pins[i]);
-      
+
       SerialCDC.print(F("detected value: "));
-      SerialCDC.println(pin_value);
+      SerialCDC.println((pin_value) ? "HIGH" : "LOW");
 
       if (pin_value == HIGH) {
         SerialCDC.println(F("ERROR: pin didn't changed!!!"));
-        
+
         if (!retry_flag) {
           // Retry one time
+          SerialCDC.println(F("Retry..."));
           retry_flag = 1;
           i--;
         } else {
