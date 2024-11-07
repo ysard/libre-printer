@@ -107,7 +107,7 @@ void setup()
     pinMode(SELECT_PIN, OUTPUT);
     pinMode(ACK_PIN, OUTPUT);
     pinMode(BUSY_PIN, OUTPUT);
-    
+
     // Data pins
     pinMode(DATA0_PIN, INPUT_PULLUP);
     pinMode(DATA1_PIN, INPUT_PULLUP);
@@ -130,8 +130,8 @@ void loop()
       SerialCDC.println(default_pin_names[i]);
     }
     SerialCDC.println();
-    
-    
+
+
     SerialCDC.println(F("Test OUTPUT pins"));
     SerialCDC.println(F("================"));
 
@@ -144,7 +144,7 @@ void loop()
       }
 
       digitalWrite(output_pins[i], LOW);
-      
+
       SerialCDC.print(F("+ Expect LOW on: "));
       SerialCDC.println(output_pin_names[i]);
 
@@ -155,11 +155,11 @@ void loop()
       if (output_pins[i] == SERIAL_DTR_PIN || output_pins[i] == SERIAL_REV_OUT_PIN) {
         SerialCDC.println(F("Note: RS-232 REV/DTR should be linked"));
       }
-      
+
       if (output_pins[i] == SERIAL_DTR_PIN || output_pins[i] == SERIAL_REV_OUT_PIN || output_pins[i] == SERIAL_RTS_PIN) {
         SerialCDC.println(F("Note: Expect ASSERTED at 9V on RS-232 jumper"));
       }
-      
+
       wait_serial_input();
     }
 
@@ -173,18 +173,18 @@ void loop()
         digitalWrite(SERIAL_DTR_PIN, HIGH);
       }
       digitalWrite(output_pins[i], HIGH);
-      
+
       SerialCDC.print(F("+ Expect HIGH on: "));
       SerialCDC.println(output_pin_names[i]);
 
       if (output_pins[i] == SERIAL_DTR_PIN || output_pins[i] == SERIAL_REV_OUT_PIN || output_pins[i] == SERIAL_RTS_PIN) {
         SerialCDC.println(F("Note: Expect DEASSERTED at -9V on RS-232 jumper"));
       }
-      
+
       wait_serial_input();
     }
     SerialCDC.println();
-    
+
 
     SerialCDC.println(F("Test INPUT pins"));
     SerialCDC.println(F("==============="));
@@ -222,7 +222,7 @@ void loop()
       }
     }
     SerialCDC.println();
-    
+
 
     SerialCDC.println(F("Autotest cross bridges on PARALLEL INPUT pins"));
     SerialCDC.println(F("============================================="));
@@ -237,7 +237,7 @@ void loop()
       delay(100);
       digitalWrite(current_pin, LOW);
       delay(50);
-      
+
       // Check all the other pins
       // Start from 2: Skip serial pins at the beginning
       for (uint8_t j = 2; j < sizeof(input_pins); j++) {
@@ -250,7 +250,7 @@ void loop()
           snprintf(buffer, sizeof buffer, "%s - %s", input_pin_names[i], input_pin_names[j]);
           SerialCDC.print(F("+ ERROR: bridge detected "));
           SerialCDC.println(buffer);
-          
+
           error_count++;
         }
       }
@@ -274,7 +274,7 @@ void loop()
 
     SerialCDC.print(F("Tests end! Total auto errors: "));
     SerialCDC.println(total_errors);
-    
+
     SerialCDC.println(F("Restart..."));
     wait_serial_input();
 }
