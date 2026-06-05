@@ -9,8 +9,8 @@ Il s'agit d'apporter une interface logicielle et matérielle se faisant passer p
 compatible avec les anciens matériels médicaux et industriels (machine-outils).
 
 Parfois ces appareils ne peuvent pas être remplacés pour des raisons de coût ou tout simplement
-parce qu'il n'y a pas de justification de le faire. Ioutefois ils fonctionnent souvent
-en couples avec des imprimantes qui ne se fabriquent plus et qui sont bien souvent
+parce qu'il n'y a pas de justification de le faire. Ils fonctionnent toutefois souvent
+en couple avec des imprimantes qui ne se fabriquent plus et qui sont bien souvent
 le point faible de l'installation car sujettes aux pannes et à l'abandon de la fabrication de leurs consommables.
 
 ## Documentation
@@ -163,7 +163,7 @@ n'ont pas besoin des surcouches propriétaires et payantes des années 2022...
 À bons entendeurs.
 
 
-## Contribution
+## Contributions
 
 Si vous disposez d'un matériel ou d'un port centronics non standard vous pouvez
 ouvrir une issue sur le [projet](https://github.com/ysard/libre-printer/issues)
