@@ -155,7 +155,8 @@ def extra_config(init_config, request):
         background.
         See `indirect` keyword arg of parametrized test
     :type init_config: tuple[str, configparser.ConfigParser]
-    :type request: tuple[str, str, dict]
+    :type request: pytest._pytest.fixtures.SubRequest
+        with tuple[str, str, dict] in param attribute
     :return: Yield temporary directory and configParser
     :rtype: generator[tuple[str, configparser.ConfigParser]]
     """

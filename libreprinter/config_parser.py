@@ -59,7 +59,7 @@ def load_config(config_file=CONFIG_FILE):
 def parse_config(config: configparser.ConfigParser):
     """Read config file, check and set default values
 
-    .. note:: All values are of type string; they must be casted
+    .. note:: All values are of type string; they must be cast
         (with dedicated methods) if necessary.
 
         The syntax `if not xxx:` handles None and '' data retrieved from file.
