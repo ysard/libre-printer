@@ -10,7 +10,7 @@ Vcs-Git: https://github.com/ysard/libre-printer
 Package: libre-printer
 Architecture: all
 Depends: dpkg (>= 1.16.1), adduser (>= 3.11), python3 (>= 3.6), avrdude (>= 6.3), enscript (>= 1.6.5.90), ghostscript (>= 9.06), inotify-tools, ${python3:Depends}, ${misc:Depends}
-Suggests: seiko-converter, escapy
+Suggests: hp2xx (>= 3.4.4), seiko-converter, escapy
 Description:Parallel Centronics and Serial printing for vintage computers
  This is a distribution of "Libre-Printer" as a self-contained
  Python virtualenv wrapped into a Debian package.
