@@ -22,13 +22,9 @@ import functools
 import importlib
 from collections import namedtuple
 from watchdog.observers.inotify import InotifyObserver
+# Starting from Python 3.7, we need 3.9 for files() method
+from importlib import resources
 
-try:
-    # Starting from Python 3.7
-    from importlib import resources
-except ImportError:  # pragma: no cover
-    # Backport
-    import importlib_resources as resources
 # Custom imports
 from libreprinter import commons as cm
 
@@ -107,11 +103,13 @@ def _import_all(package, config):
     :type config: configparser.ConfigParser
     """
     # Find installed plugins
+    # We do not want __init__.py, __pycache__
     plugin_names = [
-        module[:-3]
-        for module in resources.contents(package)
-        if module.endswith(".py") and module.startswith("lp_")
+        module.stem
+        for module in resources.files(package).iterdir()
+        if module.name.startswith("lp_")
     ]
+
     # Filter plugins according to their compatibility with the current config
     for plugin in plugin_names:
         module = _import(package, plugin)
