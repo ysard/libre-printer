@@ -262,7 +262,7 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
 
     LOGGER.debug("Thread started")
     # Fix minor exception from pyserial (See docstring note)
-    time.sleep(3)
+    time.sleep(4)
     # Put data in input-tty
     with open(DIR_DATA + test_file, "rb") as f_d, \
             open(tmp_dir + "input-tty", "wb") as tty_f_d:
@@ -287,6 +287,7 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
     if emulation == "hp":
         # Check copy in pcl dir
         assert os.path.exists("pcl/1.pcl")
+
 
 def test_interface_firmware_version(init_config, slow_down_tests, caplog):
     """Simulation of interface response with its firmware version
@@ -317,7 +318,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
 
     LOGGER.debug("Thread started")
     # Fix minor exception from pyserial (See docstring note)
-    time.sleep(3)
+    time.sleep(4)
     # Put data in input-tty
     assert Path(tmp_dir + "input-tty").exists()
     with open(tmp_dir + "input-tty", "wb") as tty_f_d:

@@ -246,6 +246,7 @@ def test_bad_binary_path(
     print(caplog.text)
     assert expected_log_text in caplog.text
 
+
 @patch("libreprinter.plugins.lp_seiko_qt2100_converter.EXTERNAL_PACKAGE", "FAKE_PACKAGE")
 @pytest.mark.parametrize(
     "watchdog, config, expected_exception_text, expected_log_text",
