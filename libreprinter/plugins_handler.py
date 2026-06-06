@@ -36,12 +36,27 @@ Plugin = namedtuple("Plugin", ("name", "func"))
 # Dictionary with information about all registered plugins
 _PLUGINS = {}
 
+# Dictionary of functions used to configure all registerd plugins
+_CONFIGURERS = {}
+
 
 def register(func):
     """Decorator for registering a new plugin"""
     package, _, plugin = func.__module__.rpartition(".")
     pkg_info = _PLUGINS.setdefault(package, {})
     pkg_info[plugin] = Plugin(name=plugin, func=func)
+    return func
+
+
+def register_configurer(func):
+    """Decorator for registering a function of a plugin as a configurer
+
+    This function will be called just after registration to validate or set
+    default configuration values in a given `configparser.ConfigParser` object.
+    """
+    package, _, plugin = func.__module__.rpartition(".")
+    pkg_info = _CONFIGURERS.setdefault(package, {})
+    pkg_info[plugin] = func
     return func
 
 
@@ -117,6 +132,12 @@ def _import_all(package, config):
         if not is_plugin_compatible(config, module.CONFIG):
             LOGGER.debug("Delete plugin: %s", plugin)
             del _PLUGINS[package][plugin]
+            continue
+
+        # Init/check configuration for this plugin, from this plugin
+        configurer = _CONFIGURERS.get(package, {}).get(plugin)
+        if configurer:
+            configurer(config)
 
     LOGGER.info(
         "Plugins loaded: %s",
