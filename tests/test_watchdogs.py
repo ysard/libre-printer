@@ -180,7 +180,7 @@ def test_bad_printer(temp_dir, caplog):
     )
 
     open(temp_dir + "pdf/x.pdf", "a").close()
-    time.sleep(0.5)
+    time.sleep(1.5)
 
     # We expect an exception in the logger returned by the lpr program
     print(caplog.text)
