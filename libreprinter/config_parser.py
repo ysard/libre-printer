@@ -216,26 +216,25 @@ def parse_config(config: configparser.ConfigParser):
 
     ## Optional sections
     ## Seiko plugin
-    if misc_section["emulation"] in ("seiko-qt2100", "auto"):
-        if "seiko-qt2100" not in config.sections():
-            config.add_section("seiko-qt2100")
+    if "seiko-qt2100" not in config.sections():
+        config.add_section("seiko-qt2100")
 
-        seiko_settings = config["seiko-qt2100"]
-        # yes by default
-        for conf in ("enable-csv", "enable-graph", "vertical"):
-            param = seiko_settings.get(conf, "yes")
-            seiko_settings[conf] = param if param == "yes" else "no"
+    seiko_settings = config["seiko-qt2100"]
+    # yes by default
+    for conf in ("enable-csv", "enable-graph", "vertical"):
+        param = seiko_settings.get(conf, "yes")
+        seiko_settings[conf] = param if param == "yes" else "no"
 
-        # true by default
-        graph_cutoff = seiko_settings.get("cutoff")
-        try:
-            _ = float(graph_cutoff)
-        except (ValueError, TypeError):
-            # Not numeric, maybe boolean ?
-            cutoff_flag = seiko_settings.getboolean("cutoff")
-            if cutoff_flag is None:
-                # Still not boolean or not defined: default value
-                seiko_settings["cutoff"] = "true"
+    # true by default
+    graph_cutoff = seiko_settings.get("cutoff")
+    try:
+        _ = float(graph_cutoff)
+    except (ValueError, TypeError):
+        # Not numeric, maybe boolean ?
+        cutoff_flag = seiko_settings.getboolean("cutoff")
+        if cutoff_flag is None:
+            # Still not boolean or not defined: default value
+            seiko_settings["cutoff"] = "true"
 
     debug_config_file(config)
     return config
