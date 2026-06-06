@@ -28,7 +28,7 @@ def default_config():
         "retain_data": "yes",
         "auto_end_page": "no",
         "end_page_timeout": "2",
-        "emulation": "auto",
+        "emulation": "epson",
     }
 
     parallel_section = {
