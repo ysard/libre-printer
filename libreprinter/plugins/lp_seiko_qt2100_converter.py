@@ -48,6 +48,34 @@ REQUIRED_DIRS = ["csv"]
 EXTERNAL_PACKAGE = "seiko_converter"
 
 
+@plugins_handler.register_configurer
+def configure_seiko(config):
+    """Check and set default configuration values for the current plugin
+
+    :param config: Opened ConfigParser object
+    :type config: configparser.ConfigParser
+    """
+    if "seiko-qt2100" not in config.sections():
+        config.add_section("seiko-qt2100")
+
+    seiko_settings = config["seiko-qt2100"]
+    # yes by default
+    for conf in ("enable-csv", "enable-graph", "vertical"):
+        param = seiko_settings.get(conf, "yes")
+        seiko_settings[conf] = param if param == "yes" else "no"
+
+    # true by default
+    graph_cutoff = seiko_settings.get("cutoff")
+    try:
+        _ = float(graph_cutoff)
+    except (ValueError, TypeError):
+        # Not numeric, maybe boolean ?
+        cutoff_flag = seiko_settings.getboolean("cutoff")
+        if cutoff_flag is None:
+            # Still not boolean or not defined: default value
+            seiko_settings["cutoff"] = "true"
+
+
 class SeikoEventHandler(RegexMatchingEventHandler):
     """Watch a directory via a parent Observer and emit events accordingly
 
