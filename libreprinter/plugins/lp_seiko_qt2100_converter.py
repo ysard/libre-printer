@@ -173,10 +173,11 @@ def setup_seiko_watchdog(config):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    obs = setup_seiko_watchdog(
-        {
-            "misc": {"output_path": "./"},
-            "seiko-qt2100": {"enable-csv": True, "enable-graph": True},
-        }
-    )
+    import configparser
+
+    min_config = configparser.ConfigParser()
+    min_config["misc"] = {"output_path": "./"}
+    min_config["seiko-qt2100"] = {"enable-csv": "True", "enable-graph": "True"}
+
+    obs = setup_seiko_watchdog(min_config)
     obs.join()
