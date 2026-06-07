@@ -87,7 +87,7 @@ class PostscriptEventHandler(RegexMatchingEventHandler):
 
         # Directly build arg list; enquote paths to avoid errors
         src_path = Path(event.src_path)
-        pdf_path = src_path.parent / "../pdf" / (src_path.stem + ".pdf")
+        pdf_path = src_path.parent.parent / "pdf" / (src_path.stem + ".pdf")
         ghostscript_cmd = [
             "/usr/bin/gs",
             "-dNOPAUSE",

@@ -125,7 +125,7 @@ class SeikoEventHandler(RegexMatchingEventHandler):
 
         LOGGER.debug("Event detected: %s", event)
         src_path = Path(event.src_path)
-        out_path = str(src_path.parent / "../{0}" / (src_path.stem + ".{0}"))
+        out_path = str(src_path.parent.parent / "{0}" / (src_path.stem + ".{0}"))
 
         parser = SeikoQT2100Parser(src_path)
         obj = SeikoQT2100GraphTool(parser)
