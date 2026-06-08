@@ -36,6 +36,7 @@ nor with `*stream` in endlesstext setting.
 """
 
 # Standard imports
+import configparser
 import shlex
 from pathlib import Path
 import subprocess
@@ -61,11 +62,10 @@ SECTION_NAME = "text"
 
 
 @plugins_handler.register_configurer
-def configure_text(config):
+def configure_text(config: configparser.ConfigParser):
     """Check and set default configuration values for the current plugin
 
     :param config: Opened ConfigParser object
-    :type config: configparser.ConfigParser
     """
     if SECTION_NAME not in config:
         config.add_section(SECTION_NAME)
@@ -89,10 +89,8 @@ class TxtEventHandler(RegexMatchingEventHandler):
         - `txt_jobs`: `*.txt`
 
     Attributes:
-        :param enscript_path: Path of the Enscript binary from the config file.
-        :param enscript_settings: Command line settings for Enscript binary.
-        :type enscript_path: str
-        :type enscript_settings: str
+        :param settings: Escapy Section of the current ConfigParser.
+        :type settings: configparser.SectionProxy | dict
 
     Class attribute:
         :param FILES_REGEX: Patterns to detect txt files.
@@ -101,13 +99,12 @@ class TxtEventHandler(RegexMatchingEventHandler):
 
     FILES_REGEX = [r".*\.txt$"]
 
-    def __init__(self, *args, enscript_path=None, enscript_settings=None, **kwargs):
+    def __init__(self, settings: configparser.SectionProxy | dict, *args, **kwargs):
         """Constructor override
         Just add Enscript settings attr and define watchdog regexes.
         """
         super().__init__(*args, regexes=self.FILES_REGEX, **kwargs)
-        self.enscript_path = enscript_path
-        self.enscript_settings = enscript_settings
+        self.settings = settings
 
     def on_closed(self, event):
         """File closing is detected, convert it to PDF
@@ -122,8 +119,9 @@ class TxtEventHandler(RegexMatchingEventHandler):
         src_path = Path(event.src_path)
         pdf_path = src_path.parent / "../pdf" / (src_path.stem + ".pdf")
         enscript_cmd = [
-            self.enscript_path,
-            self.enscript_settings,
+            self.settings["enscript_path"],
+            # Command line settings for Enscript binary
+            self.settings["enscript_settings"],
             "-p",
             "-",
             shlex.quote(event.src_path),
@@ -170,12 +168,7 @@ def setup_text_watchdog(config):
 
     init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
-    enscript_settings = config[SECTION_NAME]["enscript_settings"]
-    event_handler = TxtEventHandler(
-        enscript_path=enscript_path,
-        enscript_settings=enscript_settings,
-        ignore_directories=True,
-    )
+    event_handler = TxtEventHandler(config[SECTION_NAME], ignore_directories=True)
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
     observer.schedule(
@@ -188,13 +181,11 @@ def setup_text_watchdog(config):
 if __name__ == "__main__":  # pragma: no cover
     obs = setup_text_watchdog(
         {
-            "misc": {
-                "output_path": "./"
-            },
+            "misc": {"output_path": "./"},
             "text": {
                 "enscript_path": "/usr/bin/enscript",
                 "enscript_settings": "-2Gr",
-            }
+            },
         }
     )
     obs.join()
