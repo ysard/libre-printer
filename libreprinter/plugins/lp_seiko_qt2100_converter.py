@@ -46,6 +46,7 @@ CONFIG = {
 }
 REQUIRED_DIRS = ["csv"]
 EXTERNAL_PACKAGE = "seiko_converter"
+SECTION_NAME = "seiko-qt2100"
 
 
 @plugins_handler.register_configurer
@@ -55,10 +56,11 @@ def configure_seiko(config):
     :param config: Opened ConfigParser object
     :type config: configparser.ConfigParser
     """
-    if "seiko-qt2100" not in config.sections():
-        config.add_section("seiko-qt2100")
+    if SECTION_NAME not in config:
+        config.add_section(SECTION_NAME)
 
-    seiko_settings = config["seiko-qt2100"]
+    seiko_settings = config[SECTION_NAME]
+
     # yes by default
     for conf in ("enable-csv", "enable-graph", "vertical"):
         param = seiko_settings.get(conf, "yes")
