@@ -151,8 +151,8 @@ def _import_all(package, config):
 def is_plugin_compatible(current_config, plugin_config):
     """Test the compatibility of a config from a plugin vs current user config
 
-    :param current_config: ConfigParser object
-    :param plugin_config: Dictionnary of sections and params
+    :param current_config: ConfigParser object currently loaded
+    :param plugin_config: Dictionnary of sections and params from the tested plugin
     :return: True if the plugin is compatible, False otherwise.
         .. note:: An empty plugin configuration will return True (permanent plugin)
     :type current_config: configparser.ConfigParser
@@ -179,7 +179,9 @@ def is_plugin_compatible(current_config, plugin_config):
                 return False
             elif callable(p_param):
                 # Execute the callable to get a test result
-                return p_param(c_section.get(p_param_name))
+                if not p_param(c_section.get(p_param_name), current_config):
+                    return False
+
     # Permanent plugin
     return True
 

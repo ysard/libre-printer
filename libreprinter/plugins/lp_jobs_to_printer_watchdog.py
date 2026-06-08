@@ -45,7 +45,7 @@ LOGGER = logger()
 
 CONFIG = {
     "misc": {
-        "output_printer": lambda param: param != "no",
+        "output_printer": lambda param, _: param != "no",
         "endlesstext": ("no", "plain-jobs", "strip-escp2-jobs"),
     }
 }
