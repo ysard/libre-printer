@@ -30,10 +30,16 @@ from .helpers.diff_pdf import is_similar_pdfs
 # Note: For each plugin loaded, don't forget to modify extra_config fixture
 from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
-from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
+from libreprinter.plugins.lp_txt_converter import (
+    setup_text_watchdog,
+    configure_text,
+)
 from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
 from libreprinter.plugins.lp_ps_converter import setup_postscript_watchdog
-from libreprinter.plugins.lp_seiko_qt2100_converter import setup_seiko_watchdog
+from libreprinter.plugins.lp_seiko_qt2100_converter import (
+    setup_seiko_watchdog,
+    configure_seiko,
+)
 import libreprinter.commons as cm
 
 # Import create dir fixture
@@ -163,6 +169,13 @@ def extra_config(init_config, request):
     tmp_dir, config = init_config
     emulation, endlesstext, *extra = request.param
 
+    # Load configs from the plugins in use
+    configurer_mappings = {
+        "seiko-qt2100": configure_seiko,
+        "text": configure_text,
+    }
+    configurer_mappings.get(emulation, lambda x: None)(config)
+
     # Add current emulation setting
     config["misc"]["emulation"] = emulation
     # Accelerate the test by reducing timeout
@@ -192,6 +205,7 @@ def extra_config(init_config, request):
         observer = None
         if endlesstext in ("plain-jobs", "strip-escp2-jobs"):
             # Launch text to pdf converter
+            configure_text(config)
             observer = setup_text_watchdog(config)
         yield (tmp_dir, config)
         # Tear down
@@ -210,6 +224,7 @@ def extra_config(init_config, request):
     # TODO: remove support of 'plain-jobs' in favour of text emulation
     if emulation == "text" or endlesstext == "plain-jobs":
         # Launch text to pdf converter
+        configure_text(config)
         observer = setup_text_watchdog(config)
         yield (tmp_dir, config)
         observer.stop()
