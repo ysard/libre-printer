@@ -45,7 +45,7 @@ from watchdog.events import RegexMatchingEventHandler
 # Custom imports
 from libreprinter import plugins_handler
 from libreprinter.file_handler import init_directories
-from libreprinter.commons import logger
+from libreprinter.commons import logger, ENSCRIPT_BINARY
 
 LOGGER = logger()
 
@@ -56,6 +56,27 @@ CONFIG = {
     }
 }
 REQUIRED_DIRS = ["txt_jobs"]
+
+SECTION_NAME = "text"
+
+
+@plugins_handler.register_configurer
+def configure_text(config):
+    """Check and set default configuration values for the current plugin
+
+    :param config: Opened ConfigParser object
+    :type config: configparser.ConfigParser
+    """
+    if SECTION_NAME not in config:
+        config.add_section(SECTION_NAME)
+
+    text_section = config[SECTION_NAME]
+
+    if not text_section.get("enscript_path"):
+        text_section["enscript_path"] = ENSCRIPT_BINARY
+
+    if not text_section.get("enscript_settings"):
+        text_section["enscript_settings"] = "-BR"
 
 
 class TxtEventHandler(RegexMatchingEventHandler):
@@ -142,14 +163,14 @@ def setup_text_watchdog(config):
     LOGGER.info("Launch text watchdog...")
 
     # Test existence of Enscript binary
-    enscript_path = config["misc"]["enscript_path"]
+    enscript_path = config[SECTION_NAME]["enscript_path"]
     if not Path(enscript_path).exists():
         LOGGER.error("Setting <enscript_path:%s> doesn't exists!", enscript_path)
         raise FileNotFoundError("enscript converter not found")
 
     init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
-    enscript_settings = config["misc"]["enscript_settings"]
+    enscript_settings = config[SECTION_NAME]["enscript_settings"]
     event_handler = TxtEventHandler(
         enscript_path=enscript_path,
         enscript_settings=enscript_settings,
@@ -168,7 +189,9 @@ if __name__ == "__main__":  # pragma: no cover
     obs = setup_text_watchdog(
         {
             "misc": {
-                "output_path": "./",
+                "output_path": "./"
+            },
+            "text": {
                 "enscript_path": "/usr/bin/enscript",
                 "enscript_settings": "-2Gr",
             }

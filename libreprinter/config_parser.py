@@ -90,14 +90,6 @@ def parse_config(config: configparser.ConfigParser):
     if not pcl_converter_path:
         misc_section["pcl_converter_path"] = PCL_CONVERTER
 
-    enscript_path = misc_section.get("enscript_path")
-    if not enscript_path:
-        misc_section["enscript_path"] = ENSCRIPT_BINARY
-
-    enscript_settings = misc_section.get("enscript_settings")
-    if not enscript_settings:
-        config["misc"]["enscript_settings"] = "-BR"
-
     hp2xx_path = misc_section.get("hp2xx_path")
     if not hp2xx_path:
         misc_section["hp2xx_path"] = HP2XX_BINARY
