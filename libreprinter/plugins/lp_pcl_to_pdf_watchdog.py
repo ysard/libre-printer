@@ -64,7 +64,7 @@ class PclEventHandler(RegexMatchingEventHandler):
 
     def __init__(self, converter_path, *args, **kwargs):
         """Constructor override
-        Just add pcl_converter_path attr and define watchdog regexes.
+        Just set converter path attr and define watchdog regexes.
         """
         super().__init__(*args, regexes=self.FILES_REGEX, **kwargs)
         self.converter_path = converter_path

@@ -17,7 +17,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Watchdog for /ps directory that is able to convert new files into pdfs
 
-Conversions are made thanks to Ghostscript.
+Conversions from PostScript are made thanks to Ghostscript.
 
 As soon as a file is closed, a pdf is created.
 
@@ -63,7 +63,7 @@ class PostscriptEventHandler(RegexMatchingEventHandler):
         :type gs_settings: list[str] or None
 
     Class attribute:
-        :param FILES_REGEX: Patterns to detect postscript files.
+        :param FILES_REGEX: Patterns to detect PostScript files.
         :type FILES_REGEX: list[str]
     """
 

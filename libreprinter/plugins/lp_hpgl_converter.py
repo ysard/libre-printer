@@ -58,8 +58,10 @@ class HpglEventHandler(RegexMatchingEventHandler):
 
         - `hpgl`: `*.hpgl`
 
-    Attribute:
+    Attributes:
+        :param hp2xx_path: Path to the Hp2xx binary.
         :param hp2xx_settings: Command line settings for Hp2xx binary.
+        :type hp2xx_path: str
         :type hp2xx_settings: str
 
     Class attribute:
