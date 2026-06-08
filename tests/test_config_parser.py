@@ -5,7 +5,7 @@ import pytest
 
 # Custom imports
 from libreprinter.config_parser import parse_config, load_config
-from libreprinter.commons import ESCP2_CONVERTER, PCL_CONVERTER, ENSCRIPT_BINARY, HP2XX_BINARY
+from libreprinter.commons import ESCP2_CONVERTER, PCL_CONVERTER, HP2XX_BINARY
 from libreprinter.commons import LOG_LEVEL, DEFAULT_OUTPUT_PATH
 
 
@@ -16,8 +16,6 @@ def default_config():
         "start_cleanup": "no",
         "escp2_converter_path": ESCP2_CONVERTER,
         "pcl_converter_path": PCL_CONVERTER,
-        "enscript_path": ENSCRIPT_BINARY,
-        "enscript_settings": "-BR",
         "hp2xx_path": HP2XX_BINARY,
         "endlesstext": "no",
         "line_ending": "\n",
@@ -63,8 +61,6 @@ TEST_DATA = [
         start_cleanup=
         escp2_converter_path=
         pcl_converter_path=
-        enscript_path=
-        enscript_settings=
         hp2xx_path=
         endlesstext=
         line_ending=
