@@ -39,6 +39,7 @@ ESCP2_CONVERTER = "/home/pi/temp/sdl/escparser/convert-escp2"
 PCL_CONVERTER = "/usr/local/bin/gpcl6"
 ENSCRIPT_BINARY = "/usr/bin/enscript"
 HP2XX_BINARY = "/usr/bin/hp2xx"
+ESCAPY_BINARY = "/usr/bin/escapy"
 
 REPORT_BUG_URL = "https://github.com/ysard/libre-printer/issues/new"
 

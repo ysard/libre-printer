@@ -174,6 +174,14 @@ def parse_config(config: configparser.ConfigParser):
     if not retain_data:
         misc_section["retain_data"] = "yes"
 
+    ## ESC backend
+    if "esc" not in config:
+        config.add_section("esc")
+    esc_section = config["esc"]
+    backend = esc_section.get("preferred_backend")
+    if backend not in ("legacy", "escapy"):
+        esc_section["preferred_backend"] = "escapy"
+
     ## Parallel printer
     parallel_section = config["parallel_printer"]
 

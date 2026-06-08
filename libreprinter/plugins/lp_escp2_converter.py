@@ -33,7 +33,13 @@ CONFIG = {
     "misc": {
         "emulation": ("epson", "auto"),
         "endlesstext": ("strip-escp2-stream", "strip-escp2-jobs", "no"),
-    }
+    },
+    "esc": {
+        "preferred_backend": lambda param, config: (
+            param == "legacy"
+            or (param == "escapy" and config["misc"]["endlesstext"] != "no")
+        )
+    },
 }
 REQUIRED_DIRS = ["txt_stream", "txt_jobs", "png", "eps"]
 
