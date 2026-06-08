@@ -106,7 +106,17 @@ class SeikoEventHandler(RegexMatchingEventHandler):
         Just add converter settings attr and define watchdog regexes.
         """
         super().__init__(*args, regexes=self.FILES_REGEX, **kwargs)
-        self.seiko_settings = seiko_settings
+
+        # Format values from the config file (especially the cutoff numeric value)
+        seiko_settings = seiko_settings or {}
+        temp_config = dict()
+        for key in seiko_settings.keys():
+            try:
+                temp_config[key] = seiko_settings.getboolean(key, True)
+            except ValueError:
+                temp_config[key] = seiko_settings.getfloat(key)
+
+        self.seiko_settings = temp_config
         self.last_timestamp = datetime.now().timestamp()
 
     def on_modified(self, event: FileSystemEvent) -> None:
@@ -154,16 +164,8 @@ def setup_seiko_watchdog(config):
 
     init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
-    # Format values from the config files (especially the cutoff numeric value)
-    temp_config = dict()
-    for key in config["seiko-qt2100"].keys():
-        try:
-            temp_config[key] = config["seiko-qt2100"].getboolean(key, True)
-        except ValueError:
-            temp_config[key] = config["seiko-qt2100"].getfloat(key)
-
     event_handler = SeikoEventHandler(
-        seiko_settings=temp_config, ignore_directories=True
+        seiko_settings=config[SECTION_NAME], ignore_directories=True
     )
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
