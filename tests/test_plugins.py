@@ -17,7 +17,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # Standard imports
 from inspect import isfunction
-import copy
 import subprocess
 import pytest
 from watchdog.observers.inotify import InotifyObserver
