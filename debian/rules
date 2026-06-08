@@ -17,9 +17,10 @@ DEB_BUILD_OPTIONS=nocheck
 override_dh_install:
 	dh_install  #calls default *.install and *.dirs installation
 
-	# Create /etc directory for config file
-	install -d $(DEB_DIR)/etc/$(PACKAGE)/
-	install -m 644 libreprinter.conf $(DEB_DIR)/etc/$(PACKAGE)/
+	# Copy config file in /etc directory
+	install -D -m 644 \
+	    $(PYBUILD_NAME).conf \
+	    $(DEB_DIR)/etc/$(PACKAGE)/$(PYBUILD_NAME).conf
 
 	# Create directory for firmware & updater
 	install -d $(LOCAL_INSTALL_ROOT)/firmware/bin/
