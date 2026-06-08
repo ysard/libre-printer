@@ -79,7 +79,7 @@ def configure_seiko(config):
 class SeikoEventHandler(RegexMatchingEventHandler):
     """Watch a directory via a parent Observer and emit events accordingly
 
-    This class reimplements :meth:`on_created` + :meth:`on_closed` events.
+    This class reimplements :meth:`on_closed + :meth:`on_modified` events.
 
     Watched directory:
 

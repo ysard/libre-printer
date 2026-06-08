@@ -52,7 +52,7 @@ REQUIRED_DIRS = ["hpgl"]
 class HpglEventHandler(RegexMatchingEventHandler):
     """Watch a directory via a parent Observer and emit events accordingly
 
-    This class only reimplement :meth:`on_created` event.
+    This class only reimplements :meth:`on_closed` event.
 
     Watched directory:
 
