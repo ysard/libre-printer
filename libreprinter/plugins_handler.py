@@ -159,7 +159,10 @@ def is_plugin_compatible(current_config, plugin_config):
     for p_section_name, p_section in plugin_config.items():
         c_section = dict(current_config).get(p_section_name)
         if not c_section:
-            # Plugin section not in expected current config (:o)
+            LOGGER.warning(
+                "Plugin mentions a section <%s> not in current config (:o)",
+                p_section_name
+            )
             return False
 
         for p_param_name, p_param in p_section.items():
