@@ -82,7 +82,7 @@ def reset_catched_events():
         # lp_txt_converter: Test the detection of txt file creation in /txt_jobs
         (
             setup_text_watchdog,
-            {"misc": {"enscript_path": ENSCRIPT_BINARY, "enscript_settings": "-BR"}},
+            {"misc": {}, "text": {"enscript_path": ENSCRIPT_BINARY, "enscript_settings": "-BR"}},
             ["txt_jobs/aaa", "txt_jobs/c.txt"],  # Last file is the good one
             "pdf/c.pdf",
         ),
@@ -198,7 +198,7 @@ def test_bad_printer(temp_dir, caplog):
         ),
         (
             setup_text_watchdog,
-            {"misc": {"enscript_path": "/usr/bin/Fake_Converter_Name"}},
+            {"misc": {}, "text": {"enscript_path": "/usr/bin/Fake_Converter_Name"}},
             r"enscript converter not found",
             "Setting <enscript_path:",
         ),
