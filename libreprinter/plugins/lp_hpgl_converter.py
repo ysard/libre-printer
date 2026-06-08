@@ -69,7 +69,7 @@ class HpglEventHandler(RegexMatchingEventHandler):
 
     FILES_REGEX = [r".*\.hpgl$"]
 
-    def __init__(self, *args, hp2xx_path=None, hp2xx_settings=None, **kwargs):
+    def __init__(self, hp2xx_path, *args, hp2xx_settings="", **kwargs):
         """Constructor override
         Just add Hp2xx settings attr and define watchdog regexes.
         """
@@ -165,9 +165,7 @@ def setup_hpgl_watchdog(config):
     init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
     # hp2xx_settings = config["misc"]["hp2xx_settings"]
-    event_handler = HpglEventHandler(
-        hp2xx_path=hp2xx_path, hp2xx_settings=None, ignore_directories=True
-    )
+    event_handler = HpglEventHandler(hp2xx_path, ignore_directories=True)
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
     observer.schedule(
