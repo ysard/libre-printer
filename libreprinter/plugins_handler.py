@@ -40,6 +40,9 @@ _PLUGINS = {}
 _CONFIGURERS = {}
 
 
+# WARNING: for each added decorator (function decorated), please update
+# :meth:`tests.test_plugins.handle_module_cache` function!
+
 def register(func):
     """Decorator for registering a new plugin"""
     package, _, plugin = func.__module__.rpartition(".")
