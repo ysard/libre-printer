@@ -69,13 +69,31 @@ def handle_module_cache():
 @pytest.mark.parametrize(
     "sample_config,expected",
     [
-        # espc2_printer_enabled1: printer is not "no", txt file generated in txt_jobs/
+        # espc2_printer_enabled1_escapy: printer is not "no", txt file generated in txt_jobs/
+        # by default the ESC backend is escapy
         (
             """
             [misc]
             emulation=epson
             endlesstext=no
             output_printer=Fake_Printer_Name
+            [parallel_printer]
+            [serial_printer]
+            """,
+            # See lp_txt_converter config note for the explanation of its
+            # presence here
+            ["lp_escapy_converter", "lp_jobs_to_printer_watchdog", "lp_txt_converter"],
+        ),
+        # espc2_printer_enabled1_legacy: printer is not "no", txt file generated in txt_jobs/
+        # ESC backend is forced with legacy solution
+        (
+            """
+            [misc]
+            emulation=epson
+            endlesstext=no
+            output_printer=Fake_Printer_Name
+            [esc]
+            preferred_backend=legacy
             [parallel_printer]
             [serial_printer]
             """,
@@ -98,12 +116,15 @@ def handle_module_cache():
             ["lp_escp2_converter", "lp_jobs_to_printer_watchdog", "lp_txt_converter"],
         ),
         # escp2_printer_disabled: printer is "no", txt file generated in txt_jobs/
+        # ESC backend is forced with legacy solution
         (
             """
             [misc]
             emulation=epson
             endlesstext=no
             output_printer=no
+            [esc]
+            preferred_backend=legacy
             [parallel_printer]
             [serial_printer]
             """,
@@ -208,7 +229,8 @@ def handle_module_cache():
         ),
     ],
     ids=[
-        "espc2_printer_enabled1", "espc2_printer_enabled2", "escp2_printer_disabled",
+        "espc2_printer_enabled1_escapy", "espc2_printer_enabled1_legacy",
+        "espc2_printer_enabled2", "escp2_printer_disabled",
         "escp2_stream1", "escp2_stream2",
         "only_text", "only_hp1", "only_hp2", "hpgl", "postscript", "only_seiko-qt2100",
     ],
