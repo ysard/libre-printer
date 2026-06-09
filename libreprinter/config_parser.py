@@ -27,7 +27,6 @@ from libreprinter.commons import (
     CONFIG_FILE,
     ESCP2_CONVERTER,
     PCL_CONVERTER,
-    ENSCRIPT_BINARY,
     HP2XX_BINARY,
     DEFAULT_OUTPUT_PATH,
     LOG_LEVEL,
