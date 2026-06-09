@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # Standard imports
+import configparser
 from inspect import isfunction
 import subprocess
 import pytest
@@ -28,7 +29,6 @@ from libreprinter.file_handler import init_directories
 from .test_config_parser import sample_config
 # Import create dir fixture
 from .test_file_handler import temp_dir
-
 
 
 @pytest.fixture()
@@ -274,3 +274,41 @@ def test_plugins_loading(sample_config, expected, handle_module_cache, temp_dir)
     else:
         # Process
         ret.kill()
+
+
+@pytest.mark.parametrize(
+    "plugin_config,expected",
+    [
+        (
+            {
+                "esc": {"preferred_backend": "escapy"},
+                "UNKNOWN_SECTION": {"XXX": "YYY"},
+            },
+            False,
+        ),
+        (
+            {
+                "esc": {"preferred_backend": "escapy"},
+            },
+            True,
+        ),
+    ],
+    ids=[
+        "not_compatible_section",
+        "compatible_section",
+    ],
+)
+def test_is_plugin_compatible(plugin_config: dict[str, dict[str, str]], expected: bool):
+    """Test behavour when a plugin has a section not found in the current config
+
+    :param plugin_config: Dictionnary of sections with settings.
+    :param expected: Expected return for the tested function.
+    """
+    config = configparser.ConfigParser()
+    config.read_string("""
+        [esc]
+        preferred_backend=escapy
+    """)
+
+    found = plugins_handler.is_plugin_compatible(config, plugin_config)
+    assert expected == found
