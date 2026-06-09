@@ -34,6 +34,7 @@ from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
 from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
 from libreprinter.plugins.lp_ps_converter import setup_postscript_watchdog
 from libreprinter.plugins.lp_seiko_qt2100_converter import setup_seiko_watchdog
+from libreprinter.plugins.lp_escapy_converter import setup_escapy_watchdog
 from libreprinter.commons import PCL_CONVERTER, ENSCRIPT_BINARY, HP2XX_BINARY
 
 # Import create dir fixture
@@ -208,8 +209,14 @@ def test_bad_printer(temp_dir, caplog):
             r"hp2xx converter not found",
             "Setting <hp2xx_path:",
         ),
+        (
+            setup_escapy_watchdog,
+            {"misc": {}, "escapy": {"escapy_path": "/usr/bin/Fake_Converter_Name"}},
+            r"escapy converter not found",
+            "Setting <escapy_path:",
+        ),
     ],
-    ids=["bad_pcl_binary", "bad_enscript_binary", "bad_hp2xx_binary"],
+    ids=["bad_pcl_binary", "bad_enscript_binary", "bad_hp2xx_binary", "bad_escapy_binary"],
 )
 def test_bad_binary_path(
     watchdog, config, expected_exception_text, expected_log_text, temp_dir, caplog
