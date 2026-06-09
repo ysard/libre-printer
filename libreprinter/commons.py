@@ -24,7 +24,6 @@ import datetime as dt
 import tempfile
 import os
 
-
 # Misc
 BAUDRATE = 500000  # Yolo, it's USB CDC
 OUTPUT_DIRS = ("raw", "pcl", "png", "pdf", "txt_stream")
@@ -45,7 +44,7 @@ REPORT_BUG_URL = "https://github.com/ysard/libre-printer/issues/new"
 
 # Logging
 LOGGER_NAME = "libreprinter"
-LOG_LEVEL = "INFO"
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
 ################################################################################
 
@@ -62,7 +61,6 @@ def logger(name=LOGGER_NAME):
 
 
 _logger = logging.getLogger(LOGGER_NAME)
-_logger.setLevel(LOG_LEVEL)
 
 # log file
 formatter = logging.Formatter(
@@ -78,7 +76,6 @@ file_handler = RotatingFileHandler(
     100_000_000,
     1,
 )
-file_handler.setLevel(LOG_LEVEL)
 file_handler.setFormatter(formatter)
 _logger.addHandler(file_handler)
 
@@ -86,7 +83,6 @@ _logger.addHandler(file_handler)
 # stream_handler = logging.StreamHandler()
 # formatter = logging.Formatter("%(levelname)s: %(message)s")
 # stream_handler.setFormatter(formatter)
-# stream_handler.setLevel(LOG_LEVEL)
 # _logger.addHandler(stream_handler)
 
 
@@ -110,3 +106,6 @@ def log_level(level):
         if handler.__class__
         in (logging.StreamHandler, logging.handlers.RotatingFileHandler)
     ]
+
+
+log_level(LOG_LEVEL)
