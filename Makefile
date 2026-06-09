@@ -5,16 +5,16 @@ PROJECT_VERSION=$(shell python setup.py --version)
 
 # Tests
 tests:
-	pytest tests
+	LOG_LEVEL=DEBUG pytest tests
 	@#python setup.py test --addopts "tests libreprinter -vv"
 
 coverage:
-	pytest --cov=libreprinter --cov-report term-missing -vv
+	LOG_LEVEL=DEBUG pytest --cov=libreprinter --cov-report term-missing -vv
 	@#python setup.py test --addopts "--cov libreprinter tests"
 	@-coverage-badge -f -o images/coverage.svg
 
 branch_coverage:
-	pytest --cov=libreprinter --cov-report term-missing --cov-branch -vv
+	LOG_LEVEL=DEBUG pytest --cov=libreprinter --cov-report term-missing --cov-branch -vv
 
 docstring_coverage:
 	interrogate -v libreprinter/ \
