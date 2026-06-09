@@ -371,7 +371,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
 @patch("libreprinter.interface.configure_interface", lambda x, y: None)
 @pytest.mark.parametrize(
     "extra_config, in_file, expected_file, out_file, repetitions",
-    # extra_config: (emulation, endlesstext)
+    # extra_config: (emulation, endlesstext, *extra)
     [
         ## PDF files generation
         # Epson legacy backend
@@ -381,14 +381,14 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         (("hp", "no"), "test_page_pcl.prn", "test_page_pcl.pdf", "pdf/1.pdf", 1),
         # Intermediary file produced in txt_jobs/
         (("text", "no"), "escp2_1_strip.txt", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
-        # ... and pdf by txt_converter plugin
+        # ... and PDF by txt_converter plugin
         (("text", "no"), "escp2_1_strip.txt", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
-        # hpgl intermediary & pdf files
+        # hpgl intermediary & PDF files
         (("hpgl", "no"), "hpgl.hpgl", "hpgl.hpgl", "hpgl/1.hpgl", 1),
         (("hpgl", "no"), "hpgl.hpgl", "hpgl.pdf", "pdf/1.pdf", 1),
-        # postscript to pdf
+        # PostScript to PDF
         (("postscript", "no"), "escp2_1_strip.ps", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
-        # seiko qt2100 to graph in pdf
+        # seiko qt2100 to graph in PDF
         (("seiko-qt2100", "no"), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S.raw_1.pdf", "pdf/1.pdf", 1),
         (("seiko-qt2100", "no", {"seiko-qt2100": {"cutoff": "10.0", "enable-csv": "false"}}), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S_cutoff_10s.raw_1.pdf", "pdf/1.pdf", 1),
         # CSV only
@@ -398,7 +398,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         # 1 file plain text repeated 2 times in a stream
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 2),
         (("epson", "plain-jobs"), "escp2_1.prn", "escp2_1_plain.txt", "txt_jobs/1.txt", 1),
-        # Pdf should be also produced by txt_converter plugin because txt file is generated
+        # PDF should be also produced by txt_converter plugin because TXT file is generated
         # But as there is no escp2 code processing I have to send stripped text;
         # this test is currently similar to (text, no): "text-pdf" test
         (("epson", "plain-jobs"), "escp2_1_strip.txt", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
