@@ -40,6 +40,11 @@ from libreprinter.plugins.lp_seiko_qt2100_converter import (
     setup_seiko_watchdog,
     configure_seiko,
 )
+from libreprinter.plugins.lp_escapy_converter import (
+    setup_escapy_watchdog,
+    configure_escapy,
+)
+
 import libreprinter.commons as cm
 
 # Import create dir fixture
@@ -169,13 +174,6 @@ def extra_config(init_config, request):
     tmp_dir, config = init_config
     emulation, endlesstext, *extra = request.param
 
-    # Load configs from the plugins in use
-    configurer_mappings = {
-        "seiko-qt2100": configure_seiko,
-        "text": configure_text,
-    }
-    configurer_mappings.get(emulation, lambda x: None)(config)
-
     # Add current emulation setting
     config["misc"]["emulation"] = emulation
     # Accelerate the test by reducing timeout
@@ -187,9 +185,23 @@ def extra_config(init_config, request):
         # Merge extra config with the various ConfigParser sections
         for section, settings in extra[0].items():
             for name, value in settings.items():
+                config.setdefault(section, {})
                 config[section][name] = value
 
     debug_config_file(config)
+
+    escapy_backend = (
+        endlesstext == "no"
+        and config["esc"]["preferred_backend"] == "escapy"
+    )
+
+    # Load configs from the plugins in use
+    configurer_mappings = {
+        "seiko-qt2100": configure_seiko,
+        "text": configure_text,
+        "epson": configure_escapy if escapy_backend else lambda x: None,
+    }
+    configurer_mappings.get(emulation, lambda x: None)(config)
 
     watchdog_mappings = {
         "hp": setup_pcl_watchdog,
@@ -197,19 +209,26 @@ def extra_config(init_config, request):
         "hpgl": setup_hpgl_watchdog,
         "postscript": setup_postscript_watchdog,
         "seiko-qt2100": setup_seiko_watchdog,
+        "escapy": setup_escapy_watchdog,
     }
 
     if "escp2" in endlesstext or (emulation == "epson" and endlesstext == "no"):
         # Launch escp2 converter
-        converter_process = launch_escp2_converter(config)
+        converter_process = None
         observer = None
+        if escapy_backend:
+            observer = setup_escapy_watchdog(config)
+        else:
+            converter_process = launch_escp2_converter(config)
+
         if endlesstext in ("plain-jobs", "strip-escp2-jobs"):
             # Launch text to pdf converter
             configure_text(config)
             observer = setup_text_watchdog(config)
         yield (tmp_dir, config)
         # Tear down
-        converter_process.kill()
+        if converter_process:
+            converter_process.kill()
         if observer:
             observer.stop()
         return
