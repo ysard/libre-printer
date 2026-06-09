@@ -156,6 +156,10 @@ def extra_config(init_config, request):
     This fixture has a tearDown which ensures that the subprocess is killed
     between tests.
 
+    .. todo:: Replace this function with the same code that initialises the
+        plugins. This logic is redundant, not emergent from the configurations
+        in the plugins.
+
     :param init_config: temporary working dir + initialized config.
         See :meth:`init_config` fixture.
     :param request: Type of emulation (epson/hp/auto) and endlesstext param + extra dict of params.
