@@ -1,3 +1,11 @@
+libre-printer (1.1.1-1) UNRELEASED; urgency=medium
+
+  * Native support for ESC/P and ESC/P2 standards without third-party software
+  * Support for PostScript, HP-PGL, and Seiko Quartz Watch Timegraphers streams
+  * Migration to a plugin-based architecture
+
+ -- Ysard <ysard@users.noreply.github.com>  Tue, 10 Jun 2026 21:30:12 +0200
+
 libre-printer (1.1.0-1) UNRELEASED; urgency=medium
 
   * Beta dev candidate
