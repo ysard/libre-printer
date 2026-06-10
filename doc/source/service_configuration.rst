@@ -130,7 +130,7 @@ It is currently split into 3 sections:
     Select the preferred backend for ESC command set conversions.
 
     =============== ================================================
-    **escapy**      By default for state-of-the-art, high-performance conversion
+    **escapy**      For state-of-the-art, high-performance conversion (default)
     **legacy**      For RetroPrinter binaries (if installed on the system)
     =============== ================================================
 
