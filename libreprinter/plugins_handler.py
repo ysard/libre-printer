@@ -133,7 +133,7 @@ def _import_all(package, config):
         module = _import(package, plugin)
 
         if not is_plugin_compatible(config, module.CONFIG):
-            LOGGER.debug("Delete plugin: %s", plugin)
+            LOGGER.debug("Unload plugin: %s", plugin)
             del _PLUGINS[package][plugin]
             continue
 
