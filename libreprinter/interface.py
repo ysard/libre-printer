@@ -21,10 +21,13 @@
 - configuration
 - data receiving
 """
+
 # Standard imports
 import shutil
 import logging
 from packaging.version import Version
+from datetime import datetime
+import struct
 
 # Custom imports
 from libreprinter.file_handler import (
@@ -115,7 +118,10 @@ def configure_interface(serial_handler, config):
     """
     LOGGER.debug("Send config to the interface...")
 
-    [serial_handler.write(param.encode()) for param in build_interface_config_settings(config)]
+    [
+        serial_handler.write(param.encode())
+        for param in build_interface_config_settings(config)
+    ]
     # Signal end of config
     serial_handler.write(b"end_config\n")
 
@@ -137,7 +143,7 @@ def configure_interface(serial_handler, config):
                 LOGGER.warning(
                     "The remote firmware is not up to date! (%s vs %s)",
                     remote_version,
-                    LAST_HARDWARE_VERSION
+                    LAST_HARDWARE_VERSION,
                 )
 
         if response.startswith("end_config"):
@@ -163,7 +169,7 @@ def apply_msb_control(databyte, msbsetting):
         return databyte
     elif msbsetting == 1:
         # MSB Control: clear bit 7 (to 0)
-        return databyte[0] & 0x7f  # Get only 8 bits: convert to unsigned int
+        return databyte[0] & 0x7F  # Get only 8 bits: convert to unsigned int
     elif msbsetting == 2:
         # MSB Control: set bit 7 (to 1)
         return databyte[0] | 0x80  # Get only 8 bits: convert to unsigned int
@@ -242,9 +248,7 @@ def parse_buffer(serial_handler, job_number, config):
     if config["misc"]["usb_passthrough"] != "no":
         # Epson + HP
         # => write directly in /dev/ interface
-        usb_printer_dev_f_d = open(
-            config["misc"]["usb_passthrough"], "wb"
-        )
+        usb_printer_dev_f_d = open(config["misc"]["usb_passthrough"], "wb")
 
     epson_emulation = config["misc"]["emulation"] == "epson"
 
@@ -275,6 +279,10 @@ def parse_buffer(serial_handler, job_number, config):
     italic = False
     masterfontmode = False
     msbsetting = 0
+
+    # Seiko qt2100 control
+    job_timestamp = None
+    probe_seiko = None
 
     # Misc
     received_bytes = False
@@ -309,17 +317,19 @@ def parse_buffer(serial_handler, job_number, config):
 
         # TODO: autodetect epson_emulation based on init seq
         # TODO: starts_with ?
-        if not received_bytes and b"\x1B\x40\x1B" in databytes:
-            # Epson init command /end printing command (\x1B@\x1B)
-            print("PROBE EPSON data")
-        if not received_bytes and b"\x1B\x45\x1B\x26\x6c" in databytes:
-            # HP reset/init command (\x1BE\x1B&l) (0x1B E)
-            print("PROBE HP data")
+        if not received_bytes:
+            if b"\x1b\x40\x1b" in databytes:
+                # Epson init command /end printing command (\x1B@\x1B)
+                LOGGER.debug("PROBE EPSON data")
+            if b"\x1b\x45\x1b\x26\x6c" in databytes:
+                # HP reset/init command (\x1BE\x1B&l) (0x1B E)
+                LOGGER.debug("PROBE HP data")
+            if b"\x1b\x30" in databytes:
+                LOGGER.debug("PROBE SEIKO data ")
 
         received_bytes = True
 
         if epson_emulation:
-
             for index, databyte in enumerate(databytes):
                 if msbsetting != 0:
                     databyte = apply_msb_control(databyte, msbsetting)
@@ -333,7 +343,6 @@ def parse_buffer(serial_handler, job_number, config):
                 if (databyte == 27) and not print_controlcodes:
                     escmode = True
                 elif escmode:
-
                     if databyte == ord("#"):
                         # Cancel MSB Control; escp2 line 3437
                         msbsetting = 0
@@ -371,6 +380,59 @@ def parse_buffer(serial_handler, job_number, config):
             if plain_stream_f_d:
                 # plain-stream
                 plain_stream_f_d.write(convert_data_line_ending(databytes, line_ending))
+
+        if config["misc"]["emulation"] == "seiko-qt2100":
+            # Add timestamp before each new values in an ESC T message
+            # AND cut a stream with multiple successive data analysis
+            edited_databytes = bytearray()
+            for index, databyte in enumerate(databytes):
+                if databyte == 27:
+                    escmode = True
+                elif escmode and databyte == ord("0"):
+                    if probe_seiko:
+                        # At least a second data stream is received
+                        # Dump the end of the previous one
+                        raw_f_d.write(edited_databytes[:-1])
+                        # Keep the start of the next one
+                        edited_databytes = edited_databytes[-1:]
+                        raw_f_d.close()
+
+                        # Hijack the normal execution flow by creating a new file
+                        # without having to return to the read_interface function
+                        job_number += 1
+                        raw_filepath = f"{config['misc']['output_path']}raw/{job_number}.raw"
+                        raw_f_d = open(raw_filepath, "wb")
+
+                    job_timestamp = None
+                    probe_seiko = True
+                elif escmode and databyte == ord("1"):
+                    if not job_timestamp:
+                        # First ESC sequence seen
+                        # Initialise a job start timestamp
+                        job_timestamp = datetime.now()
+                        delta = 0
+                    else:
+                        delta = (datetime.now() - job_timestamp).seconds
+                    # Note: Difference with the Retroprinter implementation!
+                    # We prefix ALL values with a delta, including the first one
+                    # (with a delta of 0 for this one)
+                    hours, minutes, seconds = (
+                        (delta // 3600) & 0xFF,
+                        delta % 3600 // 60,
+                        delta % 60,
+                    )
+                    timestamp = struct.pack("BBB", hours, minutes, seconds)
+                    # Insert timestamp
+                    edited_databytes += b"T" + timestamp + b"\x1b"
+                else:
+                    escmode = False
+
+                edited_databytes += databyte.to_bytes(1)
+
+            # Save edited data
+            databytes = edited_databytes
+            # Flush previous data & trigger file parsing
+            raw_f_d.flush()
 
         # Save received data
         # print("out:", databytes)
@@ -411,17 +473,17 @@ def read_interface(config):
     # Signal the conversion program that it can control leds
     # send_status_message(200, 1)
 
-    job_number = get_job_number(misc_section["output_path"])
-    # TODO: Set job_number according to pending jobs in shared memory and
-    #   real pending files in /raw dir
-    LOGGER.debug("Current job number: %s", job_number)
-
     # Number of jobs for the current session (equiv "cnt" variable in legacy prog)
     # jobs_count: slot in shared memory
     # job_number: job number used in page naming by converters
     # TODO: set job_count according to free slots in shared memory
     jobs_count = 0
     while True:
+        job_number = get_job_number(misc_section["output_path"])
+        # TODO: Set job_number according to pending jobs in shared memory and
+        #   real pending files in /raw dir
+        LOGGER.debug("Current job number: %s", job_number)
+
         # TODO: epson: jobs | no plain text: verif slot: get_status_message(cnt) == 0 => boucle while d'attente ?
 
         # TODO: redéfinier emulation à l'origine ?
@@ -448,11 +510,27 @@ def read_interface(config):
             # strip-escp2-stream is made during the loop.
             sync_converters(jobs_count, job_number)
 
+        copy_args = (misc_section["output_path"], job_number)
+
         if misc_section["emulation"] == "hp":
             # Copy current file to pcl folder
             shutil.copy(
-                "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
-                "{}/pcl/{}.pcl".format(misc_section["output_path"], job_number),
+                "{}/raw/{}.raw".format(*copy_args),
+                "{}/pcl/{}.pcl".format(*copy_args),
+            )
+
+        if misc_section["emulation"] == "hpgl":
+            # Copy current file to hpgl folder
+            shutil.copy(
+                "{}/raw/{}.raw".format(*copy_args),
+                "{}/hpgl/{}.hpgl".format(*copy_args),
+            )
+
+        if misc_section["emulation"] == "postscript":
+            # Copy current file to ps folder
+            shutil.copy(
+                "{}/raw/{}.raw".format(*copy_args),
+                "{}/ps/{}.ps".format(*copy_args),
             )
 
         if (
@@ -461,8 +539,8 @@ def read_interface(config):
         ):
             # Process end of lines in raw file and copy it to /txt_jobs dir
             convert_file_line_ending(
-                "{}/raw/{}.raw".format(misc_section["output_path"], job_number),
-                "{}/txt_jobs/{}.txt".format(misc_section["output_path"], job_number),
+                "{}/raw/{}.raw".format(*copy_args),
+                "{}/txt_jobs/{}.txt".format(*copy_args),
                 config["misc"]["line_ending"],
             )
 

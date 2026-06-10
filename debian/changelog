@@ -1,3 +1,17 @@
+libre-printer (1.1.0-1) UNRELEASED; urgency=medium
+
+  * Beta dev candidate
+  * Changes:
+    - Support hpgl data to pdf
+    - Support postscript to pdf
+    - Improve tests on pdfs
+    - Support seiko QT2100 data via a third party plugin
+    - Reduce overhead
+    - Improve test procedures
+    - Improve plugin structure (add working dir requirement)
+
+ -- Ysard <ysard@users.noreply.github.com>  Tue, 24 Oct 2024 00:51:35 +0200
+
 libre-printer (1.0.0-3) UNRELEASED; urgency=medium
 
   * Release candidate; fix packaging; numerous bug fixes;

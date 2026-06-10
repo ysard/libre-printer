@@ -9,8 +9,8 @@ Il s'agit d'apporter une interface logicielle et matérielle se faisant passer p
 compatible avec les anciens matériels médicaux et industriels (machine-outils).
 
 Parfois ces appareils ne peuvent pas être remplacés pour des raisons de coût ou tout simplement
-parce qu'il n'y a pas de justification de le faire. Ioutefois ils fonctionnent souvent
-en couples avec des imprimantes qui ne se fabriquent plus et qui sont bien souvent
+parce qu'il n'y a pas de justification de le faire. Ils fonctionnent toutefois souvent
+en couple avec des imprimantes qui ne se fabriquent plus et qui sont bien souvent
 le point faible de l'installation car sujettes aux pannes et à l'abandon de la fabrication de leurs consommables.
 
 ## Documentation
@@ -22,13 +22,15 @@ La documentation complète pour le matériel et le logiciel est disponible en
 
 ```mermaid
 graph TD
-    A[fa:fa-computer-classic Host] -->|Serial RS-232 data| B[fa:fa-microchip Libre Printer interface]
+    A[fa:fa-computer-classic Host] -->|Serial RS-232 data| B[fa:fa-microchip Libre-Printer interface]
     A --> |Parallel Centronics data| B
     B -->|fa:fa-usb USB| C[fa:fa-laptop RaspberryPi or Computer]
     C --> Raw[fa:fa-file Raw file]
     Raw --> D[fa:fa-file-pdf PDF]
     Raw --> E[fa:fa-align-justify Text]
     Raw --> F[fa:fa-file-image PNG]
+    Raw --> H[fa:fa-file-csv CSV]
+    Raw --> I[fa:fa-chart-line Charts]
     Raw -->|fa:fa-usb USB| G[fa:fa-print Modern printer]
     Raw -->|fa:fa-network-wired Network| G
 ```
@@ -49,12 +51,23 @@ Le fonctionnement peut être résumé en 3 étapes clés :
 
 ## Types d'imprimantes & protocoles supportés
 
-Les interfaces concernées sont les suivantes :
+Les interfaces et appareils concernés sont les suivants :
 
 - Imprimantes Epson : ESC/P - ESC/P2, 9 & 24 pins
 - Imprimantes HP PCL :
     Toute résolution et tout format (Ex: 150dpi, 300dpi, 600dpi), couleur ou nuance de gris
     Merci au projet [GhostPCL](https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL).
+- HP-PGL (Pen Plotters), instruments compatibles HP-GL/2, instruments possédant l'interface GPIB/HP-IB :
+    HP 7470A plotter, oscilloscopes (Tektronix, HP), analyseurs de spectres et de signaux.
+    Grâce au projet Libre et Open Source :
+    [hp2xx](https://www.gnu.org/software/hp2xx/).
+- Testeurs de montres et horloges Seiko :
+    Spécifiquement le chronographe Seiko Qt-2100.
+    Grâce à notre propre projet : [Seiko Converter](https://github.com/ysard/seiko_qt2100_converter).
+
+Bien plus de matériels peuvent être supportés; le tout dépend de la participation
+de la communauté en termes de développement du code, financement ou juste partage
+des données brutes à des fins de rétro-ingénierie.
 
 ## Connectique
 
@@ -150,7 +163,7 @@ n'ont pas besoin des surcouches propriétaires et payantes des années 2022...
 À bons entendeurs.
 
 
-## Contribution
+## Contributions
 
 Si vous disposez d'un matériel ou d'un port centronics non standard vous pouvez
 ouvrir une issue sur le [projet](https://github.com/ysard/libre-printer/issues)

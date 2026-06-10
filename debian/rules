@@ -2,7 +2,6 @@
 # Increase trace logging, see debhelper(7) (uncomment to enable)
 DH_VERBOSE=1
 export PYBUILD_DISABLE_python2=1
-# The resulting location will be $DH_VIRTUALENV_INSTALL_ROOT/<packagename>
 export PYBUILD_NAME=libreprinter
 PACKAGE=$(shell dh_listpackages)
 DEB_DIR=debian/$(PACKAGE)
@@ -18,9 +17,10 @@ DEB_BUILD_OPTIONS=nocheck
 override_dh_install:
 	dh_install  #calls default *.install and *.dirs installation
 
-	# Create /etc directory for config file
-	install -d $(DEB_DIR)/etc/$(PACKAGE)/
-	install -m 644 libreprinter.conf $(DEB_DIR)/etc/$(PACKAGE)/
+	# Copy config file in /etc directory
+	install -D -m 644 \
+	    $(PYBUILD_NAME).conf \
+	    $(DEB_DIR)/etc/$(PACKAGE)/$(PYBUILD_NAME).conf
 
 	# Create directory for firmware & updater
 	install -d $(LOCAL_INSTALL_ROOT)/firmware/bin/
@@ -35,6 +35,6 @@ override_dh_python3:
 	# Script tools inherit the python2 shebang without explicit force...
 	dh_python3 --shebang=/usr/bin/python3
 
-	rm -rf debian/libre-printer/usr/lib/python3/dist-packages/doc/
-	rm -rf debian/libre-printer/usr/lib/python3/dist-packages/tools/
-	rm -rf debian/libre-printer/usr/lib/python3/dist-packages/firmware/
+	rm -rf $(DEB_DIR)/usr/lib/python3/dist-packages/doc/
+	rm -rf $(DEB_DIR)/usr/lib/python3/dist-packages/tools/
+	rm -rf $(DEB_DIR)/usr/lib/python3/dist-packages/firmware/

@@ -26,10 +26,24 @@ from libreprinter.legacy_interprocess_com import (
     get_status_message,
     debug_shared_memory,
 )
+from .helpers.diff_pdf import is_similar_pdfs
 # Note: For each plugin loaded, don't forget to modify extra_config fixture
 from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
-from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
+from libreprinter.plugins.lp_txt_converter import (
+    setup_text_watchdog,
+    configure_text,
+)
+from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
+from libreprinter.plugins.lp_ps_converter import setup_postscript_watchdog
+from libreprinter.plugins.lp_seiko_qt2100_converter import (
+    setup_seiko_watchdog,
+    configure_seiko,
+)
+from libreprinter.plugins.lp_escapy_converter import (
+    setup_escapy_watchdog,
+    configure_escapy,
+)
 
 import libreprinter.commons as cm
 
@@ -72,6 +86,7 @@ def init_virtual_interface(temp_dir):
     params=[
         """
         [misc]
+        emulation=auto
         [parallel_printer]
         [serial_printer]
         """,
@@ -80,6 +95,10 @@ def init_virtual_interface(temp_dir):
 )
 def init_config(request, init_virtual_interface):
     """Return temporary working dir + initialized config
+
+    .. note:: "emulation=auto" allows to load all plugins specific config
+        that would not be loaded by default. The emulation setting will be
+        modified/redifined per test, later in the extra_config fixture.
 
     :return: Temp dir, thanks to :meth:`init_virtual_interface` fixture,
         and initialized config.
@@ -137,9 +156,13 @@ def extra_config(init_config, request):
     This fixture has a tearDown which ensures that the subprocess is killed
     between tests.
 
+    .. todo:: Replace this function with the same code that initialises the
+        plugins. This logic is redundant, not emergent from the configurations
+        in the plugins.
+
     :param init_config: temporary working dir + initialized config.
         See :meth:`init_config` fixture.
-    :param request: Type of emulation (epson/hp/auto) and endlesstext param.
+    :param request: Type of emulation (epson/hp/auto) and endlesstext param + extra dict of params.
         These settings are added in config.
         With epson emulation, if endlesstext is "strip-escp2-stream"
         "strip-escp2-jobs" or "no", espc2 converter is launched in background.
@@ -147,12 +170,13 @@ def extra_config(init_config, request):
         background.
         See `indirect` keyword arg of parametrized test
     :type init_config: tuple[str, configparser.ConfigParser]
-    :type request: tuple[str, str]
+    :type request: pytest._pytest.fixtures.SubRequest
+        with tuple[str, str, dict] in param attribute
     :return: Yield temporary directory and configParser
     :rtype: generator[tuple[str, configparser.ConfigParser]]
     """
     tmp_dir, config = init_config
-    emulation, endlesstext = request.param
+    emulation, endlesstext, *extra = request.param
 
     # Add current emulation setting
     config["misc"]["emulation"] = emulation
@@ -160,28 +184,62 @@ def extra_config(init_config, request):
     config["misc"]["end_page_timeout"] = "1"
     # Add endless setting & converter path
     config["misc"]["endlesstext"] = endlesstext
-    config["misc"]["escp2_converter_path"] = cm.ESCP2_CONVERTER
-    config["misc"]["pcl_converter_path"] = cm.PCL_CONVERTER
+
+    if extra:
+        # Merge extra config with the various ConfigParser sections
+        for section, settings in extra[0].items():
+            for name, value in settings.items():
+                config.setdefault(section, {})
+                config[section][name] = value
 
     debug_config_file(config)
 
+    escapy_backend = (
+        endlesstext == "no"
+        and config["esc"]["preferred_backend"] == "escapy"
+    )
+
+    # Load configs from the plugins in use
+    configurer_mappings = {
+        "seiko-qt2100": configure_seiko,
+        "text": configure_text,
+        "epson": configure_escapy if escapy_backend else lambda x: None,
+    }
+    configurer_mappings.get(emulation, lambda x: None)(config)
+
+    watchdog_mappings = {
+        "hp": setup_pcl_watchdog,
+        "text": setup_text_watchdog,
+        "hpgl": setup_hpgl_watchdog,
+        "postscript": setup_postscript_watchdog,
+        "seiko-qt2100": setup_seiko_watchdog,
+        "escapy": setup_escapy_watchdog,
+    }
+
     if "escp2" in endlesstext or (emulation == "epson" and endlesstext == "no"):
         # Launch escp2 converter
-        converter_process = launch_escp2_converter(config)
+        converter_process = None
         observer = None
+        if escapy_backend:
+            observer = setup_escapy_watchdog(config)
+        else:
+            converter_process = launch_escp2_converter(config)
+
         if endlesstext in ("plain-jobs", "strip-escp2-jobs"):
             # Launch text to pdf converter
+            configure_text(config)
             observer = setup_text_watchdog(config)
         yield (tmp_dir, config)
         # Tear down
-        converter_process.kill()
+        if converter_process:
+            converter_process.kill()
         if observer:
             observer.stop()
         return
 
-    if emulation == "hp" and endlesstext == "no":
+    if emulation not in ("text", ) and endlesstext == "no":
         # Launch pcl converter
-        observer = setup_pcl_watchdog(config)
+        observer = watchdog_mappings[emulation](config)
         yield (tmp_dir, config)
         observer.stop()
         return
@@ -189,6 +247,7 @@ def extra_config(init_config, request):
     # TODO: remove support of 'plain-jobs' in favour of text emulation
     if emulation == "text" or endlesstext == "plain-jobs":
         # Launch text to pdf converter
+        configure_text(config)
         observer = setup_text_watchdog(config)
         yield (tmp_dir, config)
         observer.stop()
@@ -241,7 +300,7 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
 
     LOGGER.debug("Thread started")
     # Fix minor exception from pyserial (See docstring note)
-    time.sleep(3)
+    time.sleep(4)
     # Put data in input-tty
     with open(DIR_DATA + test_file, "rb") as f_d, \
             open(tmp_dir + "input-tty", "wb") as tty_f_d:
@@ -266,6 +325,7 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
     if emulation == "hp":
         # Check copy in pcl dir
         assert os.path.exists("pcl/1.pcl")
+
 
 def test_interface_firmware_version(init_config, slow_down_tests, caplog):
     """Simulation of interface response with its firmware version
@@ -296,7 +356,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
 
     LOGGER.debug("Thread started")
     # Fix minor exception from pyserial (See docstring note)
-    time.sleep(3)
+    time.sleep(4)
     # Put data in input-tty
     assert Path(tmp_dir + "input-tty").exists()
     with open(tmp_dir + "input-tty", "wb") as tty_f_d:
@@ -310,43 +370,59 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
     assert "The remote firmware is not up to date!" in caplog.text
 
 
-@pytest.mark.timeout(10)
+@pytest.mark.timeout(15)
 @patch("libreprinter.interface.get_serial_handler", lambda x: True)
 @patch("libreprinter.interface.configure_interface", lambda x, y: None)
 @pytest.mark.parametrize(
     "extra_config, in_file, expected_file, out_file, repetitions",
+    # extra_config: (emulation, endlesstext, *extra)
     [
-        ## Pdf files generation
-        (("epson", "no"), "escp2_1.prn", "escp2_1.pdf", "pdf/page1-1.pdf", 1),
-        (("hp", "no"), "test_page_pcl.prn", 14206, "pdf/1.pdf", 1),
+        ## PDF files generation
+        # Epson legacy backend
+        (("epson", "no", {"esc": {"preferred_backend": "legacy"}}), "escp2_1.prn", "escp2_1.pdf", "pdf/page1-1.pdf", 1),
+        # Epson escapy backend (default)
+        (("epson", "no"), "escp2_1.prn", "escp2_1_escapy.pdf", "pdf/1.pdf", 1),
+        (("hp", "no"), "test_page_pcl.prn", "test_page_pcl.pdf", "pdf/1.pdf", 1),
         # Intermediary file produced in txt_jobs/
         (("text", "no"), "escp2_1_strip.txt", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
-        # ... and pdf by txt_converter plugin
-        (("text", "no"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
+        # ... and PDF by txt_converter plugin
+        (("text", "no"), "escp2_1_strip.txt", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
+        # hpgl intermediary & PDF files
+        (("hpgl", "no"), "hpgl.hpgl", "hpgl.hpgl", "hpgl/1.hpgl", 1),
+        (("hpgl", "no"), "hpgl.hpgl", "hpgl.pdf", "pdf/1.pdf", 1),
+        # PostScript to PDF
+        (("postscript", "no"), "escp2_1_strip.ps", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
+        # seiko qt2100 to graph in PDF
+        (("seiko-qt2100", "no"), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S.raw_1.pdf", "pdf/1.pdf", 1),
+        (("seiko-qt2100", "no", {"seiko-qt2100": {"cutoff": "10.0", "enable-csv": "false"}}), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S_cutoff_10s.raw_1.pdf", "pdf/1.pdf", 1),
+        # CSV only
+        (("seiko-qt2100", "no", {"seiko-qt2100": {"enable-graph": "false"}}), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S.csv", "csv/1.csv", 1),
         ## Plain text tests
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
         # 1 file plain text repeated 2 times in a stream
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 2),
         (("epson", "plain-jobs"), "escp2_1.prn", "escp2_1_plain.txt", "txt_jobs/1.txt", 1),
-        # Pdf should be also produced by txt_converter plugin because txt file is generated
+        # PDF should be also produced by txt_converter plugin because TXT file is generated
         # But as there is no escp2 code processing I have to send stripped text;
         # this test is currently similar to (text, no): "text-pdf" test
-        (("epson", "plain-jobs"), "escp2_1_strip.txt", 6722, "pdf/1.pdf", 1),
+        (("epson", "plain-jobs"), "escp2_1_strip.txt", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
         ## Stripped text tests
         (("epson", "strip-escp2-stream"), "escp2_1.prn", "escp2_1_strip.txt", "txt_stream/1.txt", 1),
         # 1 file stripped repeated 2 times in a stream
         (("epson", "strip-escp2-stream"), "escp2_1.prn", "escp2_1_strip.txt", "txt_stream/1.txt", 2),
         (("epson", "strip-escp2-jobs"), "escp2_1.prn", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
-        # Pdf should be also produced by txt_converter plugin because txt file is generated
-        (("epson", "strip-escp2-jobs"), "escp2_1.prn", 6722, "pdf/1.pdf", 1),
-        ## pcl data with epson config
+        # PDF should be also produced by txt_converter plugin because txt file is generated
+        (("epson", "strip-escp2-jobs"), "escp2_1.prn", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
+        ## PCL data with epson config
         (("hp", "plain-stream"), "test_page_pcl.prn", "test_page_pcl.prn", "pcl/1.pcl", 1),
         # TODO: epson/hp/auto ?
     ],
     # First param goes in the 'request' param of the fixture extra_config
     indirect=["extra_config"],
     ids=[
-        "epson-pdf", "hp-pdf", "text-pdf", "text-intermediary-txt-file",
+        "epson-pdf-legacy", "epson-pdf-escapy",
+        "hp-pdf", "text-pdf", "text-intermediary-txt-file", "hpgl-hpgl", "hpgl-pdf",
+        "postscript-pdf", "seiko-qt2100-pdf", "seiko-qt2100-cutoff-pdf", "seiko-qt2100-csv",
         "plain-stream*1", "plain-stream*2", "plain-jobs", "plain-jobs-pdf",
         "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "strip-escp2-jobs-pdf",
         "pcl"
@@ -359,6 +435,9 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
         - get_serial_handler: do nothing
         - configure_interface: do nothing
         - get_buffer: return simulated databytes
+
+    .. warning:: DO NOT forget to update extra_config fixture to manually launch
+        converters for your config!
 
     :param extra_config: (fixture) Temporary directory, configParser
         and converter launcher.
@@ -414,24 +493,21 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
     print("Test directory tree: ", ret)
     found_stats = processed_file.stat()
     print("Processed file & found stats:", processed_file, found_stats)
-    if isinstance(expected_file, int):
-        # Fallback for pdfs from ghostscript (see doc)
-        # Check only the expected size
 
+    if ".pdf" in expected_file:
         # Keep track of the generated file in /tmp in case of error
         backup_file = Path("/tmp/" + in_file + "_" + processed_file.name)
         backup_file.write_bytes(processed_file.read_bytes())
 
-        assert found_stats.st_size == expected_file, \
-            f"Problematic file is saved at <{backup_file}> for further study."
+        ret = is_similar_pdfs(processed_file, Path(DIR_DATA + expected_file))
+        assert ret, f"Problematic file is saved at <{backup_file}> for further study."
         # All is ok => delete the generated file
         backup_file.unlink()
         return
 
     # Check file content
     expected_content = Path(DIR_DATA + expected_file).read_bytes()
-    assert expected_content * repetitions == processed_file.read_bytes(), \
-        "Maybe a mismatch on the Haru Free PDF Library?"
+    assert expected_content * repetitions == processed_file.read_bytes()
 
 
 @pytest.mark.parametrize(
@@ -490,8 +566,8 @@ def test_apply_msb_control():
     assert found == 0b01111111  # 255 => 127
 
     # MSB is set: bit 7 to 1
-    # /!\ Beware with this one, we want an unsigned int: 255, not -1
-    found = apply_msb_control(b"\xfe", msbsetting=2)
+    # /!\ Beware of this one, we want an unsigned int: 255, not -1
+    found = apply_msb_control(b"\x7f", msbsetting=2)
     assert found == 0b11111111  # 254 => 255
 
     # Wrong msbsetting

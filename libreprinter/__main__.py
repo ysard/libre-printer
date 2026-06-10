@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Libreprinter entry point"""
+
 # Standard imports
 import argparse
 from pathlib import Path
@@ -47,7 +48,7 @@ def libreprinter_entry_point(config_file=None, *args, **kwargs):
 
     # Launch converters & watchdogs
     plugins_loaded = plugins.plugins(config)
-    process_to_kill = [
+    processes_to_kill = [
         plugins.get_functions(plugin)(config) for plugin in plugins_loaded
     ]
 
@@ -57,7 +58,7 @@ def libreprinter_entry_point(config_file=None, *args, **kwargs):
     # Cleanup processes
     [
         converter_process.kill()
-        for converter_process in process_to_kill
+        for converter_process in processes_to_kill
         if converter_process and hasattr(converter_process, "kill")
     ]
 

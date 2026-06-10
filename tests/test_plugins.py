@@ -16,8 +16,8 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # Standard imports
+import configparser
 from inspect import isfunction
-import copy
 import subprocess
 import pytest
 from watchdog.observers.inotify import InotifyObserver
@@ -29,7 +29,6 @@ from libreprinter.file_handler import init_directories
 from .test_config_parser import sample_config
 # Import create dir fixture
 from .test_file_handler import temp_dir
-
 
 
 @pytest.fixture()
@@ -51,7 +50,8 @@ def handle_module_cache():
         for elem in dir(plugins)
         if elem.startswith("lp_")
     ]
-    # Grap the functions to be registered (entry points of the plugins)
+    # Grab the functions to be registered
+    # (entry points, launch, configure functions of the plugins)
     funcs = [
         obj
         for elem in plugin_modules
@@ -59,6 +59,7 @@ def handle_module_cache():
         if isfunction(obj)
         and obj_name.startswith("setup_")
         or obj_name.startswith("launch_")
+        or obj_name.startswith("configure_")
     ]
     # Register these functions (refresh the _PLUGINS dict of the plugins_handler
     # module).
@@ -68,13 +69,31 @@ def handle_module_cache():
 @pytest.mark.parametrize(
     "sample_config,expected",
     [
-        # espc2_printer_enabled1: printer is not "no", txt file generated in txt_jobs/
+        # espc2_printer_enabled1_escapy: printer is not "no", txt file generated in txt_jobs/
+        # by default the ESC backend is escapy
         (
             """
             [misc]
             emulation=epson
             endlesstext=no
             output_printer=Fake_Printer_Name
+            [parallel_printer]
+            [serial_printer]
+            """,
+            # See lp_txt_converter config note for the explanation of its
+            # presence here
+            ["lp_escapy_converter", "lp_jobs_to_printer_watchdog", "lp_txt_converter"],
+        ),
+        # espc2_printer_enabled1_legacy: printer is not "no", txt file generated in txt_jobs/
+        # ESC backend is forced with legacy solution
+        (
+            """
+            [misc]
+            emulation=epson
+            endlesstext=no
+            output_printer=Fake_Printer_Name
+            [esc]
+            preferred_backend=legacy
             [parallel_printer]
             [serial_printer]
             """,
@@ -97,12 +116,15 @@ def handle_module_cache():
             ["lp_escp2_converter", "lp_jobs_to_printer_watchdog", "lp_txt_converter"],
         ),
         # escp2_printer_disabled: printer is "no", txt file generated in txt_jobs/
+        # ESC backend is forced with legacy solution
         (
             """
             [misc]
             emulation=epson
             endlesstext=no
             output_printer=no
+            [esc]
+            preferred_backend=legacy
             [parallel_printer]
             [serial_printer]
             """,
@@ -173,11 +195,44 @@ def handle_module_cache():
             """,
             ["lp_pcl_to_pdf_watchdog", "lp_jobs_to_printer_watchdog"],
         ),
+        # hpgl: no endlesstext
+        (
+            """
+            [misc]
+            emulation=hpgl
+            endlesstext=no
+            [parallel_printer]
+            [serial_printer]
+            """,
+            ["lp_hpgl_converter"],
+        ),
+        # postscript: no endlesstext
+        (
+            """
+            [misc]
+            emulation=postscript
+            endlesstext=no
+            [parallel_printer]
+            [serial_printer]
+            """,
+            ["lp_ps_converter"],
+        ),
+        # seiko-qt2100: one plugin only
+        (
+            """
+            [misc]
+            emulation=seiko-qt2100
+            [parallel_printer]
+            [serial_printer]
+            """,
+            ["lp_seiko_qt2100_converter"],
+        ),
     ],
     ids=[
-        "espc2_printer_enabled1", "espc2_printer_enabled2", "escp2_printer_disabled",
+        "espc2_printer_enabled1_escapy", "espc2_printer_enabled1_legacy",
+        "espc2_printer_enabled2", "escp2_printer_disabled",
         "escp2_stream1", "escp2_stream2",
-        "only_text", "only_hp1", "only_hp2"
+        "only_text", "only_hp1", "only_hp2", "hpgl", "postscript", "only_seiko-qt2100",
     ],
     indirect=["sample_config"],  # Send sample_config val to the fixture
 )
@@ -219,3 +274,41 @@ def test_plugins_loading(sample_config, expected, handle_module_cache, temp_dir)
     else:
         # Process
         ret.kill()
+
+
+@pytest.mark.parametrize(
+    "plugin_config,expected",
+    [
+        (
+            {
+                "esc": {"preferred_backend": "escapy"},
+                "UNKNOWN_SECTION": {"XXX": "YYY"},
+            },
+            False,
+        ),
+        (
+            {
+                "esc": {"preferred_backend": "escapy"},
+            },
+            True,
+        ),
+    ],
+    ids=[
+        "not_compatible_section",
+        "compatible_section",
+    ],
+)
+def test_is_plugin_compatible(plugin_config: dict[str, dict[str, str]], expected: bool):
+    """Test behavour when a plugin has a section not found in the current config
+
+    :param plugin_config: Dictionnary of sections with settings.
+    :param expected: Expected return for the tested function.
+    """
+    config = configparser.ConfigParser()
+    config.read_string("""
+        [esc]
+        preferred_backend=escapy
+    """)
+
+    found = plugins_handler.is_plugin_compatible(config, plugin_config)
+    assert expected == found

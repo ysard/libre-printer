@@ -10,8 +10,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  sleep 2
 
  echo "Restarting device..."
--python ./restart_interface.py $1
-+python /usr/share/libre-printer/firmware/restart_interface.py $1
+-python ./restart_interface.py "$1"
++python /usr/share/libre-printer/firmware/restart_interface.py "$1"
 
  retVal=$?
  if [ $retVal -ne 0 ]; then
@@ -19,8 +19,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  }
 
  echo "Flashing device..."
--avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
-+avrdude -v -patmega32u4 -cavr109 -P/dev/$real_hardware_device -b57600 -D -Uflash:w:/usr/share/libre-printer/firmware/bin/libreprinter.ino.hex:i
+-/usr/bin/avrdude -v -patmega32u4 -cavr109 -P/dev/"$real_hardware_device" -b57600 -D -Uflash:w:./bin/libreprinter.ino.hex:i
++/usr/bin/avrdude -v -patmega32u4 -cavr109 -P/dev/"$real_hardware_device" -b57600 -D -Uflash:w:/usr/share/libre-printer/firmware/bin/libreprinter.ino.hex:i
  sleep 7
 
  echo "Restart the service"

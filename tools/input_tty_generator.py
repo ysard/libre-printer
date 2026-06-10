@@ -33,7 +33,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         file = sys.argv[1]
     else:
-        file = "../test_data/escp2_1.prn"
+        file = "./test_data/escp2_1.prn"
 
     print("File opened: ", file)
     write_tty(file)

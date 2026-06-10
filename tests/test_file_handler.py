@@ -100,19 +100,26 @@ def test_get_job_number(temp_dir):
     # Empty dir
     found_val = get_job_number(temp_dir)
     print(found_val)
-    # assert found_val == 1
+    assert found_val == 1
 
     # Populated dir
     init_directories(temp_dir)
+    init_directories(temp_dir, output_dirs=["txt_jobs", ])
     # Create test files
     with open(temp_dir + "raw/1.raw", "w") as f_d:
         f_d.write("hello world")
+
+    with open(temp_dir + "raw/4.raw", "w") as _:
+        # Empty file, should not be detected
+        pass
 
     with open(temp_dir + "pcl/2.raw", "w") as f_d:
         f_d.write("hello world")
 
     with open(temp_dir + "txt_jobs/3.txt", "w") as f_d:
         f_d.write("hello world")
+
+    print("GLOB:", list(pathlib.Path(temp_dir).rglob("*")))
 
     os.mknod(temp_dir + "raw/10.raw")
 

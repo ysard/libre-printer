@@ -30,6 +30,7 @@ In other terms, a pdf is sent to printer if:
 TODO: only "no" for endless config because strip wrongly builds empty pdf files
     => not any of ("plain-jobs", "strip-escp2-jobs", "no")
 """
+
 # Standard imports
 import shlex
 import subprocess
@@ -44,7 +45,7 @@ LOGGER = logger()
 
 CONFIG = {
     "misc": {
-        "output_printer": lambda param: param != "no",
+        "output_printer": lambda param, _: param != "no",
         "endlesstext": ("no", "plain-jobs", "strip-escp2-jobs"),
     }
 }
@@ -53,7 +54,7 @@ CONFIG = {
 class PdfEventHandler(RegexMatchingEventHandler):
     """Watch a directory via a parent Observer and emit events accordingly
 
-    This class only reimplement :meth:`on_created` event.
+    This class only reimplements :meth:`on_closed` event.
 
     Watched directories:
 
@@ -121,7 +122,6 @@ def setup_pdf_watchdog(config):
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     obs = setup_pdf_watchdog(
         {"misc": {"output_path": "./", "output_printer": "TEST_PRINTER"}}
     )

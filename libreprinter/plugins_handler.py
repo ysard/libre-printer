@@ -16,17 +16,15 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Handle the dynamic loading of plugins"""
+
 # Standard imports
 import functools
 import importlib
 from collections import namedtuple
 from watchdog.observers.inotify import InotifyObserver
-try:
-    # Starting from Python 3.7
-    from importlib import resources
-except ImportError: # pragma: no cover
-    # Backport
-    import importlib_resources as resources
+# Starting from Python 3.7, we need 3.9 for files() method
+from importlib import resources
+
 # Custom imports
 from libreprinter import commons as cm
 
@@ -38,12 +36,30 @@ Plugin = namedtuple("Plugin", ("name", "func"))
 # Dictionary with information about all registered plugins
 _PLUGINS = {}
 
+# Dictionary of functions used to configure all registerd plugins
+_CONFIGURERS = {}
+
+
+# WARNING: for each added decorator (function decorated), please update
+# :meth:`tests.test_plugins.handle_module_cache` function!
 
 def register(func):
     """Decorator for registering a new plugin"""
     package, _, plugin = func.__module__.rpartition(".")
     pkg_info = _PLUGINS.setdefault(package, {})
     pkg_info[plugin] = Plugin(name=plugin, func=func)
+    return func
+
+
+def register_configurer(func):
+    """Decorator for registering a function of a plugin as a configurer
+
+    This function will be called just after registration to validate or set
+    default configuration values in a given `configparser.ConfigParser` object.
+    """
+    package, _, plugin = func.__module__.rpartition(".")
+    pkg_info = _CONFIGURERS.setdefault(package, {})
+    pkg_info[plugin] = func
     return func
 
 
@@ -105,11 +121,13 @@ def _import_all(package, config):
     :type config: configparser.ConfigParser
     """
     # Find installed plugins
+    # We do not want __init__.py, __pycache__
     plugin_names = [
-        module[:-3]
-        for module in resources.contents(package)
-        if module.endswith(".py") and module.startswith("lp_")
+        module.stem
+        for module in resources.files(package).iterdir()
+        if module.name.startswith("lp_")
     ]
+
     # Filter plugins according to their compatibility with the current config
     for plugin in plugin_names:
         module = _import(package, plugin)
@@ -117,18 +135,24 @@ def _import_all(package, config):
         if not is_plugin_compatible(config, module.CONFIG):
             LOGGER.debug("Delete plugin: %s", plugin)
             del _PLUGINS[package][plugin]
+            continue
+
+        # Init/check configuration for this plugin, from this plugin
+        configurer = _CONFIGURERS.get(package, {}).get(plugin)
+        if configurer:
+            configurer(config)
 
     LOGGER.info(
         "Plugins loaded: %s",
-        [name for plugins in _PLUGINS.values() for name in plugins.keys()]
+        [name for plugins in _PLUGINS.values() for name in plugins.keys()],
     )
 
 
 def is_plugin_compatible(current_config, plugin_config):
     """Test the compatibility of a config from a plugin vs current user config
 
-    :param current_config: ConfigParser object
-    :param plugin_config: Dictionnary of sections and params
+    :param current_config: ConfigParser object currently loaded
+    :param plugin_config: Dictionnary of sections and params from the tested plugin
     :return: True if the plugin is compatible, False otherwise.
         .. note:: An empty plugin configuration will return True (permanent plugin)
     :type current_config: configparser.ConfigParser
@@ -138,7 +162,10 @@ def is_plugin_compatible(current_config, plugin_config):
     for p_section_name, p_section in plugin_config.items():
         c_section = dict(current_config).get(p_section_name)
         if not c_section:
-            # Plugin section not in expected current config (:o)
+            LOGGER.warning(
+                "Plugin mentions a section <%s> not in current config (:o)",
+                p_section_name
+            )
             return False
 
         for p_param_name, p_param in p_section.items():
@@ -152,7 +179,9 @@ def is_plugin_compatible(current_config, plugin_config):
                 return False
             elif callable(p_param):
                 # Execute the callable to get a test result
-                return p_param(c_section.get(p_param_name))
+                if not p_param(c_section.get(p_param_name), current_config):
+                    return False
+
     # Permanent plugin
     return True
 

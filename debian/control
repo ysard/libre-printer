@@ -2,7 +2,7 @@ Source: libre-printer
 Section: contrib/python
 Priority: optional
 Maintainer: Ysard <ysard_git@gmx.fr>
-Build-Depends: debhelper (>= 9.20160709), dh-virtualenv (>= 1.0), python3 (>= 3.6), tar (>=1.27.1), python3-setuptools, python3-serial, python3-numpy (>= 1.19.5), python3-watchdog (>= 2.2.1), python3-packaging
+Build-Depends: debhelper (>= 9.20160709), python3 (>= 3.6), tar (>=1.27.1), python3-setuptools, python3-serial, python3-numpy (>= 1.19.5), python3-watchdog (>= 2.2.1), python3-packaging
 Standards-Version: 3.9.6
 Homepage: https://github.com/ysard/libre-printer
 Vcs-Git: https://github.com/ysard/libre-printer
@@ -10,6 +10,7 @@ Vcs-Git: https://github.com/ysard/libre-printer
 Package: libre-printer
 Architecture: all
 Depends: dpkg (>= 1.16.1), adduser (>= 3.11), python3 (>= 3.6), avrdude (>= 6.3), enscript (>= 1.6.5.90), ghostscript (>= 9.06), inotify-tools, ${python3:Depends}, ${misc:Depends}
+Suggests: hp2xx (>= 3.4.4), seiko-converter, escapy
 Description:Parallel Centronics and Serial printing for vintage computers
  This is a distribution of "Libre-Printer" as a self-contained
  Python virtualenv wrapped into a Debian package.

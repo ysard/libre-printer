@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Open and use shared memory object created by converters"""
+
 # Standard imports
 import os
 import mmap
@@ -123,6 +124,7 @@ def debug_shared_memory():
         202: {
             0: "no data to process or data is processed",
             1: "data to process",
+            3: "end of job forced",
         },
     }
 

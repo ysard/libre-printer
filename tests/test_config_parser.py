@@ -5,7 +5,7 @@ import pytest
 
 # Custom imports
 from libreprinter.config_parser import parse_config, load_config
-from libreprinter.commons import ESCP2_CONVERTER, PCL_CONVERTER, ENSCRIPT_BINARY
+from libreprinter.commons import ESCP2_CONVERTER, PCL_CONVERTER, HP2XX_BINARY
 from libreprinter.commons import LOG_LEVEL, DEFAULT_OUTPUT_PATH
 
 
@@ -16,8 +16,7 @@ def default_config():
         "start_cleanup": "no",
         "escp2_converter_path": ESCP2_CONVERTER,
         "pcl_converter_path": PCL_CONVERTER,
-        "enscript_path": ENSCRIPT_BINARY,
-        "enscript_settings": "-BR",
+        "hp2xx_path": HP2XX_BINARY,
         "endlesstext": "no",
         "line_ending": "\n",
         "usb_passthrough": "no",
@@ -27,7 +26,7 @@ def default_config():
         "retain_data": "yes",
         "auto_end_page": "no",
         "end_page_timeout": "2",
-        "emulation": "auto",
+        "emulation": "epson",
     }
 
     parallel_section = {
@@ -62,8 +61,7 @@ TEST_DATA = [
         start_cleanup=
         escp2_converter_path=
         pcl_converter_path=
-        enscript_path=
-        enscript_settings=
+        hp2xx_path=
         endlesstext=
         line_ending=
         usb_passthrough=
@@ -163,19 +161,32 @@ def test_default_settings(sample_config, expected):
     [
         # Config with user settings vs expected parsed settings
         (
-            # sample1
+            # sample1: mainly test end_page_timeout restrictions
+            # + various changed default settings
             """
             [misc]
             line_ending=windows
             emulation=hp
             end_page_timeout=-1
+            usb_passthrough=yes
+            auto_end_page=yes
+            retain_data=no
+            loglevel=info
+            enscript_settings=XXX
             [parallel_printer]
+            delayprinter=4
             [serial_printer]
             """,
             {
                 "line_ending": "\r\n",  # line ending is updated internally
                 "emulation": "hp",
                 "end_page_timeout": "2",  # <= 0 is not allowed
+                "usb_passthrough": "yes",
+                "auto_end_page": "yes",
+                "retain_data": "no",
+                "loglevel": "info",
+                "enscript_settings": "XXX",
+                "delayprinter": "4",
             },
         ),
         (
@@ -244,4 +255,8 @@ def test_default_settings(sample_config, expected):
 def test_specific_settings(sample_config, expected_settings):
     """Test user settings vs parsed ones"""
     for k, v in expected_settings.items():
-        assert sample_config["misc"][k] == v
+        # Temporary workaround for settings from another section...
+        if k == "delayprinter":
+            assert sample_config["parallel_printer"][k] == v, f"Fault key: {k}"
+            continue
+        assert sample_config["misc"][k] == v, f"Fault key: {k}"

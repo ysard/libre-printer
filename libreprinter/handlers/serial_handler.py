@@ -18,10 +18,12 @@
 """Low level functions to interact with the serial port
 Basically get a serial handler used in the :meth:`libreprinter.interface` module.
 """
+
 # Standard imports
 import os
 import time
 import serial
+
 # Import here the serial exception used in the interface module
 from serial.serialutil import SerialException as SerialException
 
@@ -67,7 +69,7 @@ def _get_serial_handler(serial_path):
         serial_handler.open()
         assert serial_handler.is_open
 
-        serial_handler.write(b"\xFF")
+        serial_handler.write(b"\xff")
         serial_handler.close()
         # Wait reboot from interface
         # At most 1 second waiting time for the test in loop() function

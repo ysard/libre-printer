@@ -21,6 +21,8 @@ Test only file detections & startups.
 """
 # Standard imports
 import time
+
+import libreprinter.plugins.lp_seiko_qt2100_converter
 import pytest
 from unittest.mock import patch
 
@@ -29,7 +31,11 @@ from libreprinter.file_handler import init_directories
 from libreprinter.plugins.lp_jobs_to_printer_watchdog import setup_pdf_watchdog
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
 from libreprinter.plugins.lp_txt_converter import setup_text_watchdog
-from libreprinter.commons import PCL_CONVERTER, ENSCRIPT_BINARY
+from libreprinter.plugins.lp_hpgl_converter import setup_hpgl_watchdog
+from libreprinter.plugins.lp_ps_converter import setup_postscript_watchdog
+from libreprinter.plugins.lp_seiko_qt2100_converter import setup_seiko_watchdog
+from libreprinter.plugins.lp_escapy_converter import setup_escapy_watchdog
+from libreprinter.commons import PCL_CONVERTER, ENSCRIPT_BINARY, HP2XX_BINARY
 
 # Import create dir fixture
 from .test_file_handler import temp_dir
@@ -54,6 +60,8 @@ def reset_catched_events():
 @patch("libreprinter.plugins.lp_jobs_to_printer_watchdog.PdfEventHandler.on_closed", mock_on_closed)
 @patch("libreprinter.plugins.lp_pcl_to_pdf_watchdog.PclEventHandler.on_closed", mock_on_closed)
 @patch("libreprinter.plugins.lp_txt_converter.TxtEventHandler.on_closed", mock_on_closed)
+@patch("libreprinter.plugins.lp_hpgl_converter.HpglEventHandler.on_closed", mock_on_closed)
+@patch("libreprinter.plugins.lp_ps_converter.PostscriptEventHandler.on_closed", mock_on_closed)
 @pytest.mark.parametrize(
     # WARNING: expected_file is currently NOT tested!
     "watchdog, config, files_to_create, expected_file",
@@ -75,12 +83,27 @@ def reset_catched_events():
         # lp_txt_converter: Test the detection of txt file creation in /txt_jobs
         (
             setup_text_watchdog,
-            {"misc": {"enscript_path": ENSCRIPT_BINARY, "enscript_settings": "-BR"}},
+            {"misc": {}, "text": {"enscript_path": ENSCRIPT_BINARY, "enscript_settings": "-BR"}},
             ["txt_jobs/aaa", "txt_jobs/c.txt"],  # Last file is the good one
             "pdf/c.pdf",
         ),
+        # lp_hpgl_converter: Test the detection of a hpgl file in /hpgl
+        (
+            setup_hpgl_watchdog,
+            {"misc": {"hp2xx_path": HP2XX_BINARY}},
+            ["hpgl/aaa", "hpgl/d.hpgl"],  # Last file is the good one
+            "pdf/h.pdf",
+        ),
+        # lp_ps_converter: Test the detection of a hpgl file in /hpgl
+        (
+            setup_postscript_watchdog,
+            {"misc": {}},
+            ["ps/aaa", "ps/e.ps"],  # Last file is the good one
+            "pdf/e.pdf",
+        ),
+        # lp_seiko_qt2100_converter: Not tested here, doesn't accept empty raw file
     ],
-    ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog", "txt_to_pdf_watchdog"],
+    ids=["jobs_to_printer_watchdog", "pcl_to_pdf_watchdog", "txt_to_pdf_watchdog", "hpgl_to_pdf_watchdog", "ps_to_pdf_watchdog"],
 )
 def test_setup_watchdog(
     watchdog, config, files_to_create, expected_file, temp_dir, reset_catched_events
@@ -158,7 +181,7 @@ def test_bad_printer(temp_dir, caplog):
     )
 
     open(temp_dir + "pdf/x.pdf", "a").close()
-    time.sleep(0.5)
+    time.sleep(1.5)
 
     # We expect an exception in the logger returned by the lpr program
     print(caplog.text)
@@ -176,12 +199,24 @@ def test_bad_printer(temp_dir, caplog):
         ),
         (
             setup_text_watchdog,
-            {"misc": {"enscript_path": "/usr/bin/Fake_Converter_Name"}},
+            {"misc": {}, "text": {"enscript_path": "/usr/bin/Fake_Converter_Name"}},
             r"enscript converter not found",
             "Setting <enscript_path:",
         ),
+        (
+            setup_hpgl_watchdog,
+            {"misc": {"hp2xx_path": "/usr/bin/Fake_Converter_Name"}},
+            r"hp2xx converter not found",
+            "Setting <hp2xx_path:",
+        ),
+        (
+            setup_escapy_watchdog,
+            {"misc": {}, "escapy": {"escapy_path": "/usr/bin/Fake_Converter_Name"}},
+            r"escapy converter not found",
+            "Setting <escapy_path:",
+        ),
     ],
-    ids=["bad_pcl_binary", "bad_enscript_binary"],
+    ids=["bad_pcl_binary", "bad_enscript_binary", "bad_hp2xx_binary", "bad_escapy_binary"],
 )
 def test_bad_binary_path(
     watchdog, config, expected_exception_text, expected_log_text, temp_dir, caplog
@@ -210,6 +245,46 @@ def test_bad_binary_path(
     with pytest.raises(FileNotFoundError, match=expected_exception_text):
         # Add temporary dir to config
         config["misc"]["output_path"] = temp_dir
+        # Start watchdog
+        _ = watchdog(config)
+        # Failure is expected: no need to stop the watchdog
+
+    # We expect an error in the logger
+    print(caplog.text)
+    assert expected_log_text in caplog.text
+
+
+@patch("libreprinter.plugins.lp_seiko_qt2100_converter.EXTERNAL_PACKAGE", "FAKE_PACKAGE")
+@pytest.mark.parametrize(
+    "watchdog, config, expected_exception_text, expected_log_text",
+    [
+        (
+            setup_seiko_watchdog,
+            {},  # Config is unimportant: it should crash before that it's used
+            r"<FAKE_PACKAGE> package is not installed!",
+            "<FAKE_PACKAGE> package is not installed!",
+        ),
+    ],
+    ids=["missing-seiko_converter"]
+)
+def test_missing_external_module(watchdog, config, expected_exception_text, expected_log_text, caplog):
+    """Test setup_*_watchdog functions with non-existent external packages requirements
+
+    The watchdog should crash emitting a ImportError exception.
+
+    :param watchdog: Function that set up a watchdog according to a given config
+    :param config: Config in the format returned by a Configuration Parser.
+        Not all settings are required for a specific watchdog.
+    :param expected_exception_text: Exception message in a raw string.
+    :param expected_log_text: Fragment of a message emitted by the logger.
+    :param caplog: (fixture) pytest caplog-fixture
+    :type watchdog: <function>
+    :type config: <dict>
+    :type expected_exception_text: <str>
+    :type expected_log_text: <str>
+    :type caplog: <_pytest.logging.LogCaptureFixture>
+    """
+    with pytest.raises(ImportError, match=expected_exception_text):
         # Start watchdog
         _ = watchdog(config)
         # Failure is expected: no need to stop the watchdog

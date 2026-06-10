@@ -16,12 +16,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Load configuration file, check and set default values"""
+
 # Standard imports
 import configparser
 
 # Custom imports
-from libreprinter.commons import logger, log_level, CONFIG_FILE, ESCP2_CONVERTER, \
-    PCL_CONVERTER, ENSCRIPT_BINARY, DEFAULT_OUTPUT_PATH, LOG_LEVEL
+from libreprinter.commons import (
+    logger,
+    log_level,
+    CONFIG_FILE,
+    ESCP2_CONVERTER,
+    PCL_CONVERTER,
+    HP2XX_BINARY,
+    DEFAULT_OUTPUT_PATH,
+    LOG_LEVEL,
+)
 
 FLOW_CTRL_MAPPING = {
     "hardware": 1,
@@ -49,7 +58,7 @@ def load_config(config_file=CONFIG_FILE):
 def parse_config(config: configparser.ConfigParser):
     """Read config file, check and set default values
 
-    .. note:: All values are of type string; they must be casted
+    .. note:: All values are of type string; they must be cast
         (with dedicated methods) if necessary.
 
         The syntax `if not xxx:` handles None and '' data retrieved from file.
@@ -80,16 +89,15 @@ def parse_config(config: configparser.ConfigParser):
     if not pcl_converter_path:
         misc_section["pcl_converter_path"] = PCL_CONVERTER
 
-    enscript_path = misc_section.get("enscript_path")
-    if not enscript_path:
-        misc_section["enscript_path"] = ENSCRIPT_BINARY
-
-    enscript_settings = misc_section.get("enscript_settings")
-    if not enscript_settings:
-        config["misc"]["enscript_settings"] = "-BR"
+    hp2xx_path = misc_section.get("hp2xx_path")
+    if not hp2xx_path:
+        misc_section["hp2xx_path"] = HP2XX_BINARY
 
     if misc_section.get("endlesstext") not in (
-        "plain-stream", "strip-escp2-stream", "plain-jobs", "strip-escp2-jobs"
+        "plain-stream",
+        "strip-escp2-stream",
+        "plain-jobs",
+        "strip-escp2-jobs",
     ):
         misc_section["endlesstext"] = "no"
 
@@ -102,7 +110,7 @@ def parse_config(config: configparser.ConfigParser):
 
     # Warning: If usb_passthrough is set, output_printer is not disabled.
     # It should be noted that any "raw" parallel interface like `/dev/usb/lpx`
-    # disappears when Cups is used on it. Thus it can't be used with this
+    # disappears when Cups is used on it. Thus, it can't be used with this
     # functionality anymore.
     usb_passthrough = misc_section.get("usb_passthrough")
     if not usb_passthrough:
@@ -120,8 +128,17 @@ def parse_config(config: configparser.ConfigParser):
     if not serial_port:
         misc_section["serial_port"] = "/dev/ttyACM0"
 
-    if misc_section.get("emulation") not in ("epson", "escp2", "hp", "pcl", "text"):
-        misc_section["emulation"] = "auto"
+    if misc_section.get("emulation") not in (
+        "epson",
+        "escp2",
+        "hp",
+        "pcl",
+        "text",
+        "hpgl",
+        "postscript",
+        "seiko-qt2100",
+    ):
+        misc_section["emulation"] = "epson"
     if misc_section.get("emulation") in ("hp", "pcl"):
         misc_section["emulation"] = "hp"
     if misc_section.get("emulation") in ("epson", "escp2"):
@@ -155,6 +172,14 @@ def parse_config(config: configparser.ConfigParser):
     retain_data = misc_section.get("retain_data")
     if not retain_data:
         misc_section["retain_data"] = "yes"
+
+    ## ESC backend
+    if "esc" not in config:
+        config.add_section("esc")
+    esc_section = config["esc"]
+    backend = esc_section.get("preferred_backend")
+    if backend not in ("legacy", "escapy"):
+        esc_section["preferred_backend"] = "escapy"
 
     ## Parallel printer
     parallel_section = config["parallel_printer"]

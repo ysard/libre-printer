@@ -15,10 +15,15 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Watchdog for /pcl directory that is able to convert new files into pdfs
+"""Watchdog for /ps directory that is able to convert new files into pdfs
 
-The conversion is made thanks to the `pcl_converter_path` setting pointing to
-the GhostPCL binary.
+Conversions from PostScript are made thanks to Ghostscript.
+
+As soon as a file is closed, a pdf is created.
+
+Expected config (emulation + endlesstext):
+
+    - postscript + no
 """
 
 # Standard imports
@@ -30,54 +35,61 @@ from watchdog.events import RegexMatchingEventHandler
 
 # Custom imports
 from libreprinter import plugins_handler
+from libreprinter.file_handler import init_directories
 from libreprinter.commons import logger
 
 LOGGER = logger()
 
 CONFIG = {
     "misc": {
-        "emulation": "hp",
-        "endlesstext": "no",
+        "emulation": ("postscript",),
+        "endlesstext": ("no",),
     }
 }
+REQUIRED_DIRS = ["ps"]
 
 
-class PclEventHandler(RegexMatchingEventHandler):
+class PostscriptEventHandler(RegexMatchingEventHandler):
     """Watch a directory via a parent Observer and emit events accordingly
 
     This class only reimplements :meth:`on_closed` event.
 
     Watched directory:
 
-        - `pcl`: `*.pcl`
+        - `ps`: `*.ps`
 
     Attribute:
-        :param converter_path: Path to GhostPCL binary.
-        :type converter_path: str
+        :param gs_settings: Command line settings for Ghostscript binary.
+        :type gs_settings: list[str] or None
 
     Class attribute:
-        :param FILES_REGEX: Patterns to detect pcl files.
+        :param FILES_REGEX: Patterns to detect PostScript files.
         :type FILES_REGEX: list[str]
     """
 
-    FILES_REGEX = [r".*\.pcl$"]
+    FILES_REGEX = [r".*\.ps$"]
 
-    def __init__(self, converter_path, *args, **kwargs):
+    def __init__(self, *args, gs_settings=None, **kwargs):
         """Constructor override
-        Just set converter path attr and define watchdog regexes.
+        Just add Ghostscript settings attr and define watchdog regexes.
         """
         super().__init__(*args, regexes=self.FILES_REGEX, **kwargs)
-        self.converter_path = converter_path
+        self.gs_settings = gs_settings or []
 
     def on_closed(self, event):
-        """PCL file creation is detected, convert it to PDF"""
+        """File closing is detected, convert it to PDF
+
+        Minimal command::
+
+            gs -sDEVICE=pdfwrite -o out.pdf in.ps
+        """
         LOGGER.info("Event detected: %s", event)
 
         # Directly build arg list; enquote paths to avoid errors
         src_path = Path(event.src_path)
         pdf_path = src_path.parent.parent / "pdf" / (src_path.stem + ".pdf")
-        args = [
-            self.converter_path,
+        ghostscript_cmd = [
+            "/usr/bin/gs",
             "-dNOPAUSE",
             "-sDEVICE=pdfwrite",
             "-sColorConversionStrategy=RGB",
@@ -85,14 +97,15 @@ class PclEventHandler(RegexMatchingEventHandler):
             "-dEmbedAllFonts=true",  # Increase the final size
             "-dSubsetFonts=true",  # Reduce the final size
             f"-sOutputFile={shlex.quote(str(pdf_path))}",
-            shlex.quote(event.src_path),
         ]
-        LOGGER.debug("GhostPCL command: %s", args)
+        ghostscript_cmd += self.gs_settings
+        ghostscript_cmd += [shlex.quote(event.src_path), "-c", "quit"]
+        LOGGER.debug("ghostscript command: %s", ghostscript_cmd)
         try:
             # We are in a child thread, we can have blocking calls like run()
             # Capture all outputs from the command in case of error with PIPE
             subprocess.run(
-                args, stderr=subprocess.PIPE, stdout=subprocess.PIPE, check=True
+                ghostscript_cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, check=True
             )
         except subprocess.CalledProcessError as e:
             # process exits with a non-zero exit code
@@ -101,36 +114,34 @@ class PclEventHandler(RegexMatchingEventHandler):
 
 
 @plugins_handler.register
-def setup_pcl_watchdog(config):
-    """Initialise a watchdog on `/pcl` directory in configured `output_path`.
+def setup_postscript_watchdog(config):
+    """Initialise a watchdog on `/ps` directory in configured `output_path`.
 
-    Any pcl file created in this directories will be converted in `/pdf` by
-    the ghostpcl binary whose path is indicated in the variable
-    `pcl_converter_path`.
-
-    :return: Observer that is currently watching directories.
-    :rtype: watchdog.Observer
+    Any ps file created in this directories will be converted in `/pdf` by
+    the Ghostscript binary installed on the system.
     """
-    LOGGER.info("Launch pcl watchdog...")
+    LOGGER.info("Launch postscript watchdog...")
 
-    # Test existence of pcl converter binary
-    converter_path = config["misc"]["pcl_converter_path"]
-    if not Path(converter_path).exists():
-        LOGGER.error("Setting <pcl_converter_path:%s> doesn't exists!", converter_path)
-        raise FileNotFoundError("pcl converter not found")
+    init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
 
-    event_handler = PclEventHandler(converter_path, ignore_directories=True)
+    # gs_settings = config["misc"]["gs_settings"]
+    event_handler = PostscriptEventHandler(gs_settings=None, ignore_directories=True)
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
-    observer.schedule(event_handler, config["misc"]["output_path"] + "pcl/", recursive=False)
+    observer.schedule(
+        event_handler, config["misc"]["output_path"] + "ps/", recursive=False
+    )
     observer.start()
     return observer
 
 
 if __name__ == "__main__":  # pragma: no cover
-    from libreprinter.commons import PCL_CONVERTER
-
-    obs = setup_pcl_watchdog(
-        {"misc": {"output_path": "./", "pcl_converter_path": PCL_CONVERTER}}
+    obs = setup_postscript_watchdog(
+        {
+            "misc": {
+                "output_path": "./",
+                "gs_settings": ["-sPAPERSIZE=b5", "-dFIXEDMEDIA"],
+            }
+        }
     )
     obs.join()

@@ -5,13 +5,16 @@ PROJECT_VERSION=$(shell python setup.py --version)
 
 # Tests
 tests:
-	pytest tests
+	LOG_LEVEL=DEBUG pytest tests
 	@#python setup.py test --addopts "tests libreprinter -vv"
 
 coverage:
-	pytest --cov=libreprinter --cov-report term-missing -vv
+	LOG_LEVEL=DEBUG pytest --cov=libreprinter --cov-report term-missing -vv
 	@#python setup.py test --addopts "--cov libreprinter tests"
 	@-coverage-badge -f -o images/coverage.svg
+
+branch_coverage:
+	LOG_LEVEL=DEBUG pytest --cov=libreprinter --cov-report term-missing --cov-branch -vv
 
 docstring_coverage:
 	interrogate -v libreprinter/ \
@@ -32,7 +35,7 @@ update_firmware:
 	avrdude -v -patmega32u4 -cavr109 -P/dev/ttyACM0 -b57600 -D -Uflash:w:./firmware/libreprinter.ino.hex:i
 
 clean:
-	rm -rf eps pcl pdf png raw txt txt_jobs txt_stream dist
+	rm -rf eps pcl pdf png raw txt txt_jobs hpgl ps txt_stream dist csv libreprinter.egg-info
 	-$(MAKE) -C ./doc clean
 
 doc:
@@ -71,7 +74,11 @@ archive:
 	# Create upstream src archive
 	git archive HEAD --prefix='libre-printer-$(PROJECT_VERSION).orig/' | gzip > ../libre-printer-$(PROJECT_VERSION).orig.tar.gz
 
-debianize: archive
+reset_patches:
+	# Force the removal of the current patches
+	-quilt pop -af
+
+debianize: archive reset_patches
 	dpkg-buildpackage -us -uc -b -d
 
 debcheck:
@@ -89,7 +96,7 @@ test_tty_to_tty:
 
 test_tty_to_rpi:
 	# serial tty to serial tty => automatic test in chroot env
-	socat PTY,link=/mnt/raspbian/home/pi/libreprinter/virtual-tty,raw,echo=0 PTY,link=./input-tty,raw,echo=0
+	socat PTY,link=/mnt/raspbian/home/pi/virtual-tty,raw,echo=0 PTY,link=./input-tty,raw,echo=0
 
 prod_tty_to_tty:
 	# serial interface => serial tty
@@ -97,7 +104,7 @@ prod_tty_to_tty:
 
 send_tty_input:
 	# Send Test1.prn to ./virtual-tty
-	./input_tty_generator.py
+	./tools/input_tty_generator.py
 
 send_end_config:
 	# Send "end_config" word to end the interface configuration

@@ -7,6 +7,9 @@ txt_jobs/
 txt_stream/
 doc/build/
 poc/
+hpgl/
+ps/
+input-tty
 
 # PyCharm
 .idea/

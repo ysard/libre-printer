@@ -23,6 +23,8 @@ Features
         Raw --> D[fa:fa-file-pdf PDF]
         Raw --> E[fa:fa-align-justify Text]
         Raw --> F[fa:fa-file-image PNG]
+        Raw --> H[fa:fa-file-csv CSV]
+        Raw --> I[fa:fa-chart-line Charts]
         Raw -->|fa:fa-usb USB| G[fa:fa-print Modern printer]
         Raw -->|fa:fa-network-wired Network| G
 
@@ -44,14 +46,31 @@ The operation can be summarized in 3 key steps:
 Printer types & protocols supported
 ===================================
 
-The interfaces concerned are the following:
+The supported interfaces & devices are the following:
 
 - Epson printers:
-    ESC/P - ESC/P2, 9 & 24 pins
+    ESC/P - ESC/P2, 9 & 24 pins thanks to `Escapy <https://github.com/ysard/escapy>`_,
+    that reliably and almost exhaustively interprets the command set to
+    produce searchable PDF files.
 - HP PCL printers:
     Any resolution and format (Ex: 150dpi, 300dpi, 600dpi), color or grayscale
     thanks to the project
     `GhostPCL <https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL>`_.
+- HP-PGL (Pen Plotters), HP-GL/2-Compatible Instruments, Instruments with GPIB/HP-IB interfaces:
+    HP 7470A plotter, oscilloscopes (Tektronix, HP), spectrum analyzers and signal analyzers.
+    Thanks to the Free and Open Source Software:
+    `hp2xx <https://www.gnu.org/software/hp2xx/>`_.
+- PostScript printers:
+    Conversions are made thanks to `Ghostscript <https://ghostscript.com/>`_,
+    an interpreter for the PostScript® language and PDF files.
+    Ghostscript consists of a PostScript interpreter layer and a graphics library.
+- Seiko Quartz Watch Tester Printers:
+    Specifically the Seiko Qt-2100 Timegrapher device.
+    Thanks to our own project:
+    `Seiko Converter <https://github.com/ysard/seiko_qt2100_converter>`_
+
+Much more will come depending on the community's participation in terms
+of funding, developing or sharing raw device output data for retroengineering purposes.
 
 Connectivity
 ============
@@ -82,18 +101,19 @@ is emulated on USB and allows the connection, the exchanges and the update of th
 Arduino from a simple USB plug (we avoid the proprietary connectors or the limited
 use of a RaspberryPi HAT).
 
-Software
---------
+Softwares
+---------
 
 The core software collecting the data interpreted by the interface can be executed
 on any machine running GNU/Linux.
 
-It should be noted that the recent versions of the program converting ESC/P and
-ESC/P2 data are those of the Retroprinter project, which has only been compiled
-for the ARM platform (i.e. Raspberry Pi).
-However, we offer a slightly older (but functional) version of the converter that
-is compilable on all platforms.
+**Since 2026** we provide a **much better and very powerful**
+converter (`Escapy <https://github.com/ysard/escapy>`_) for this job.
 
+The **legacy backend** of the program converting ESC/P and ESC/P2 data is
+based on the binary of the RetroPrinter project, which has only been compiled
+for the ARM platform (i.e. Raspberry Pi). An older version is available on all
+the platforms.
 
 Why this project?
 =================
@@ -127,7 +147,7 @@ Technical considerations
 - |project_name| components are much cheaper/more affordable.
 - We support serial printers without additional adapters.
 - Multiple interfaces can be connected on the same computer!
-- Our code is tested with over 90% coverage.
+- Our code is tested with over 95% coverage.
 
 
 Ethical considerations
@@ -138,7 +158,7 @@ Our solution is **truly** free: licensed under the AGPL.
 It is common to see programs in C/C++ etc. developed not by expertise or by
 performance research, but rather by a desire to obfuscate code at "lower cost".
 RetroPrinter is no exception to this.
-Thus the "community" formed around these projects receives few benefits:
+Thus, the "community" formed around these projects receives few benefits:
 slow development of patches, lack of know-how for some tasks, paying products,
 no right to modify or redistribute the program, etc.
 This behaviour is toxic because the community can neither audit nor improve the
@@ -148,4 +168,5 @@ products. The most paradoxical thing is that when the proprietary code leaks
 which is precisely what the authors wanted to avoid in the first place.
 
 Finally, quite frankly, let's be pragmatic, the technologies of the 80's don't
-need the proprietary and paying overlay of the 2022's... Let's hear it.
+need proprietary overpriced, overloaded and flawed stuff of the 2022's... Let's
+spread the word.

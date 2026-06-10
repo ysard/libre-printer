@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Parametrize and launch espc2 converter binary as subprocess"""
+
 # Standard imports
 import shlex
 import subprocess
@@ -23,6 +24,7 @@ import pathlib
 
 # Custom imports
 from libreprinter import plugins_handler
+from libreprinter.file_handler import init_directories
 from libreprinter.commons import logger
 
 LOGGER = logger()
@@ -31,8 +33,15 @@ CONFIG = {
     "misc": {
         "emulation": ("epson", "auto"),
         "endlesstext": ("strip-escp2-stream", "strip-escp2-jobs", "no"),
-    }
+    },
+    "esc": {
+        "preferred_backend": lambda param, config: (
+            param == "legacy"
+            or (param == "escapy" and config["misc"]["endlesstext"] != "no")
+        )
+    },
 }
+REQUIRED_DIRS = ["txt_stream", "txt_jobs", "png", "eps"]
 
 ENDLESS_TEXT_VALUE_MAPPING = {
     "no": 0,
@@ -80,6 +89,7 @@ def launch_escp2_converter(config):
     :rtype: subprocess.Popen
     """
     # Handle configuration filepaths
+    init_directories(config["misc"]["output_path"], REQUIRED_DIRS)
     converter_path = pathlib.Path(config["misc"]["escp2_converter_path"])
 
     if not converter_path.exists():

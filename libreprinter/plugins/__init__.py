@@ -24,6 +24,7 @@ Usage::
     get_functions(plugin_name)(args_for_plugin_function)
     call_functions(plugin_name, args_for_plugin_function)
 """
+
 from libreprinter import plugins_handler
 
 plugins = plugins_handler.names_factory(__package__)

@@ -29,6 +29,7 @@ Interface communication
 .. automodule:: libreprinter.interface
    :members:
 
+
 Serial handler
 ==============
 
