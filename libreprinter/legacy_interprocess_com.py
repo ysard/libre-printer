@@ -53,24 +53,28 @@ def initialize_interprocess_com():
     shared_mem_path = "/dev/shm/" + cm.SHARED_MEM_NAME
     shared_mem_size = 512 * 4
 
+    # Avoid errors when a file is shared between multiple users (denied O_CREAT).
+    # This should not append outside the dev env...
     if not os.path.isfile(shared_mem_path):
         # Create not existing file
-        os.mknod(shared_mem_path)  # Will work only on Unix => who cares?
+        _f_d = os.open(shared_mem_path, os.O_CREAT | os.O_RDWR)
+        # Neutralize default umask effect
+        os.chmod(shared_mem_path, 0o666)
+    else:
+        _f_d = os.open(shared_mem_path, os.O_RDWR)
 
     # Truncate the file to the expected size in all cases
     # Without this, we can't access to all memory used by buggy converters
     # (limited to the 512 first bytes).
-    os.truncate(shared_mem_path, shared_mem_size)
+    os.ftruncate(_f_d, shared_mem_size)
 
-    f_d = open(shared_mem_path, mode="rb+")
-    m = mmap.mmap(f_d.fileno(), length=0, access=mmap.ACCESS_WRITE)
-
+    m = mmap.mmap(_f_d, length=0, access=mmap.ACCESS_WRITE)
     SHARED_MEM_BUFFER = frombuffer(m, dtype=int32)
 
     LOGGER.debug("Shared mem initialised")
     # print(SHARED_MEM_BUFFER[400:405])
     debug_shared_memory()
-    return f_d
+    return os.fdopen(_f_d, "rb+")
 
 
 def get_status_message(offset):
