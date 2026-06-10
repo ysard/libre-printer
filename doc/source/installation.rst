@@ -289,7 +289,7 @@ Download compiled binaries
 **************************
 
 - `v10.0.0 linux-x86_64 (Artifex release) <https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/tag/gs1000>`_
-- `v10.03.1 linux-arm (LibrePrinter release) <TBA>`_
+- `v10.03.1 linux-armv6 (LibrePrinter release) <https://github.com/ysard/libre-printer/releases/tag/1.0.0rc1>`_
 
 Then copy the ``gpcl6`` binary to ``/usr/local`` and make it executable (``chmod 755 /usr/local/gpcl6``).
 
