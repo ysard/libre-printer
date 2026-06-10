@@ -41,7 +41,7 @@ It is currently split into 3 sections:
 
     Reset directories in output_path, and shared memory during startup.
 
-- **escp2_converter_path=/usr/bin/convert-escp2**
+- **escp2_converter_path=**
 
     Path of the legacy espc2 converter. If the binary is not at the end of the
     given path its expected name is "convert-escp2".
@@ -116,9 +116,30 @@ It is currently split into 3 sections:
     **epson or escp2** For Epson ESC/P and ESC/P2 data (default)
     **hp or pcl**      For HP PCL data
     **text**           For raw text data from the printer (equivalent of epson + plain-jobs)
+    **hpgl**           For HP Plotter (HP-GL)
+    **postscript**     For PostScript standard data
+    **seiko-qt2100**   For Seiko QT-2100 Timegrapher
     **auto**           (Not implemented)
     ================== ================================================
 
+[esc]
+=====
+
+- **preferred_backend=escapy**
+
+    Select the preferred backend for ESC command set conversions.
+
+    =============== ================================================
+    **escapy**      By default for state-of-the-art, high-performance conversion
+    **legacy**      For RetroPrinter binaries (if installed on the system)
+    =============== ================================================
+
+[escapy]
+========
+
+- **config_file=/etc/escapy/escapy.conf**
+
+    Select a custom config file for Escapy.
 
 [parallel_printer]
 ==================
