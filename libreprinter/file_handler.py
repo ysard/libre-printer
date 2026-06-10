@@ -76,10 +76,12 @@ def get_job_number(
     - Get only expected extensions (txt, raw, eps)
     - Search highest file number in all folders
 
-    TODO: handle properly pdf dir data: page1-1.pdf, page1-2.pdf, page2-1.pdf, ...
+    TODO: handle properly pdf dir data: page1-1.pdf, page1-2.pdf, page2-1.pdf...
+
     TODO: handle new naming convention based on the date to avoid overwriting
         if raw files are deleted.
         => will allow to only search raw files
+
     :return: Current job number
     :rtype: int
     """
