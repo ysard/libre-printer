@@ -5,8 +5,14 @@ Plugins
 .. automodule:: libreprinter.plugins
    :members:
 
-Jobs to Printer
-===============
+ESC & ESC/P2 converter
+======================
+
+.. automodule:: libreprinter.plugins.lp_escapy_converter
+   :members:
+
+Data & PDF to Printer
+=====================
 
 .. automodule:: libreprinter.plugins.lp_jobs_to_printer_watchdog
    :members:
@@ -17,17 +23,26 @@ PCL to PDF
 .. automodule:: libreprinter.plugins.lp_pcl_to_pdf_watchdog
    :members:
 
-ESC & ESC/P2 converter
-======================
+HPGL to PDF
+===========
 
-Interprocess communication
---------------------------
-
-.. automodule:: libreprinter.legacy_interprocess_com
+.. automodule:: libreprinter.plugins.lp_hpgl_converter
    :members:
 
-Converter wrapper
------------------
+PostScript to PDF
+=================
 
-.. automodule:: libreprinter.plugins.lp_escp2_converter
+.. automodule:: libreprinter.plugins.lp_ps_converter
+   :members:
+
+Text to PDF
+===========
+
+.. automodule:: libreprinter.plugins.lp_txt_converter
+   :members:
+
+Seiko Qt-2100 Timegrapher to PDF & CSV
+=======================================
+
+.. automodule:: libreprinter.plugins.lp_seiko_qt2100_converter
    :members:
