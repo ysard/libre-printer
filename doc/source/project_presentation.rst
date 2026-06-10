@@ -60,6 +60,10 @@ The supported interfaces & devices are the following:
     HP 7470A plotter, oscilloscopes (Tektronix, HP), spectrum analyzers and signal analyzers.
     Thanks to the Free and Open Source Software:
     `hp2xx <https://www.gnu.org/software/hp2xx/>`_.
+- PostScript printers:
+    Conversions are made thanks to `Ghostscript <https://ghostscript.com/>`_,
+    an interpreter for the PostScript® language and PDF files.
+    Ghostscript consists of a PostScript interpreter layer and a graphics library.
 - Seiko Quartz Watch Tester Printers:
     Specifically the Seiko Qt-2100 Timegrapher device.
     Thanks to our own project:

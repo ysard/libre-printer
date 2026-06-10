@@ -53,19 +53,23 @@ The operation can be summarized in 3 key steps:
 
 The supported interfaces & devices are the following:
 
-- Epson printers:
+- **Epson printers:**
     ESC/P - ESC/P2, 9 & 24 pins thanks to [Escapy](https://github.com/ysard/escapy),
     that reliably and almost exhaustively interprets the command set to
     produce searchable PDF files.
-- HP PCL printers:
+- **HP PCL printers:**
     Any resolution and format (Ex: 150dpi, 300dpi, 600dpi), color or grayscale
     thanks to the project
     [GhostPCL](https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL).
-- HP-PGL (Pen Plotters), HP-GL/2-Compatible Instruments, Instruments with GPIB/HP-IB interfaces:
+- **HP-PGL (Pen Plotters), HP-GL/2-Compatible Instruments, Instruments with GPIB/HP-IB interfaces:**
     HP 7470A plotter, oscilloscopes (Tektronix, HP), spectrum analyzers and signal analyzers.
     Thanks to the Free and Open Source Software:
     [hp2xx](https://www.gnu.org/software/hp2xx/).
-- Seiko Quartz Watch Tester Printers:
+- **PostScript printers:**
+    Conversions are made thanks to [Ghostscript](https://ghostscript.com/),
+    an interpreter for the PostScript® language and PDF files.
+    Ghostscript consists of a PostScript interpreter layer and a graphics library.
+- **Seiko Quartz Watch Tester Printers:**
     Specifically the Seiko Qt-2100 Timegrapher device.
     Thanks to our own project: [Seiko Converter](https://github.com/ysard/seiko_qt2100_converter).
 
