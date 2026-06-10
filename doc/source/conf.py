@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'Libre-Printer'
-copyright = f"2024-{datetime.now().year}, Ysard"
 author = 'Ysard'
+copyright = f"2024-{datetime.now().year}, {author}"
 
 # The full version, including alpha/beta/rc tags
 version = version("libreprinter")
