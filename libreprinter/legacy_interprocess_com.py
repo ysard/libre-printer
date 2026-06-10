@@ -130,16 +130,24 @@ def debug_shared_memory():
 
     # Get 202 message: at offset 200 * 2 + 1 = 401
     value = get_status_message(200)
-    print(
-        "200: Power Led control and unlock buggy converters:",
+    LOGGER.debug(
+        "200: Power Led control and unlock buggy converters: %d; %s",
         value,
         words_table[200][value],
     )
+
     # Get 202 message: at offset 201 * 2 + 1 = 403
     value = get_status_message(201)
-    print(
-        "201: Converters to convert-flasher:", value, words_table[201][value]
+    LOGGER.debug(
+        "201: Converters to convert-flasher: %d; %s",
+        value,
+        words_table[201][value],
     )  # TODO convert-flasher uniquement ???
+
     # Get 202 message: at offset 202 * 2 + 1 = 405
     value = get_status_message(202)
-    print("202: Interface to converters raw/escp2:", value, words_table[202][value])
+    LOGGER.debug(
+        "202: Interface to converters raw/escp2: %d; %s",
+        value,
+        words_table[202][value]
+    )
