@@ -12,18 +12,21 @@
 #
 import os
 import sys
+from importlib.metadata import version
+from datetime import datetime
+
 sys.path.insert(0, os.path.abspath('../'))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'Libre-Printer'
-copyright = '2024, Ysard'
+copyright = f"2024-{datetime.now().year}, Ysard"
 author = 'Ysard'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
-
+version = version("libreprinter")
+release = version
 
 # -- General configuration ---------------------------------------------------
 
