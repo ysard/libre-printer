@@ -11,10 +11,11 @@ Note: By default it will use the following file used for tests:
 """
 import sys
 
+TTY_PATH = "./input-tty"
 
 def write_tty(prn_file):
     """Write the given file content to the virtual tty ./input-tty initialized with socat"""
-    with open(prn_file, "rb") as f_d, open("./input-tty", "wb") as tty_d:
+    with open(prn_file, "rb") as f_d, open(TTY_PATH, "wb") as tty_d:
         # Dump per line
         for i in f_d:
             tty_d.write(i)
