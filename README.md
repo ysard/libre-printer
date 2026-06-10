@@ -54,7 +54,9 @@ The operation can be summarized in 3 key steps:
 The supported interfaces & devices are the following:
 
 - Epson printers:
-    ESC/P - ESC/P2, 9 & 24 pins
+    ESC/P - ESC/P2, 9 & 24 pins thanks to [Escapy](https://github.com/ysard/escapy),
+    that reliably and almost exhaustively interprets the command set to
+    produce searchable PDF files.
 - HP PCL printers:
     Any resolution and format (Ex: 150dpi, 300dpi, 600dpi), color or grayscale
     thanks to the project
@@ -101,13 +103,19 @@ as 2 RS-232 serial interfaces. One of the two serial interfaces is emulated on U
 the exchanges and the update of the Arduino from a simple USB plug (we avoid the proprietary connectors
 or the limited use of a RaspberryPi HAT).
 
-### Software
+### Softwares
 
-The core software collecting the data interpreted by the interface can be executed on any machine running GNU/Linux.
+The core software collecting the data interpreted by the interface can be executed
+on any machine running GNU/Linux. The same applies to the plugins and most
+of the converters.
 
-It should be noted that the recent versions of the program converting ESC/P and ESC/P2 data are those
-of the Retroprinter project, which has only been compiled for the ARM platform (i.e. Raspberry Pi).
-However, we offer a slightly older (but functional) version of the converter that is compilable on all platforms.
+**Since 2026** we provide a **much better and very powerful**
+converter ([Escapy](https://github.com/ysard/escapy)) for this job.
+
+The **legacy backend** of the program converting ESC/P and ESC/P2 data is
+based on the binary of the RetroPrinter project, which has only been compiled
+for the ARM platform (i.e. Raspberry Pi). An older version is available on all
+the platforms.
 
 
 ## Why this project?
@@ -137,7 +145,7 @@ both an economical and pragmatic choice for its diffusion
 - LibrePrinter components are much cheaper/more affordable.
 - We support serial printers without additional adapters.
 - Multiple interfaces can be connected on the same computer!
-- Our code is tested with over 90% coverage.
+- Our code is tested with over 95% coverage.
 
 
 ### Ethical considerations
@@ -146,15 +154,17 @@ Our solution is **truly** free: licensed under the AGPL.
 
 It is common to see programs in C/C++ etc. developed not by expertise or by performance research,
 but rather by a desire to obfuscate code at "lower cost". RetroPrinter is no exception to this.
-Thus the "community" formed around these projects receives few benefits: slow development of patches,
+Thus, the "community" formed around these projects receives few benefits:
+slow development of patches,
 lack of know-how for some tasks, paying products, no right to modify or redistribute the program, etc.
 This behaviour is toxic because the community can neither audit nor improve the products.
 The most paradoxical thing is that when the proprietary code leaks (and it always does) it becomes a competitor
 to the original (Cf. [Streisand effect](https://fr.wikipedia.org/wiki/Effet_Streisand));
 which is precisely what the authors wanted to avoid in the first place.
 
-Finally, quite frankly, let's be pragmatic, the technologies of the 80's don't need the proprietary
-and paying overlay of the 2022's... Let's hear it.
+Finally, quite frankly, let's be pragmatic, the technologies of the 80's don't
+need proprietary overpriced, overloaded and flawed stuff of the 2022's... Let's
+spread the word.
 
 
 ## Contributing
@@ -187,4 +197,3 @@ You are not obligated to share your proprietary source code and this saves you f
 to the requirements and restrictions of the AGPL.
 
 To know the terms of this license we invite you to contact us.
-
