@@ -19,6 +19,7 @@
 
 # Standard imports
 import configparser
+from logging import DEBUG
 
 # Custom imports
 from libreprinter.commons import (
@@ -223,6 +224,8 @@ def debug_config_file(config: configparser.ConfigParser):
     :param config: Opened ConfigParser object
     :type config: configparser.ConfigParser
     """
+    if LOGGER.level > DEBUG:
+        return
     for section in config.sections():
         LOGGER.debug("[%s]", section)
 
