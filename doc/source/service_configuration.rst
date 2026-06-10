@@ -43,11 +43,11 @@ It is currently split into 3 sections:
 
 - **escp2_converter_path=/usr/bin/convert-escp2**
 
-    Path of espc2 converter. If the binary is not at the end of the given path its
-    expected name is "convert-escp2".
+    Path of the legacy espc2 converter. If the binary is not at the end of the
+    given path its expected name is "convert-escp2".
 
-    - For the RetroPrinter image: /home/pi/temp/sdl/escparser/convert-escp2
-    - For the LibrePrinter Debian package: /usr/bin/convert-escp2
+    Default is as in the RetroPrinter image:
+    `/home/pi/temp/sdl/escparser/convert-escp2`
 
 - **pcl_converter_path=/usr/local/bin/gpcl6**
 
