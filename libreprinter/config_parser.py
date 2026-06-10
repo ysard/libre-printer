@@ -214,7 +214,6 @@ def parse_config(config: configparser.ConfigParser):
     if flow_control not in ("hardware", "software", "both"):
         serial_section["flow_control"] = "hardware"
 
-    debug_config_file(config)
     return config
 
 

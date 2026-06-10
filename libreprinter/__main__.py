@@ -24,7 +24,7 @@ from pathlib import Path
 # Custom imports
 from libreprinter import __version__
 from libreprinter import plugins
-from libreprinter.config_parser import load_config
+from libreprinter.config_parser import load_config, debug_config_file
 from libreprinter.file_handler import init_directories, cleanup_directories
 from libreprinter.interface import read_interface
 import libreprinter.commons as cm
@@ -51,6 +51,9 @@ def libreprinter_entry_point(config_file=None, *args, **kwargs):
     processes_to_kill = [
         plugins.get_functions(plugin)(config) for plugin in plugins_loaded
     ]
+
+    # Show configuration after loading plugins
+    debug_config_file(config)
 
     # Launch interface reader
     read_interface(config)
