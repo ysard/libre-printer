@@ -86,6 +86,8 @@ debcheck:
 
 
 # development & testing
+# Do not forget to use `send_end_config` directive to simulate the interface
+# presence & response.
 test_std_tty:
 	# Allow stdin terminal to serial tty => manual debug
 	socat PTY,link=./virtual-tty,raw,echo=0 -
