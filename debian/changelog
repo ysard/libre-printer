@@ -1,3 +1,10 @@
+libre-printer (1.1.2-1) UNRELEASED; urgency=medium
+
+  * Fix shared memory multiple owners
+  * Last minute changes, tests, loggin
+
+ -- Ysard <ysard@users.noreply.github.com>  Thu, 11 Jun 2026 16:27:04 +0200
+
 libre-printer (1.1.1-1) UNRELEASED; urgency=medium
 
   * Native support for ESC/P and ESC/P2 standards without third-party software
