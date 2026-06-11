@@ -22,6 +22,7 @@ import functools
 import importlib
 from collections import namedtuple
 from watchdog.observers.inotify import InotifyObserver
+
 # Starting from Python 3.7, we need 3.9 for files() method
 from importlib import resources
 
@@ -167,7 +168,7 @@ def is_plugin_compatible(current_config, plugin_config):
         if not c_section:
             LOGGER.warning(
                 "Plugin mentions a section <%s> not in current config (:o)",
-                p_section_name
+                p_section_name,
             )
             return False
 
