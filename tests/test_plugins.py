@@ -50,8 +50,7 @@ def handle_module_cache():
         for elem in dir(plugins)
         if elem.startswith("lp_")
     ]
-    # Grab the functions to be registered
-    # (entry points, launch, configure functions of the plugins)
+    # Grab the functions to be registered (entry points of the plugins)
     funcs = [
         obj
         for elem in plugin_modules
@@ -59,7 +58,6 @@ def handle_module_cache():
         if isfunction(obj)
         and obj_name.startswith("setup_")
         or obj_name.startswith("launch_")
-        or obj_name.startswith("configure_")
     ]
     # Register these functions (refresh the _PLUGINS dict of the plugins_handler
     # module).
