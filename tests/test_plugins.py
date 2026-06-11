@@ -44,24 +44,9 @@ def handle_module_cache():
     yield True
 
     # Tear down
-    # Grab the plugins and import them
-    plugin_modules = [
-        plugins_handler._import("libreprinter.plugins", elem)
-        for elem in dir(plugins)
-        if elem.startswith("lp_")
-    ]
-    # Grab the functions to be registered (entry points of the plugins)
-    funcs = [
-        obj
-        for elem in plugin_modules
-        for obj_name, obj in elem.__dict__.items()
-        if isfunction(obj)
-        and obj_name.startswith("setup_")
-        or obj_name.startswith("launch_")
-    ]
-    # Register these functions (refresh the _PLUGINS dict of the plugins_handler
-    # module).
-    _ = list(map(plugins_handler.register, funcs))
+    # Grab the functions decorated by register() and re-register them
+    # (i.e. refresh the _PLUGINS dict of the plugins_handler module).
+    _ = list(map(plugins_handler.register, plugins_handler.REGISTERED_FUNCS))
 
 
 @pytest.mark.parametrize(

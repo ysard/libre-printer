@@ -39,12 +39,18 @@ _PLUGINS = {}
 # Dictionary of functions used to configure all registerd plugins
 _CONFIGURERS = {}
 
+# Set of functions decorated by register()
+# Mainly used for tests, to re-register these functions between tests that
+# can unload plugins (i.e. delete items in _PLUGINS).
+REGISTERED_FUNCS = set()
+
 
 def register(func):
     """Decorator for registering a new plugin"""
     package, _, plugin = func.__module__.rpartition(".")
     pkg_info = _PLUGINS.setdefault(package, {})
     pkg_info[plugin] = Plugin(name=plugin, func=func)
+    REGISTERED_FUNCS.add(func)
     return func
 
 
