@@ -182,14 +182,14 @@ def is_bit_set(byte, bit_number):
 
     :param byte: databyte to test
     :param bit_number: nth bit number to test in databyte
-    :type byte: bytes
+    :type byte: int
     :type bit_number: int
     :return: Result of test
     :rtype: boolean
     """
     # get a simple yes/no 1/0 answer
     # right shift and get the least-significant bit
-    return bool((byte[0] >> bit_number) & 1)
+    return bool((byte >> bit_number) & 1)
 
 
 def get_buffer(serial_handler, end_page_timeout):

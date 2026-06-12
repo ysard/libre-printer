@@ -592,8 +592,8 @@ def test_bad_serial_port():
 
 
 def test_is_bit_set():
-    found = is_bit_set(b"\x01", 0)
+    found = is_bit_set(0x01, 0)
     assert found
 
-    found = is_bit_set(b"\x01", 1)
+    found = is_bit_set(0x01, 1)
     assert not found
