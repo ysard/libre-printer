@@ -97,7 +97,6 @@ def parse_config(config: configparser.ConfigParser):
     if misc_section.get("endlesstext") not in (
         "plain-stream",
         "strip-escp2-stream",
-        "plain-jobs",
         "strip-escp2-jobs",
     ):
         misc_section["endlesstext"] = "no"

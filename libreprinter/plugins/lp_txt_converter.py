@@ -23,13 +23,11 @@ As soon as a txt file is created, a pdf is created.
 
 Expected config (emulation + endlesstext):
 
-    - epson + plain-jobs
     - epson + strip-escp2-jobs
     - text + no
 
-Yes the following config targets also: `epson + no`, `text + plain-jobs`
-but in the first case there will be no text file, and in the 2nd case there
-will be a text file due to `text` (`plain-jobs` is only for epson emulations).
+Yes the following config targets also: `epson + no`,
+but in there will be no text file in this config.
 
 So... The plugin is not compatible with `hp` emulation,
 nor with `*stream` in endlesstext setting.
@@ -53,7 +51,7 @@ LOGGER = logger()
 CONFIG = {
     "misc": {
         "emulation": ("text", "epson"),
-        "endlesstext": ("no", "plain-jobs", "strip-escp2-jobs"),
+        "endlesstext": ("no", "strip-escp2-jobs"),
     }
 }
 REQUIRED_DIRS = ["txt_jobs"]

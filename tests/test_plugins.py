@@ -150,8 +150,7 @@ def handle_module_cache() -> Generator[None]:
             """,
             [],
         ),
-        # only_text: similar to epson emulation + plain-jobs as endlesstext
-        # txt file generated in txt_jobs/
+        # only_text: txt file generated in txt_jobs/
         (
             """
             [misc]

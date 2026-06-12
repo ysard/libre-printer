@@ -24,11 +24,11 @@ i.e. `output_printer` is defined; and it is not an infinite stream.
 
 In other terms, a pdf is sent to printer if:
 
-- `endlesstext` setting is `no`, `plain-jobs`, `strip-escp2-jobs`,
+- `endlesstext` setting is `no`, `strip-escp2-jobs`,
 - and `output_printer` setting is not `no`
 
 TODO: only "no" for endless config because strip wrongly builds empty pdf files
-    => not any of ("plain-jobs", "strip-escp2-jobs", "no")
+    => not any of ("strip-escp2-jobs", "no")
 """
 
 # Standard imports
@@ -46,7 +46,7 @@ LOGGER = logger()
 CONFIG = {
     "misc": {
         "output_printer": lambda param, _: param != "no",
-        "endlesstext": ("no", "plain-jobs", "strip-escp2-jobs"),
+        "endlesstext": ("no", "strip-escp2-jobs"),
     }
 }
 

@@ -47,7 +47,7 @@ ENDLESS_TEXT_VALUE_MAPPING = {
     "no": 0,
     "plain-stream": 1,
     "strip-escp2-stream": 2,
-    "plain-jobs": 3,
+    "plain-jobs": 3,  # Not used anymore (see text emulation instead)
     "strip-escp2-jobs": 4,
 }
 # Doc of options in legacy project:

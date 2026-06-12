@@ -535,7 +535,6 @@ def read_interface(config):
 
         if (
             config["misc"]["emulation"] == "text"
-            or (epson_emulation and (misc_section["endlesstext"] == "plain-jobs"))
         ):
             # Process end of lines in raw file and copy it to /txt_jobs dir
             convert_file_line_ending(

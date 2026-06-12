@@ -225,7 +225,7 @@ def extra_config(init_config, request):
         else:
             converter_process = launch_escp2_converter(config)
 
-        if endlesstext in ("plain-jobs", "strip-escp2-jobs"):
+        if endlesstext == "strip-escp2-jobs":
             # Launch text to pdf converter
             configure_text(config)
             observer = setup_text_watchdog(config)
@@ -244,8 +244,7 @@ def extra_config(init_config, request):
         observer.stop()
         return
 
-    # TODO: remove support of 'plain-jobs' in favour of text emulation
-    if emulation == "text" or endlesstext == "plain-jobs":
+    if emulation == "text":
         # Launch text to pdf converter
         configure_text(config)
         observer = setup_text_watchdog(config)
@@ -403,11 +402,8 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
         # 1 file plain text repeated 2 times in a stream
         (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 2),
-        (("epson", "plain-jobs"), "escp2_1.prn", "escp2_1_plain.txt", "txt_jobs/1.txt", 1),
-        # PDF should be also produced by txt_converter plugin because TXT file is generated
-        # But as there is no escp2 code processing I have to send stripped text;
-        # this test is currently similar to (text, no): "text-pdf" test
-        (("epson", "plain-jobs"), "escp2_1_strip.txt", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
+        # Raw data to txt (useless ?)
+        (("text", "no"), "escp2_1.prn", "escp2_1_plain.txt", "txt_jobs/1.txt", 1),
         ## Stripped text tests
         (("epson", "strip-escp2-stream"), "escp2_1.prn", "escp2_1_strip.txt", "txt_stream/1.txt", 1),
         # 1 file stripped repeated 2 times in a stream
@@ -425,7 +421,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         "epson-pdf-legacy", "epson-pdf-escapy",
         "hp-pdf", "text-pdf", "text-intermediary-txt-file", "hpgl-hpgl", "hpgl-pdf",
         "postscript-pdf", "seiko-qt2100-pdf", "seiko-qt2100-cutoff-pdf", "seiko-qt2100-csv",
-        "plain-stream*1", "plain-stream*2", "plain-jobs", "plain-jobs-pdf",
+        "plain-stream*1", "plain-stream*2", "plain-jobs",
         "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "strip-escp2-jobs-pdf",
         "pcl"
     ]
