@@ -368,7 +368,8 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
 
     # We expect an exception in the logger returned by the lpr program
     print(caplog.text)
-    assert "The remote firmware is not up to date!" in caplog.text
+    expected = "The remote firmware is not up to date!"
+    assert expected in caplog.text
 
 
 @pytest.mark.timeout(15)
@@ -508,7 +509,7 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
 
     # Check file content
     expected_content = Path(DIR_DATA + expected_file).read_bytes()
-    assert expected_content * repetitions == processed_file.read_bytes()
+    assert processed_file.read_bytes() == expected_content * repetitions
 
 
 @pytest.mark.parametrize(
