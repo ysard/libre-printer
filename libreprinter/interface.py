@@ -464,6 +464,14 @@ def read_interface(config):
     if not serial_handler:
         return
 
+    # For each emulation, define the destination directory and file extension
+    # for the created files.
+    exports = {
+        "hp": ("pcl", ".pcl"),
+        "hpgl": ("hpgl", ".hpgl"),
+        "postscript": ("ps", ".ps"),
+    }
+
     # Setup interface
     configure_interface(serial_handler, config)
 
@@ -495,14 +503,20 @@ def read_interface(config):
             LOGGER.exception(e)
             break
 
+        output_path = misc_section["output_path"]
+        if misc_section["emulation"] in exports:
+            folder, ext = exports[misc_section["emulation"]]
+            shutil.copy(
+                f"{output_path}/raw/{job_number}.raw",
+                f"{output_path}/{folder}/{job_number}{ext}",
+            )
+
         epson_emulation = misc_section["emulation"] == "epson"
-
-        LOGGER.debug(
-            "epson ? %s, usb_passthrough ? %s",
-            epson_emulation, misc_section["usb_passthrough"]
-        )
-
         if epson_emulation and misc_section["usb_passthrough"] == "no":
+            LOGGER.debug(
+                "epson_emulation, usb_passthrough ? %s",
+                misc_section["usb_passthrough"]
+            )
             # No conversion if usb_passthrough is enabled
             # Since raw and pcl converters are implemented here,
             # sync of converter should be made only for epson (espc2):
@@ -511,27 +525,6 @@ def read_interface(config):
             sync_converters(jobs_count, job_number)
 
         copy_args = (misc_section["output_path"], job_number)
-
-        if misc_section["emulation"] == "hp":
-            # Copy current file to pcl folder
-            shutil.copy(
-                "{}/raw/{}.raw".format(*copy_args),
-                "{}/pcl/{}.pcl".format(*copy_args),
-            )
-
-        if misc_section["emulation"] == "hpgl":
-            # Copy current file to hpgl folder
-            shutil.copy(
-                "{}/raw/{}.raw".format(*copy_args),
-                "{}/hpgl/{}.hpgl".format(*copy_args),
-            )
-
-        if misc_section["emulation"] == "postscript":
-            # Copy current file to ps folder
-            shutil.copy(
-                "{}/raw/{}.raw".format(*copy_args),
-                "{}/ps/{}.ps".format(*copy_args),
-            )
 
         if (
             config["misc"]["emulation"] == "text"
