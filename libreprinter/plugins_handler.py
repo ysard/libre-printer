@@ -52,6 +52,7 @@ def register(func):
     pkg_info = _PLUGINS.setdefault(package, {})
     pkg_info[plugin] = Plugin(name=plugin, func=func)
     REGISTERED_FUNCS.add(func)
+    LOGGER.debug("Register plugin: %s:%s", plugin, func)
     return func
 
 
