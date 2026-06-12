@@ -17,8 +17,9 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # Standard imports
 import configparser
-from inspect import isfunction
 import subprocess
+from typing import Generator
+
 import pytest
 from watchdog.observers.inotify import InotifyObserver
 
@@ -30,10 +31,14 @@ from .test_config_parser import sample_config
 # Import create dir fixture
 from .test_file_handler import temp_dir
 
+from libreprinter.commons import logger
+
+LOGGER = logger()
+
 
 @pytest.fixture()
-def handle_module_cache():
-    """Regenerate the available set of plugins between tests
+def handle_module_cache() -> Generator[None]:
+    """Regenerate the available set of plugins before tests
 
     Since the :meth:`libreprinter.plugins_handler._import_all` function
     deletes the plugins that don't match a given config, and that these plugins
@@ -41,12 +46,15 @@ def handle_module_cache():
     decorator, only 1 time at runtime, we must re-register them before a new
     test.
     """
-    yield True
-
-    # Tear down
+    # Setup
     # Grab the functions decorated by register() and re-register them
     # (i.e. refresh the _PLUGINS dict of the plugins_handler module).
     _ = list(map(plugins_handler.register, plugins_handler.REGISTERED_FUNCS))
+    LOGGER.debug(
+        "Available plugins funcs to be registered: %s",
+        plugins_handler.REGISTERED_FUNCS
+    )
+    yield None
 
 
 @pytest.mark.parametrize(
@@ -225,11 +233,10 @@ def test_plugins_loading(sample_config, expected, handle_module_cache, temp_dir)
     :param sample_config: (fixture) Parsed configuration
     :param expected: Expected list of enabled plugins for the given config
     :param handle_module_cache: (fixture) Regenerate the available set of
-        plugins between tests.
+        plugins before tests.
     :param temp_dir: (fixture) Create temp directory
     :type sample_config: configparser.ConfigParser
     :type expected: list[str]
-    :type handle_module_cache: bool
     :type temp_dir: str
     """
     init_directories(temp_dir)
