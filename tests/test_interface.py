@@ -133,7 +133,7 @@ def tmp_process():
     """Yield new process ready to be started
 
     Assign `run` attribute to a target function before calling `start` method.
-    The tearDown will automatically terminates this process.
+    The tearDown will automatically terminate this process.
     """
     process = Process()
     yield process
@@ -256,6 +256,7 @@ def extra_config(init_config, request):
     yield (tmp_dir, config)
 
 
+
 @pytest.mark.timeout(10)
 @pytest.mark.parametrize(
     "emulation, test_file",
@@ -280,9 +281,9 @@ def test_interface_receiving(emulation, test_file, init_config, slow_down_tests)
     :param emulation: Emulation type (epson, hp, auto)
     :param test_file: File sent to the interface. The result must be exactly the
         same. Files are stored in `<project_root_dir>/test_data/`.
-    :param init_config: temporary working dir + initialized config.
+    :param init_config: (fixture) temporary working dir + initialized config.
         See :meth:`init_config` fixture.
-    :param slow_down_tests: Slow down the tear down to clean child Thread
+    :param slow_down_tests: (fixture) Slow down the tear down to clean child Thread
     :type emulation: str
     :type test_file: str
     :type init_config: tuple[str, configparser.ConfigParser]
@@ -341,7 +342,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
 
     :param init_config: temporary working dir + initialized config.
         See :meth:`init_config` fixture.
-    :param slow_down_tests: Slow down the tear down to clean child Thread
+    :param slow_down_tests: (fixture) Slow down the tear down to clean child Thread
     :param caplog: (fixture) pytest caplog-fixture
     :type init_config: tuple[str, configparser.ConfigParser]
     :type caplog: <_pytest.logging.LogCaptureFixture>
