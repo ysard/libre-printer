@@ -72,7 +72,7 @@ def build_interface_config_settings(config):
         #   1: printer is ready when DSR is asserted (space high level) (default)
         #   0: printer is ready when DSR is deasserted (mark low level) (CP2102)
         dtr_logic = serial_section.get("dtr_logic") != "low"
-        interface_params.append("dtr_logic={}\n".format(int(dtr_logic)))
+        interface_params.append(f"dtr_logic={int(dtr_logic)}\n")
 
         if serial_enabled == "yes":
             # PS: auto: do not sent param, let the interface choose
@@ -118,7 +118,7 @@ def configure_interface(serial_handler, config):
     """
     LOGGER.debug("Send config to the interface...")
 
-    [
+    _ = [
         serial_handler.write(param.encode())
         for param in build_interface_config_settings(config)
     ]
@@ -167,14 +167,14 @@ def apply_msb_control(databyte, msbsetting):
     if msbsetting == 0:
         # Cancel MSB Control: No control on bit 7
         return databyte
-    elif msbsetting == 1:
+    if msbsetting == 1:
         # MSB Control: clear bit 7 (to 0)
         return databyte[0] & 0x7F  # Get only 8 bits: convert to unsigned int
-    elif msbsetting == 2:
+    if msbsetting == 2:
         # MSB Control: set bit 7 (to 1)
         return databyte[0] | 0x80  # Get only 8 bits: convert to unsigned int
 
-    raise ValueError("msbsetting value not expected: %s" % msbsetting)
+    raise ValueError(f"msbsetting value not expected: {msbsetting}")
 
 
 def is_bit_set(byte, bit_number):
@@ -524,15 +524,11 @@ def read_interface(config):
             # strip-escp2-stream is made during the loop.
             sync_converters(jobs_count, job_number)
 
-        copy_args = (misc_section["output_path"], job_number)
-
-        if (
-            config["misc"]["emulation"] == "text"
-        ):
+        if config["misc"]["emulation"] == "text":
             # Process end of lines in raw file and copy it to /txt_jobs dir
             convert_file_line_ending(
-                "{}/raw/{}.raw".format(*copy_args),
-                "{}/txt_jobs/{}.txt".format(*copy_args),
+                f"{output_path}/raw/{job_number}.raw",
+                f"{output_path}/txt_jobs/{job_number}.txt",
                 config["misc"]["line_ending"],
             )
 
