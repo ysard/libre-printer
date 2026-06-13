@@ -17,8 +17,6 @@ from libreprinter.config_parser import parse_config, debug_config_file
 from libreprinter.interface import (
     read_interface,
     build_interface_config_settings,
-    apply_msb_control,
-    is_bit_set,
 )
 from libreprinter.file_handler import init_directories
 from libreprinter.legacy_interprocess_com import (
@@ -553,26 +551,6 @@ def test_get_interface_config(sample_config, expected):
     assert expected == found_settings
 
 
-def test_apply_msb_control():
-    """Test msb modifications from escp datasheet (deprecated)"""
-    # Do nothing
-    found = apply_msb_control(0xff, msbsetting=0)
-    assert found == b"\xff"
-
-    # MSB is set: bit 7 to 0
-    found = apply_msb_control(0xff, msbsetting=1)
-    assert found == 0b01111111  # 255 => 127
-
-    # MSB is set: bit 7 to 1
-    # /!\ Beware of this one, we want an unsigned int: 255, not -1
-    found = apply_msb_control(0x7f, msbsetting=2)
-    assert found == 0b11111111  # 254 => 255
-
-    # Wrong msbsetting
-    with pytest.raises(ValueError, match=r"msbsetting value not expected:.*"):
-        _ = apply_msb_control(0xff, msbsetting=3)
-
-
 @pytest.mark.timeout(6)
 def test_bad_serial_port():
     """Test inexistant serial port"""
@@ -587,11 +565,3 @@ def test_bad_serial_port():
     # 5 tries in 5 seconds before returning None
     ret = read_interface(config)
     assert ret is None
-
-
-def test_is_bit_set():
-    found = is_bit_set(0x01, 0)
-    assert found
-
-    found = is_bit_set(0x01, 1)
-    assert not found

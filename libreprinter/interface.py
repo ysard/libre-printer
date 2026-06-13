@@ -150,48 +150,6 @@ def configure_interface(serial_handler, config):
             break
 
 
-def apply_msb_control(databyte, msbsetting):
-    """Apply MSB control command to the given byte
-
-    .. note:: This kind of control codes is deprecated according to the Epson
-        datasheet. Not many printers should use them...
-
-    :param databyte: Supposed modified byte
-    :param msbsetting: Expects value in (0: No modification,
-        1: MSB (bit 7) is set to 0, 2: MSB (bit 7) is set to 1).
-    :type databyte: int
-    :type msbsetting: int
-    :return: Modified value; value derived from unsigned int (c_uint8)
-    :rtype: int
-    """
-    if msbsetting == 0:
-        # Cancel MSB Control: No control on bit 7
-        return databyte
-    if msbsetting == 1:
-        # MSB Control: clear bit 7 (to 0)
-        return databyte & 0x7F  # Get only 8 bits: convert to unsigned int
-    if msbsetting == 2:
-        # MSB Control: set bit 7 (to 1)
-        return databyte | 0x80  # Get only 8 bits: convert to unsigned int
-
-    raise ValueError(f"msbsetting value not expected: {msbsetting}")
-
-
-def is_bit_set(byte, bit_number):
-    """Test if nth bit is set in the given byte
-
-    :param byte: databyte to test
-    :param bit_number: nth bit number to test in databyte
-    :type byte: int
-    :type bit_number: int
-    :return: Result of test
-    :rtype: boolean
-    """
-    # get a simple yes/no 1/0 answer
-    # right shift and get the least-significant bit
-    return bool((byte >> bit_number) & 1)
-
-
 def get_buffer(serial_handler, end_page_timeout):
     """Try to read and return bytes from interface
 
