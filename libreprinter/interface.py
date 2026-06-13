@@ -272,14 +272,6 @@ def parse_buffer(serial_handler, job_number, config):
         "{}raw/{}.raw".format(config["misc"]["output_path"], job_number), "wb"
     )
 
-    # Epson control
-    escimode = False
-    escmode = False
-    print_controlcodes = False
-    italic = False
-    masterfontmode = False
-    msbsetting = 0
-
     # Seiko qt2100 control
     job_timestamp = None
     probe_seiko = None
@@ -328,58 +320,6 @@ def parse_buffer(serial_handler, job_number, config):
                 LOGGER.debug("PROBE SEIKO data ")
 
         received_bytes = True
-
-        if epson_emulation:
-            for index, databyte in enumerate(databytes):
-                if msbsetting != 0:
-                    databyte = apply_msb_control(databyte, msbsetting)
-                    databytes[index] = databyte
-
-                # All this stuff is designed to set status of print_controlcodes
-                # and so set msbsetting which ultimately modifies the current
-                # databyte...
-                # These checks ARE NOT made by espc2 converter for some reason...
-                # Check ESC command
-                if (databyte == 27) and not print_controlcodes:
-                    escmode = True
-                elif escmode:
-                    if databyte == ord("#"):
-                        # Cancel MSB Control; escp2 line 3437
-                        msbsetting = 0
-                    if databyte == ord("="):
-                        # Set MSB (bit 7) of all incoming data to 0
-                        msbsetting = 1
-                    if databyte == ord(">"):
-                        # Set MSB (bit 7) of all incoming data to 1
-                        msbsetting = 2
-                    if databyte == ord("I"):
-                        # ESC I n - enable printing of control codes - shaded codes in table in manual (A-23); escp2 line 3528
-                        escimode = True
-                    if databyte == ord("4"):
-                        # ESC 4 SELECT ITALIC FONT; escp2 line 2860
-                        italic = True
-                    if databyte == ord("5"):
-                        # ESC 5 CANCEL ITALIC FONT
-                        italic = False
-                    if databyte == ord("!"):
-                        # ESC ! n Master Font Select
-                        masterfontmode = True
-                    escmode = False
-                elif escimode:
-                    if not italic:
-                        print_controlcodes = databyte == 1
-                    escimode = False
-
-                elif masterfontmode:
-                    # Test if 6th bit is set
-                    # yes: select italic
-                    # no: cancel italic
-                    italic = is_bit_set(databyte, 6)
-                    masterfontmode = False
-
-            if plain_stream_f_d:
-                # plain-stream
-                plain_stream_f_d.write(convert_data_line_ending(databytes, line_ending))
 
         if config["misc"]["emulation"] == "seiko-qt2100":
             # Add timestamp before each new values in an ESC T message
