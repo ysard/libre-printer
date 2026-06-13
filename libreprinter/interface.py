@@ -159,7 +159,7 @@ def apply_msb_control(databyte, msbsetting):
     :param databyte: Supposed modified byte
     :param msbsetting: Expects value in (0: No modification,
         1: MSB (bit 7) is set to 0, 2: MSB (bit 7) is set to 1).
-    :type databyte: bytes
+    :type databyte: int
     :type msbsetting: int
     :return: Modified value; value derived from unsigned int (c_uint8)
     :rtype: int
@@ -169,10 +169,10 @@ def apply_msb_control(databyte, msbsetting):
         return databyte
     if msbsetting == 1:
         # MSB Control: clear bit 7 (to 0)
-        return databyte[0] & 0x7F  # Get only 8 bits: convert to unsigned int
+        return databyte & 0x7F  # Get only 8 bits: convert to unsigned int
     if msbsetting == 2:
         # MSB Control: set bit 7 (to 1)
-        return databyte[0] | 0x80  # Get only 8 bits: convert to unsigned int
+        return databyte | 0x80  # Get only 8 bits: convert to unsigned int
 
     raise ValueError(f"msbsetting value not expected: {msbsetting}")
 

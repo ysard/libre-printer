@@ -556,21 +556,21 @@ def test_get_interface_config(sample_config, expected):
 def test_apply_msb_control():
     """Test msb modifications from escp datasheet (deprecated)"""
     # Do nothing
-    found = apply_msb_control(b"\xff", msbsetting=0)
+    found = apply_msb_control(0xff, msbsetting=0)
     assert found == b"\xff"
 
     # MSB is set: bit 7 to 0
-    found = apply_msb_control(b"\xff", msbsetting=1)
+    found = apply_msb_control(0xff, msbsetting=1)
     assert found == 0b01111111  # 255 => 127
 
     # MSB is set: bit 7 to 1
     # /!\ Beware of this one, we want an unsigned int: 255, not -1
-    found = apply_msb_control(b"\x7f", msbsetting=2)
+    found = apply_msb_control(0x7f, msbsetting=2)
     assert found == 0b11111111  # 254 => 255
 
     # Wrong msbsetting
     with pytest.raises(ValueError, match=r"msbsetting value not expected:.*"):
-        _ = apply_msb_control(b"\xff", msbsetting=3)
+        _ = apply_msb_control(0xff, msbsetting=3)
 
 
 @pytest.mark.timeout(6)
