@@ -492,12 +492,15 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
         with patch("libreprinter.interface.get_buffer", mock_interface_buffer):
             read_interface(config)
 
+    processed_file = Path(tmp_dir) / out_file
+    expected_file = Path(DIR_DATA) / expected_file
+
     tmp_process.run = partial(wrapper, config)
     tmp_process.start()
     LOGGER.debug("Process started")
 
     # Test obtained files existence
-    processed_file = Path(tmp_dir) / out_file
+    print("expect file:", processed_file)
     while not processed_file.exists() or processed_file.stat().st_size == 0:
         time.sleep(1 * repetitions + 2)  # Empirical delay
         print("Waiting dir tree: ", set(Path(tmp_dir).rglob("*")))
@@ -507,19 +510,19 @@ def test_endlesstext_values(extra_config, in_file, expected_file, out_file, repe
     found_stats = processed_file.stat()
     print("Processed file & found stats:", processed_file, found_stats)
 
-    if ".pdf" in expected_file:
+    if ".pdf" in expected_file.name:
         # Keep track of the generated file in /tmp in case of error
         backup_file = Path("/tmp/" + in_file + "_" + processed_file.name)
         backup_file.write_bytes(processed_file.read_bytes())
 
-        ret = is_similar_pdfs(processed_file, Path(DIR_DATA + expected_file))
+        ret = is_similar_pdfs(processed_file, expected_file)
         assert ret, f"Problematic file is saved at <{backup_file}> for further study."
         # All is ok => delete the generated file
         backup_file.unlink()
         return
 
     # Check file content
-    expected_content = Path(DIR_DATA + expected_file).read_bytes()
+    expected_content = expected_file.read_bytes()
     assert processed_file.read_bytes() == expected_content * repetitions
 
 
