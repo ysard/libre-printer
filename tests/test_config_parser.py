@@ -204,9 +204,24 @@ def test_default_settings(sample_config, expected):
             },
         ),
         (
+            # endlesstext_emulation_restriction
+            """
+            [misc]
+            emulation=hp
+            endlesstext=plain-stream
+            [parallel_printer]
+            [serial_printer]
+            """,
+            {
+                # plain-stream is not allowed with emulation != text
+                "endlesstext": "no",
+            },
+        ),
+        (
             # output_printer1
             """
             [misc]
+            emulation=text
             output_printer=Fake_Printer_Name
             endlesstext=plain-stream
             [parallel_printer]
@@ -249,7 +264,10 @@ def test_default_settings(sample_config, expected):
             },
         ),
     ],
-    ids=["sample1", "sample2", "output_printer1", "output_printer2", "output_printer3"],
+    ids=[
+        "sample1", "sample2", "endlesstext_emulation_restriction",
+        "output_printer1", "output_printer2", "output_printer3"
+    ],
     indirect=["sample_config"],  # Send sample_config val to the fixture
 )
 def test_specific_settings(sample_config, expected_settings):

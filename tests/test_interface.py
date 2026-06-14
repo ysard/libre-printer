@@ -192,6 +192,9 @@ def extra_config(init_config, request):
     # Accelerate the test by reducing timeout
     config["misc"]["end_page_timeout"] = "1"
     # Add endless setting & converter path
+    if "plain-stream" == endlesstext and "text" != emulation:
+        # Fix to follow config restriction
+        endlesstext = "no"
     config["misc"]["endlesstext"] = endlesstext
 
     if extra:
@@ -407,10 +410,10 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         (("seiko-qt2100", "no", {"seiko-qt2100": {"cutoff": "10.0", "enable-csv": "false"}}), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S_cutoff_10s.raw_1.pdf", "pdf/1.pdf", 1),
         # CSV only
         (("seiko-qt2100", "no", {"seiko-qt2100": {"enable-graph": "false"}}), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S.csv", "csv/1.csv", 1),
-        ## Plain text tests
-        (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
+        ## Plain text tests: Even with a raw text we modify only the line endings
+        (("text", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 1),
         # 1 file plain text repeated 2 times in a stream
-        (("epson", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 2),
+        (("text", "plain-stream"), "escp2_1.prn", "escp2_1_plain.txt", "txt_stream/1.txt", 2),
         # Raw data to txt (useless ?)
         (("text", "no"), "escp2_1.prn", "escp2_1_plain.txt", "txt_jobs/1.txt", 1),
         ## Stripped text tests
@@ -420,7 +423,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         (("epson", "strip-escp2-jobs"), "escp2_1.prn", "escp2_1_strip.txt", "txt_jobs/1.txt", 1),
         # PDF should be also produced by txt_converter plugin because txt file is generated
         (("epson", "strip-escp2-jobs"), "escp2_1.prn", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
-        ## PCL data with epson config
+        ## PCL data with text stream config: endlesstext is forced to 'no', so no diff vs ("hp", "no")
         (("hp", "plain-stream"), "test_page_pcl.prn", "test_page_pcl.prn", "pcl/1.pcl", 1),
         # TODO: epson/hp/auto ?
     ],

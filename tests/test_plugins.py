@@ -137,12 +137,24 @@ def handle_module_cache() -> Generator[None]:
             # presence here
             ["lp_escp2_converter"],
         ),
-        # escp2_stream2: endlesstext is *stream: no txt in txt_jobs/, printer is disabled even if set
-        # plain-stream = no escp2 processing: no converter
+        # escp2_stream2: plain-stream is incompatible with epson emulation
+        # thus, it is forced to 'no', and default epson emulation is enabled
         (
             """
             [misc]
             emulation=epson
+            endlesstext=plain-stream
+            [parallel_printer]
+            [serial_printer]
+            """,
+            ["lp_escapy_converter", "lp_txt_converter"],
+        ),
+        # text_stream: endlesstext is *stream: no txt in txt_jobs/, printer is disabled even if set
+        # plain-stream = no escp2 processing: no converter
+        (
+            """
+            [misc]
+            emulation=text
             endlesstext=plain-stream
             output_printer=Fake_Printer_Name
             [parallel_printer]
@@ -221,7 +233,7 @@ def handle_module_cache() -> Generator[None]:
     ids=[
         "espc2_printer_enabled1_escapy", "espc2_printer_enabled1_legacy",
         "espc2_printer_enabled2", "escp2_printer_disabled",
-        "escp2_stream1", "escp2_stream2",
+        "escp2_stream1", "escp2_stream2", "text_stream",
         "only_text", "only_hp1", "only_hp2", "hpgl", "postscript", "only_seiko-qt2100",
     ],
     indirect=["sample_config"],  # Send sample_config val to the fixture
