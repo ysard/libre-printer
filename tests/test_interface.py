@@ -405,8 +405,11 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
         (("hpgl", "no"), "hpgl.hpgl", "hpgl.pdf", "pdf/1.pdf", 1),
         # PostScript to PDF
         (("postscript", "no"), "escp2_1_strip.ps", "escp2_1_strip.pdf", "pdf/1.pdf", 1),
-        # seiko qt2100 to graph in PDF
+        ## Seiko qt2100
+        # to graph in PDF
         (("seiko-qt2100", "no"), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S.raw_1.pdf", "pdf/1.pdf", 1),
+        # cover rotate job
+        (("seiko-qt2100", "no"), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S.raw_1.pdf", "pdf/2.pdf", 2),
         (("seiko-qt2100", "no", {"seiko-qt2100": {"cutoff": "10.0", "enable-csv": "false"}}), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S_cutoff_10s.raw_1.pdf", "pdf/1.pdf", 1),
         # CSV only
         (("seiko-qt2100", "no", {"seiko-qt2100": {"enable-graph": "false"}}), "seiko_qt2100_A10S.raw", "seiko_qt2100_A10S.csv", "csv/1.csv", 1),
@@ -432,7 +435,7 @@ def test_interface_firmware_version(init_config, slow_down_tests, caplog):
     ids=[
         "epson-pdf-legacy", "epson-pdf-escapy",
         "hp-pdf", "text-pdf", "text-intermediary-txt-file", "hpgl-hpgl", "hpgl-pdf",
-        "postscript-pdf", "seiko-qt2100-pdf", "seiko-qt2100-cutoff-pdf", "seiko-qt2100-csv",
+        "postscript-pdf", "seiko-qt2100-pdf", "seiko-qt2100-pdf*2", "seiko-qt2100-cutoff-pdf", "seiko-qt2100-csv",
         "plain-stream*1", "plain-stream*2", "plain-jobs",
         "strip-escp2-stream*1", "strip-escp2-stream*2", "strip-escp2-jobs", "strip-escp2-jobs-pdf",
         "pcl"
