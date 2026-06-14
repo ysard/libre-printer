@@ -208,37 +208,33 @@ def parse_buffer(serial_handler, job_number, config):
         # => write directly in /dev/ interface
         usb_printer_dev_f_d = open(config["misc"]["usb_passthrough"], "wb")
 
-    epson_emulation = config["misc"]["emulation"] == "epson"
-
-    # Handle data stream and stream plain text
+    # Handle raw data and plain text streams
     stream = plain_stream_f_d = line_ending = None
-    if epson_emulation and "stream" in config["misc"]["endlesstext"]:
-        # Epson: plain-stream/strip-escp2-stream
-        # Put the data in the same file (infinite loop)
-        # PS: do not forget to sync converter if no plain (see below)
+    output_path = config['misc']['output_path']
+
+    # Raw data stream
+    # Put the data in the same file (infinite loop)
+    # Do not forget to sync legacy converters (see below) (Ex: Epson: strip-escp2-stream)
+    if "stream" in config["misc"]["endlesstext"]:
         stream = True
-        if "plain" in config["misc"]["endlesstext"]:
-            # Process line endings and put the result in txt_stream/ dir
-            line_ending = config["misc"]["line_ending"].encode()
 
-            plain_stream_f_d = open(
-                "{}txt_stream/{}.txt".format(config["misc"]["output_path"], job_number),
-                "wb",
-            )
+    # Raw text data stream
+    if "plain-stream" == config["misc"]["endlesstext"]:
+        # Process line endings and put the result in txt_stream/ dir
+        line_ending = config["misc"]["line_ending"].encode()
 
-    raw_f_d = open(
-        "{}raw/{}.raw".format(config["misc"]["output_path"], job_number), "wb"
-    )
+        plain_stream_f_d = open(f"{output_path}txt_stream/{job_number}.txt", "wb")
+
+    # Main destination file
+    raw_f_d = open(f"{output_path}raw/{job_number}.raw", "wb")
 
     # Seiko qt2100 control
     job_timestamp = None
     probe_seiko = None
 
-    # Misc
+    # Read interface and process bytes if necessary
     received_bytes = False
     end_page_timeout = config["misc"].getint("end_page_timeout")
-
-    # Read interface and process bytes if necessary
     while True:
         databytes = get_buffer(serial_handler, end_page_timeout)
         if not databytes:

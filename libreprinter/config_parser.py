@@ -144,6 +144,16 @@ def parse_config(config: configparser.ConfigParser):
     if misc_section.get("emulation") in ("epson", "escp2"):
         misc_section["emulation"] = "epson"
 
+    if (
+        "plain-stream" == misc_section["endlesstext"] and
+        "text" != misc_section["emulation"]
+    ):
+        LOGGER.warning(
+            "User defined <plain-stream> with an emulation that is not <text>!\n"
+            "Setting will be defined to <no>"
+        )
+        misc_section["endlesstext"] = "no"
+
     output_path = misc_section.get("output_path", DEFAULT_OUTPUT_PATH)
     output_path = output_path or DEFAULT_OUTPUT_PATH
     output_path = output_path + "/" if output_path[-1] != "/" else output_path

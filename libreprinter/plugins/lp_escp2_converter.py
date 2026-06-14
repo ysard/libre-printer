@@ -45,7 +45,7 @@ REQUIRED_DIRS = ["txt_stream", "txt_jobs", "png", "eps"]
 
 ENDLESS_TEXT_VALUE_MAPPING = {
     "no": 0,
-    "plain-stream": 1,
+    "plain-stream": 1,  # Not used anymore (see text emulation instead)
     "strip-escp2-stream": 2,
     "plain-jobs": 3,  # Not used anymore (see text emulation instead)
     "strip-escp2-jobs": 4,
