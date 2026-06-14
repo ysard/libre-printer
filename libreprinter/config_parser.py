@@ -232,7 +232,7 @@ def debug_config_file(config: configparser.ConfigParser):
     :param config: Opened ConfigParser object
     :type config: configparser.ConfigParser
     """
-    if LOGGER.level > DEBUG:
+    if LOGGER.level > DEBUG:  # pragma: no cover
         return
     for section in config.sections():
         LOGGER.debug("[%s]", section)
