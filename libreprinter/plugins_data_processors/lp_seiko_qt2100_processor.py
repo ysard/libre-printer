@@ -48,7 +48,7 @@ CONFIG = {
 class SeikoProcessor(DataProcessor):
     """Seiko qt2100 timegrapher data processor"""
 
-    def __init__(self, config: configparser.ConfigParser):
+    def __init__(self, config: "configparser.ConfigParser"):
         """Initialise the processor"""
         super().__init__(config)
         # Seiko qt2100 control
@@ -56,7 +56,7 @@ class SeikoProcessor(DataProcessor):
         self.probe_seiko = False
         self.escmode = False
 
-    def process_chunk(self, databytes) -> Generator:
+    def process_chunk(self, databytes) -> "Generator":
         """On-the-fly processing of data from the timegrapher
 
         Add timestamp before each new values in an ESC T message

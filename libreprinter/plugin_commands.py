@@ -60,7 +60,7 @@ class DataProcessor:
             Called after the job has been fully written and closed.
     """
 
-    def __init__(self, config: configparser.ConfigParser):
+    def __init__(self, config: "configparser.ConfigParser"):
         """Initialise the processor with the application configuration"""
         self.config = config
 
@@ -70,7 +70,7 @@ class DataProcessor:
         :param job_number: Identifier assigned to the incoming job.
         """
 
-    def process_chunk(self, databytes: bytearray) -> Generator:
+    def process_chunk(self, databytes: bytearray) -> "Generator":
         """Process a received block of bytes
 
         Subclasses should yield one or more Command instances.
