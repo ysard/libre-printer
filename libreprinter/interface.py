@@ -25,9 +25,8 @@
 # Standard imports
 import shutil
 import logging
+import itertools as it
 from packaging.version import Version
-from datetime import datetime
-import struct
 
 # Custom imports
 from libreprinter.file_handler import (
@@ -43,6 +42,12 @@ from libreprinter.legacy_interprocess_com import (
 from libreprinter.handlers import get_serial_handler, SerialException
 from libreprinter.commons import logger, LAST_HARDWARE_VERSION
 from libreprinter.config_parser import FLOW_CTRL_MAPPING
+from libreprinter import plugins_data_processors
+from libreprinter.plugin_commands import (
+    DataProcessor,
+    WriteChunk,
+    RotateJob,
+)
 
 LOGGER = logger()
 
@@ -178,7 +183,7 @@ def get_buffer(serial_handler, end_page_timeout):
     # send_status_message(200, 1)
 
 
-def parse_buffer(serial_handler, job_number, config):
+def parse_buffer(serial_handler, job_number, config, data_processors):
     """
     TODO: penser à coroutine:
         générateur emettant des databytes
@@ -197,9 +202,14 @@ def parse_buffer(serial_handler, job_number, config):
         - disabled: store a raw file and alert converters of the job status
 
     :param serial_handler: Serial port handler.
-    :param job_number:
-    :param config:
+    :param job_number: Current job number; used to sync legacy converters
+        and name the produced files.
+    :param config: Current project configuration
+    :param data_processors: Active list of data stream processing plugins.
     :type serial_handler: serial.Serial
+    :type job_number: int
+    :type config: configparser.ConfigParser
+    :type data_processors: list[DataProcessor]
     """
     # Handle USB passthrough
     usb_printer_dev_f_d = None
@@ -271,9 +281,29 @@ def parse_buffer(serial_handler, job_number, config):
 
         received_bytes = True
 
-        # Save received data
-        # print("out:", databytes)
-        raw_f_d.write(databytes)
+        g = it.chain(*(ret for plugin in data_processors if
+                       (ret := plugin.process_chunk(databytes))))
+        for action in g:
+            if isinstance(action, WriteChunk):
+                # Save received data
+                raw_f_d.write(action.data)
+                # Flush previous data & trigger file parsing
+                # TODO PAS AUTO ça, juste pour les streams à la rigueur... et seiko
+                # raw_f_d.flush()
+
+                if plain_stream_f_d:
+                    # TODO: not ok if databytes ar cut in the middle of the searched pattern
+                    plain_stream_f_d.write(convert_data_line_ending(action.data, line_ending))
+
+            elif isinstance(action, RotateJob):
+                raw_f_d.close()
+
+                # Hijack the normal execution flow by creating a new file
+                # without having to return to the read_interface function
+                job_number += 1
+                raw_filepath = f"{output_path}raw/{job_number}.raw"
+                raw_f_d = open(raw_filepath, "wb")
+
 
         if epson_emulation and stream and not plain_stream_f_d:
             # Not plain-stream, but strip-escp2-stream
@@ -293,6 +323,8 @@ def read_interface(config):
     :param config: ConfigParser object
     :type config: configparser.ConfigParser
     """
+    processors_loaded = plugins_data_processors.plugins(config)
+
     misc_section = config["misc"]
 
     # Get serial connection
@@ -334,7 +366,15 @@ def read_interface(config):
         # TODO: redéfinier emulation à l'origine ?
         # ou passer toutes les fonctions qyi suivent à la fin de parse_buffer...
         try:
-            parse_buffer(serial_handler, job_number, config)
+            data_processors = [
+                plugins_data_processors.get_functions(plugin_name)(config)
+                for plugin_name in processors_loaded
+            ]
+            if not data_processors:
+                data_processors = [DataProcessor(config)]
+            LOGGER.debug("Active data processors: %s", data_processors)
+
+            parse_buffer(serial_handler, job_number, config, data_processors)
         except SerialException as e:
             # Properly ends the infinite loop after an error on the serial pipe
             LOGGER.exception(e)
