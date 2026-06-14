@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import configparser
+    from typing import Generator
 
 
 class DataProcessor:
@@ -69,7 +70,7 @@ class DataProcessor:
         :param job_number: Identifier assigned to the incoming job.
         """
 
-    def process_chunk(self, databytes: bytearray):
+    def process_chunk(self, databytes: bytearray) -> Generator:
         """Process a received block of bytes
 
         Subclasses should yield one or more Command instances.
