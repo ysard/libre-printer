@@ -132,7 +132,18 @@ def tmp_process():
 
     Assign `run` attribute to a target function before calling `start` method.
     The tearDown will automatically terminate this process.
+
+    .. warning:: If an infinite loop runs in a subprocess, calling `terminate()`
+        prevents the coverage data from being dumped!
+        Coverage tool must follow the following config to capture SIGTERM signals
+        and capture coverage data.
+
+            [run]
+            patch = subprocess
+            parallel = True
+            sigterm = True
     """
+    LOGGER.debug("PID parent %s", os.getpid())
     process = Process()
     yield process
     process.terminate()

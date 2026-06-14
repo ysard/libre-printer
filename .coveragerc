@@ -1,0 +1,6 @@
+[run]
+patch = subprocess
+parallel = True
+# Not working, miss parent code ?
+# concurrency = multiprocessing
+sigterm = True
