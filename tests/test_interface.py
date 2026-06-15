@@ -24,7 +24,6 @@ from libreprinter.legacy_interprocess_com import (
     get_status_message,
     debug_shared_memory,
 )
-from .helpers.diff_pdf import is_similar_pdfs
 # Note: For each plugin loaded, don't forget to modify extra_config fixture
 from libreprinter.plugins.lp_escp2_converter import launch_escp2_converter
 from libreprinter.plugins.lp_pcl_to_pdf_watchdog import setup_pcl_watchdog
@@ -44,10 +43,14 @@ from libreprinter.plugins.lp_escapy_converter import (
 )
 import libreprinter.commons as cm
 
+# Local imports
 # Import create dir fixture
 from .test_file_handler import temp_dir
 # Regeneration of plugins before each test
 from .test_plugins import handle_module_cache
+# Inotify observer for expected file
+from .helpers.output_file_watcher import run_subprocess_wait_output_file
+from .helpers.diff_pdf import is_similar_pdfs
 
 LOGGER = cm.logger()
 
@@ -516,18 +519,17 @@ def test_endlesstext_values(
     processed_file = Path(tmp_dir) / out_file
     expected_file = Path(DIR_DATA) / expected_file
 
-    tmp_process.run = partial(wrapper, config)
-    tmp_process.start()
-    LOGGER.debug("Process started")
+    try:
+        run_subprocess_wait_output_file(
+            tmp_process,
+            processed_file,
+            partial(wrapper, config)
+        )
+    except TimeoutError as exp:
+        ret = set(Path(tmp_dir).rglob("*"))
+        print("Test directory tree content: ", ret)
+        raise FileNotFoundError from exp
 
-    # Test obtained files existence
-    print("expect file:", processed_file)
-    while not processed_file.exists() or processed_file.stat().st_size == 0:
-        time.sleep(1 * repetitions + 2)  # Empirical delay
-        print("Waiting dir tree: ", set(Path(tmp_dir).rglob("*")))
-
-    ret = set(Path(tmp_dir).rglob("*"))
-    print("Test directory tree: ", ret)
     found_stats = processed_file.stat()
     print("Processed file & found stats:", processed_file, found_stats)
 
