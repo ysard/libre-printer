@@ -511,7 +511,7 @@ def test_endlesstext_values(
 
     def wrapper(config):
         """Wrapper used to patch the get_buffer function inside the new process"""
-        LOGGER.debug("PID child:", os.getpid())
+        LOGGER.debug("PID child: %s", os.getpid())
 
         with patch("libreprinter.interface.get_buffer", mock_interface_buffer):
             read_interface(config)
