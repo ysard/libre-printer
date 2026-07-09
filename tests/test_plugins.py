@@ -256,13 +256,17 @@ def test_plugins_loading(sample_config, expected, handle_module_cache, temp_dir)
     # Only mandatory if we want to start the plugin later
     sample_config["misc"]["output_path"] = temp_dir
 
-    assert set(expected) == set(plugins.plugins(sample_config))
+    # For readability reasons, paths for internal plugins are simplified
+    # in the parametrized data.
+    found = set(name.replace("libreprinter.plugins.", "") for name in plugins.plugins(sample_config))
+    assert found == set(expected)
 
     if not expected:
         return
 
     # Get the entry point of the 1st plugin, execute it
-    ret = plugins.call_functions(expected[0], sample_config)
+    first_plugin_name = plugins.plugins(sample_config)[0]
+    ret = plugins.call_functions(first_plugin_name, sample_config)
 
     # Test the running subprocess type
     # => not mandatory here, functional tests are made in test_inteface & test_watchdogs
