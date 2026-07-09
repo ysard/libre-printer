@@ -19,12 +19,13 @@
 
 # Standard imports
 import functools
-import importlib
 from collections import namedtuple
-from watchdog.observers.inotify import InotifyObserver
-
+import importlib
+from importlib.metadata import entry_points
 # Starting from Python 3.7, we need 3.9 for files() method
 from importlib import resources
+
+from watchdog.observers.inotify import InotifyObserver
 
 # Custom imports
 from libreprinter import commons as cm
@@ -35,6 +36,9 @@ LOGGER = cm.logger()
 Plugin = namedtuple("Plugin", ("name", "func"))
 
 # Dictionary with information about all registered plugins
+# Structure: packages as keys (libreprinter.plugins or
+# libreprinter.plugins_data_processors). Then as values, dicts of plugin names
+# as keys, and entry points as values.
 _PLUGINS = {}
 
 # Dictionary of functions used to configure all registerd plugins
@@ -46,26 +50,62 @@ _CONFIGURERS = {}
 REGISTERED_FUNCS = set()
 
 
-def register(func):
-    """Decorator for registering a new plugin"""
-    package, _, plugin = func.__module__.rpartition(".")
-    pkg_info = _PLUGINS.setdefault(package, {})
-    pkg_info[plugin] = Plugin(name=plugin, func=func)
-    REGISTERED_FUNCS.add(func)
-    LOGGER.debug("Register plugin: %s:%s", plugin, func)
-    return func
+def register(_func=None, *, group=None):
+    """Decorator for registering a new plugin
+
+    :param _func: Decorated function.
+    :param group: Registration group of the plugin.
+        - For local plugins, just use the form `@register`.
+        - For external plugins, use the form `@register(group="libreprinter.plugins")`
+        or `@register(group="libreprinter.plugins_data_processors")`, whether
+        you're registering a converter or a data processor plugin.
+    :return: Decorated function.
+    """
+
+    def decorator(func):
+        """Internal decorator"""
+        package, _, plugin_name = func.__module__.rpartition(".")
+        pkg_info = _PLUGINS.setdefault(group or package, {})
+        pkg_info[func.__module__] = Plugin(name=plugin_name, func=func)
+        REGISTERED_FUNCS.add(func)
+        LOGGER.debug("Register plugin: %s:%s", plugin_name, func)
+        return func
+
+    if _func is None:
+        # Decorator with param: @register(group=xxx)
+        return decorator
+    # Simple decorator: @register
+    return decorator(_func)
 
 
-def register_configurer(func):
+def register_configurer(_func=None, *, group=None):
     """Decorator for registering a function of a plugin as a configurer
 
     This function will be called just after registration to validate or set
     default configuration values in a given `configparser.ConfigParser` object.
+
+    :param _func: Decorated function.
+    :param group: Registration group of the plugin.
+        - For local plugins, just use the form `@register_configurer`.
+        - For external plugins, use the form
+        `@register_configurer(group="libreprinter.plugins")`
+        or `@register_configurer(group="libreprinter.plugins_data_processors")`,
+        whether you're registering a converter or a data processor plugin.
+    :return: Decorated function.
     """
-    package, _, plugin = func.__module__.rpartition(".")
-    pkg_info = _CONFIGURERS.setdefault(package, {})
-    pkg_info[plugin] = func
-    return func
+
+    def decorator(func):
+        """Internal decorator"""
+        package, *_ = func.__module__.rpartition(".")
+        pkg_info = _CONFIGURERS.setdefault(group or package, {})
+        pkg_info[func.__module__] = func
+        return func
+
+    if _func is None:
+        # Decorator with param: @register(group=xxx)
+        return decorator
+    # Simple decorator: @register
+    return decorator(_func)
 
 
 def names(package, config):
@@ -101,13 +141,14 @@ def call(package, plugin, *args, **kwargs) -> InotifyObserver:
     return plugin_func(*args, **kwargs)
 
 
-def _import(package, plugin):
+def _import(plugin):
     """Import the given plugin file from a package
 
+    :param plugin: The path of the plugin
     :return: The imported module object
     :rtype: module
     """
-    return importlib.import_module(f"{package}.{plugin}")
+    return importlib.import_module(plugin)
 
 
 def _import_all(package, config):
@@ -128,14 +169,19 @@ def _import_all(package, config):
     # Find installed plugins
     # We do not want __init__.py, __pycache__
     plugin_names = [
-        module.stem
+        f"{package}.{module.stem}"
         for module in resources.files(package).iterdir()
         if module.name.startswith("lp_")
     ]
 
+    # Add external plugins
+    for ep in entry_points(group="libreprinter.plugins"):
+        # ep.load()  # Do not import now
+        plugin_names.append(ep.value)
+
     # Filter plugins according to their compatibility with the current config
     for plugin in plugin_names:
-        module = _import(package, plugin)
+        module = _import(plugin)
 
         if not is_plugin_compatible(config, module.CONFIG):
             LOGGER.debug("Unload plugin: %s", plugin)
