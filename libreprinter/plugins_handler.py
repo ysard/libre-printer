@@ -228,7 +228,7 @@ def is_plugin_compatible(current_config, plugin_config):
                 and c_section.get(p_param_name) not in p_param
             ) or (isinstance(p_param, str) and c_section.get(p_param_name) != p_param):
                 return False
-            elif callable(p_param):
+            if callable(p_param):
                 # Execute the callable to get a test result
                 if not p_param(c_section.get(p_param_name), current_config):
                     return False
