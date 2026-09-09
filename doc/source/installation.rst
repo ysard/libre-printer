@@ -119,6 +119,12 @@ You can install the project with the following command on all systems with a Pyt
 .. note:: Don't forget to add the flag ``--user`` to the command above if you don't use
    virtual environment or if you do not have root privileges on your system.
 
+.. note:: If you want to use all the plugins and external programs,
+   add one of these options to your command:
+
+   - `[all]`: Escapy, PJL (Printer Job Language), Seiko Qt-2100;
+   - `[esc]`: Escapy only;
+   - `[pjl]`: PJL only.
 
 At this point a new command is available in your shell to launch the service:
 

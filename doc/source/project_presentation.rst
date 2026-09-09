@@ -56,6 +56,11 @@ The supported interfaces & devices are the following:
     Any resolution and format (Ex: 150dpi, 300dpi, 600dpi), color or grayscale
     thanks to the project
     `GhostPCL <https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL>`_.
+- HP PJL (Printer Job Language):
+    PJL is supported thanks to an external plugin that brings the ability to
+    extract printer data from multiple languages (PostScript, PCL, ESCP, etc.)
+    and send it to Libre-Printer's converters.
+    See more `here <https://github.com/ysard/libreprinter-pjl>`_.
 - HP-PGL (Pen Plotters), HP-GL/2-Compatible Instruments, Instruments with GPIB/HP-IB interfaces:
     HP 7470A plotter, oscilloscopes (Tektronix, HP), spectrum analyzers and signal analyzers.
     Thanks to the Free and Open Source Software:
