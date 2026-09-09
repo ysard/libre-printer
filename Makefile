@@ -1,4 +1,5 @@
 PROJECT_VERSION=$(shell python setup.py --version)
+PACKAGE_NAME=libreprinter
 
 # Workaround for targets with the same name as a directory
 .PHONY: doc tests
@@ -6,36 +7,36 @@ PROJECT_VERSION=$(shell python setup.py --version)
 # Tests
 tests:
 	LOG_LEVEL=DEBUG pytest tests
-	@#python setup.py test --addopts "tests libreprinter -vv"
+	@#python setup.py test --addopts "tests $(PACKAGE_NAME) -vv"
 
 coverage:
-	LOG_LEVEL=DEBUG pytest --cov=libreprinter --cov-report term-missing -vv
-	@#python setup.py test --addopts "--cov libreprinter tests"
+	LOG_LEVEL=DEBUG pytest --cov=$(PACKAGE_NAME) --cov-report term-missing -vv
+	@#python setup.py test --addopts "--cov $(PACKAGE_NAME) tests"
 	@-coverage-badge -f -o images/coverage.svg
 
 branch_coverage:
-	LOG_LEVEL=DEBUG pytest --cov=libreprinter --cov-report term-missing --cov-branch -vv
+	LOG_LEVEL=DEBUG pytest --cov=$(PACKAGE_NAME) --cov-report term-missing --cov-branch -vv
 
 docstring_coverage:
-	interrogate -v libreprinter/ \
-	    -e libreprinter/__init__.py \
-	    -e libreprinter/handlers/__init__.py \
+	interrogate -v $(PACKAGE_NAME)/ \
+	    -e $(PACKAGE_NAME)/__init__.py \
+	    -e $(PACKAGE_NAME)/handlers/__init__.py \
 	    --badge-style flat --generate-badge images/
 
 # Code formatting
 black:
-	black libreprinter
+	black $(PACKAGE_NAME)
 
 # Run the service locally
 run:
 	-killall convert-escp2
-	python -m libreprinter
+	python -m $(PACKAGE_NAME)
 
 update_firmware:
 	avrdude -v -patmega32u4 -cavr109 -P/dev/ttyACM0 -b57600 -D -Uflash:w:./firmware/libreprinter.ino.hex:i
 
 clean:
-	rm -rf eps pcl pdf png raw txt txt_jobs hpgl ps txt_stream dist csv libreprinter.egg-info
+	rm -rf eps pcl pdf png raw txt txt_jobs hpgl ps txt_stream dist csv $(PACKAGE_NAME).egg-info
 	-$(MAKE) -C ./doc clean
 
 doc:
@@ -49,7 +50,7 @@ install:
 	@# Install a project in editable mode.
 	pip install -e .[dev]
 uninstall:
-	pip libreprinter uninstall
+	pip $(PACKAGE_NAME) uninstall
 
 sdist:
 	@echo Building the distribution package...
@@ -63,12 +64,12 @@ check_setups:
 	pyroma .
 
 check_code:
-	prospector libreprinter/
+	prospector $(PACKAGE_NAME)/
 	check-manifest
 
 missing_doc:
 	# Remove D213 antagonist of D212
-	prospector libreprinter/ | grep "libreprinter/\|Line\|Missing docstring"
+	prospector $(PACKAGE_NAME)/ | grep "$(PACKAGE_NAME)/\|Line\|Missing docstring"
 
 archive:
 	# Create upstream src archive
