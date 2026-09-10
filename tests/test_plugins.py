@@ -26,8 +26,10 @@ from watchdog.observers.inotify import InotifyObserver
 # Custom imports
 from libreprinter import plugins, plugins_handler
 from libreprinter.file_handler import init_directories
+
 # Import sample config fixture
 from .test_config_parser import sample_config
+
 # Import create dir fixture
 from .test_file_handler import temp_dir
 
@@ -261,7 +263,10 @@ def test_plugins_loading(sample_config, expected, handle_module_cache, temp_dir)
 
     # For readability reasons, paths for internal plugins are simplified
     # in the parametrized data.
-    found = set(name.replace("libreprinter.plugins.", "") for name in plugins.plugins(sample_config))
+    found = set(
+        name.replace("libreprinter.plugins.", "")
+        for name in plugins.plugins(sample_config)
+    )
     assert found == set(expected)
 
     if not expected:
