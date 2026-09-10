@@ -42,7 +42,7 @@ LOGGER = logger()
 
 CONFIG = {
     "misc": {
-        "emulation": ("postscript",),
+        "emulation": ("postscript", "pjl"),
         "endlesstext": ("no",),
     }
 }

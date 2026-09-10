@@ -36,7 +36,7 @@ LOGGER = logger()
 
 CONFIG = {
     "misc": {
-        "emulation": "hp",
+        "emulation": ("hp", "pjl"),
         "endlesstext": "no",
     }
 }
