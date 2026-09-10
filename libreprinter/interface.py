@@ -267,8 +267,7 @@ def parse_buffer(serial_handler, job_number, config, data_processors):
         # print("in:", databytes)
         # LOGGER.debug("in: %s", databytes)
 
-        # TODO: autodetect epson_emulation based on init seq
-        # TODO: starts_with ?
+        # TODO: autodetect epson_emulation based on init seq (starts_with ?)
         if not received_bytes:
             if b"\x1b\x40\x1b" in databytes:
                 # Epson init command /end printing command (\x1B@\x1B)
