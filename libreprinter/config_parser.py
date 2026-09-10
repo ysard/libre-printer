@@ -137,6 +137,7 @@ def parse_config(config: configparser.ConfigParser):
         "hpgl",
         "postscript",
         "seiko-qt2100",
+        "pjl",
     ):
         misc_section["emulation"] = "epson"
     if misc_section.get("emulation") in ("hp", "pcl"):
