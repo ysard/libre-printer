@@ -49,11 +49,14 @@ def handle_module_cache() -> Generator[None]:
     # Setup
     # Grab the functions decorated by register() and re-register them
     # (i.e. refresh the _PLUGINS dict of the plugins_handler module).
-    _ = list(map(plugins_handler.register, plugins_handler.REGISTERED_FUNCS))
+    _ = [
+        plugins_handler.register(_func=func, group=group)
+        for group, func in plugins_handler.REGISTERED_FUNCS
+    ]
     LOGGER.debug(
-        "Available plugins funcs to be registered: %s",
-        plugins_handler.REGISTERED_FUNCS
+        "Available plugins funcs to be registered: %s", plugins_handler.REGISTERED_FUNCS
     )
+    LOGGER.debug("Enabled plugins: %s", plugins_handler._PLUGINS)
     yield None
 
 
