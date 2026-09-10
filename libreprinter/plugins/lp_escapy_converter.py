@@ -43,13 +43,13 @@ LOGGER = logger()
 
 CONFIG = {
     "misc": {
-        "emulation": ("epson", "auto"),
+        "emulation": ("epson", "auto", "pjl"),
         "endlesstext": ("no",),
     },
     "esc": {"preferred_backend": "escapy"},
 }
 CHARACTERS_DB_DIR = "user_characters_db"  # Contain mappings.json
-REQUIRED_DIRS = [CHARACTERS_DB_DIR]
+REQUIRED_DIRS = [CHARACTERS_DB_DIR, "eps"]
 SECTION_NAME = "escapy"
 
 
@@ -89,7 +89,7 @@ class EscapyEventHandler(RegexMatchingEventHandler):
         :type FILES_REGEX: list[str]
     """
 
-    FILES_REGEX = [r".*\.raw$"]
+    FILES_REGEX = [r".*\.raw$", r".*\.eps$"]
 
     def __init__(self, settings: configparser.SectionProxy | dict, *args, **kwargs):
         """Constructor override
@@ -169,8 +169,10 @@ def setup_escapy_watchdog(config: configparser.ConfigParser | dict):
     event_handler = EscapyEventHandler(config[SECTION_NAME], ignore_directories=True)
     # Attach event handler to the configured output_path
     observer = InotifyObserver()
+    # For PJL jobs the PJL converter will dispatch epson jobs
+    listened_folder = "eps/" if config["misc"]["emulation"] == "pjl" else "raw/"
     observer.schedule(
-        event_handler, config["misc"]["output_path"] + "raw/", recursive=False
+        event_handler, config["misc"]["output_path"] + listened_folder, recursive=False
     )
     observer.start()
     return observer
