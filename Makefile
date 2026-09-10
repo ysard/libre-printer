@@ -44,6 +44,7 @@ doc:
 
 # development & release cycle
 fullrelease:
+	@echo "\033[5;1;31m*** DO NOT forget to update debian/changelog version before! ***\033[0m"
 	fullrelease
 install:
 	@# Replacement for python setup.py develop which doesn't support extra_require keyword.
