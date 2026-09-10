@@ -1,3 +1,14 @@
+libre-printer (1.2.0-1) UNRELEASED; urgency=medium
+
+  * Removal of the Retroprinter's ugly preprocessing related to MSB checking in
+    the Epson emulation; which is based on a deep misunderstanding of how the
+    low and high tables of the ASCII table of printable characters are handled.
+  * Refactor interface module
+  * Implement support of DataProcessor plugins
+  * Add support for PJL language
+
+ -- Ysard <ysard@users.noreply.github.com>  Thu, 10 Sept 2026 04:29:34 +0200
+
 libre-printer (1.1.2-1) UNRELEASED; urgency=medium
 
   * Fix shared memory multiple owners
