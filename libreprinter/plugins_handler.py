@@ -22,6 +22,7 @@ import functools
 from collections import namedtuple
 import importlib
 from importlib.metadata import entry_points
+
 # Starting from Python 3.7, we need 3.9 for files() method
 from importlib import resources
 
