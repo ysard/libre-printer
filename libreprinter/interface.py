@@ -304,7 +304,8 @@ def parse_buffer(serial_handler, job_number, config, data_processors):
                 raw_f_d = open(raw_filepath, "wb")
 
 
-        if epson_emulation and stream and not plain_stream_f_d:
+        # if epson_emulation and stream and not plain_stream_f_d:
+        if stream and not plain_stream_f_d:# TODO remove epson emulation ?
             # Not plain-stream, but strip-escp2-stream
             # => need to sync escp2 converter
             raw_f_d.flush()
