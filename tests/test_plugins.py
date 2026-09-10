@@ -234,12 +234,38 @@ def handle_module_cache() -> Generator[None]:
             """,
             ["lp_seiko_qt2100_converter"],
         ),
+        # pjl external plugin
+        (
+            """
+            [misc]
+            emulation=pjl
+            [parallel_printer]
+            [serial_printer]
+            """,
+            [
+                "libreprinter_pjl.lp_pjl_converter",
+                "lp_escapy_converter",
+                "lp_pcl_to_pdf_watchdog",
+                "lp_ps_converter",
+                "lp_txt_converter",
+            ],
+        ),
     ],
     ids=[
-        "espc2_printer_enabled1_escapy", "espc2_printer_enabled1_legacy",
-        "espc2_printer_enabled2", "escp2_printer_disabled",
-        "escp2_stream1", "escp2_stream2", "text_stream",
-        "only_text", "only_hp1", "only_hp2", "hpgl", "postscript", "only_seiko-qt2100",
+        "espc2_printer_enabled1_escapy",
+        "espc2_printer_enabled1_legacy",
+        "espc2_printer_enabled2",
+        "escp2_printer_disabled",
+        "escp2_stream1",
+        "escp2_stream2",
+        "text_stream",
+        "only_text",
+        "only_hp1",
+        "only_hp2",
+        "hpgl",
+        "postscript",
+        "only_seiko-qt2100",
+        "pjl_external",
     ],
     indirect=["sample_config"],  # Send sample_config val to the fixture
 )
