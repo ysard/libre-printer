@@ -44,7 +44,7 @@ _PLUGINS = {}
 # Dictionary of functions used to configure all registerd plugins
 _CONFIGURERS = {}
 
-# Set of functions decorated by register()
+# Set of tuples: package/group and functions decorated by register()
 # Mainly used for tests, to re-register these functions between tests that
 # can unload plugins (i.e. delete items in _PLUGINS).
 REGISTERED_FUNCS = set()
@@ -55,7 +55,7 @@ def register(_func=None, *, group=None):
 
     :param _func: Decorated function.
     :param group: Registration group of the plugin.
-        - For local plugins, just use the form `@register`.
+        - For local plugins, just use the form `@register` or set `group` to `None`.
         - For external plugins, use the form `@register(group="libreprinter.plugins")`
         or `@register(group="libreprinter.plugins_data_processors")`, whether
         you're registering a converter or a data processor plugin.
@@ -65,10 +65,15 @@ def register(_func=None, *, group=None):
     def decorator(func):
         """Internal decorator"""
         package, _, plugin_name = func.__module__.rpartition(".")
-        pkg_info = _PLUGINS.setdefault(group or package, {})
+        grp = group or package
+        pkg_info = _PLUGINS.setdefault(grp, {})
         pkg_info[func.__module__] = Plugin(name=plugin_name, func=func)
-        REGISTERED_FUNCS.add(func)
-        LOGGER.debug("Register plugin: %s:%s", plugin_name, func)
+        REGISTERED_FUNCS.add((grp, func))
+
+        LOGGER.debug(
+            "Register plugin: %s:%s (%s); group: %s",
+            plugin_name, func.__name__, func.__module__, grp
+        )
         return func
 
     if _func is None:
@@ -179,13 +184,13 @@ def _import_all(package, config):
         # ep.load()  # Do not import now
         plugin_names.append(ep.value)
 
-    # Filter plugins according to their compatibility with the current config
+    # Prune plugins according to their compatibility with the current config
     for plugin in plugin_names:
         module = _import(plugin)
 
         if not is_plugin_compatible(config, module.CONFIG):
             LOGGER.debug("Unload plugin: %s", plugin)
-            del _PLUGINS[package][plugin]
+            _PLUGINS[package].pop(plugin, None)
             continue
 
         # Init/check configuration for this plugin, from this plugin
