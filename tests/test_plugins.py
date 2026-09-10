@@ -56,7 +56,8 @@ def handle_module_cache() -> Generator[None]:
         for group, func in plugins_handler.REGISTERED_FUNCS
     ]
     LOGGER.debug(
-        "Available plugins funcs to be registered: %s", plugins_handler.REGISTERED_FUNCS
+        "Available plugins funcs to be registered: %s",
+        plugins_handler.REGISTERED_FUNCS
     )
     LOGGER.debug("Enabled plugins: %s", plugins_handler._PLUGINS)
     yield None
