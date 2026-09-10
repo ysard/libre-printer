@@ -145,7 +145,7 @@ def test_setup_watchdog(
     [open(temp_dir + filename, "a").close() for filename in files_to_create]
 
     while not CATCHED_EVENTS:
-        time.sleep(0.5)
+        time.sleep(0.1)
 
     # Check detection of the correct file
     assert len(CATCHED_EVENTS) == 1
