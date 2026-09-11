@@ -161,8 +161,8 @@ Standard Pins:
 
 Protection resistors R1, R2, R3, R4 and pullup resistors R6, R7, D1 *can* be omitted;
 In this case, the first ones (R1-R4) must be bridged to allow the signals to pass.
-While it's allowed for test cases, the interface *should work™* most of the time
-but it's far from guaranteed...
+While it's allowed for test cases, if you decide to go with this configuration,
+the interface *should work™* most of the time but it's far from guaranteed...
 
 Unused Pins:
 ~~~~~~~~~~~~

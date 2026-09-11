@@ -132,9 +132,8 @@ Why this project?
 
 Why a competing project to RetroPrinter?
 
-- Because we can.
-- In short: This is an opportunity to have a better community project than the
-  proprietary version.
+In short: This is an opportunity to have a better community project than the
+proprietary version.
 
 Technical considerations
 ------------------------
