@@ -53,16 +53,26 @@ Le fonctionnement peut être résumé en 3 étapes clés :
 
 Les interfaces et appareils concernés sont les suivants :
 
-- Imprimantes Epson : ESC/P - ESC/P2, 9 & 24 pins
-- Imprimantes HP PCL :
-    Toute résolution et tout format (Ex: 150dpi, 300dpi, 600dpi), couleur ou nuance de gris
-    Merci au projet [GhostPCL](https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL).
-- HP-PGL (Pen Plotters), instruments compatibles HP-GL/2, instruments possédant l'interface GPIB/HP-IB :
-    HP 7470A plotter, oscilloscopes (Tektronix, HP), analyseurs de spectres et de signaux.
-    Grâce au projet Libre et Open Source :
+- **Imprimantes Epson :**
+    ESC/P - ESC/P2, 9 et 24 broches grâce à Escapy, qui interprète de manière fiable et quasi
+    exhaustive le jeu de commandes pour produire des fichiers PDF consultables.
+- **Imprimantes HP PCL :**
+    Toutes résolutions et tous formats (ex. : 150 dpi, 300 dpi, 600 dpi), en couleur ou
+    en niveaux de gris grâce au projet
+    [GhostPCL](https://www.ghostscript.com/doc/9.53.3/WhatIsGS.htm#GhostPCL).
+- **HP PJL (Printer Job Language) :**
+    Le PJL est pris en charge grâce à un plugin externe qui permet d'extraire les données d'impression de plusieurs langages (PostScript, PCL, ESCP, etc.) et de les envoyer aux convertisseurs de Libre-Printer.
+    Pour en savoir plus, cliquez [ici](https://github.com/ysard/libreprinter-pjl).
+- **HP-PGL (traceurs à stylo), instruments compatibles HP-GL/2, instruments dotés d’interfaces GPIB/HP-IB :**
+    Traceur HP 7470A, oscilloscopes (Tektronix, HP), analyseurs de spectre et analyseurs de signaux.
+    Grâce au logiciel libre et open source :
     [hp2xx](https://www.gnu.org/software/hp2xx/).
-- Testeurs de montres et horloges Seiko :
-    Spécifiquement le chronographe Seiko Qt-2100.
+- **Imprimantes PostScript :**
+    Les conversions sont effectuées grâce à [Ghostscript](https://ghostscript.com/), un interpréteur
+    du langage PostScript® et des fichiers PDF. Ghostscript se compose d’une couche d’interprétation
+    PostScript et d’une bibliothèque graphique.
+- **Imprimantes pour testeurs de montres à quartz Seiko :**
+    Plus précisément l’appareil Seiko Qt-2100 Timegrapher.
     Grâce à notre propre projet : [Seiko Converter](https://github.com/ysard/seiko_qt2100_converter).
 
 Bien plus de matériels peuvent être supportés; le tout dépend de la participation
