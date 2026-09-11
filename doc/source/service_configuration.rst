@@ -43,7 +43,7 @@ It is currently split into 3 sections:
 
 - **escp2_converter_path=**
 
-    Path of the legacy espc2 converter. If the binary is not at the end of the
+    Path of the legacy escp2 converter. If the binary is not at the end of the
     given path its expected name is "convert-escp2".
 
     Default is as in the RetroPrinter image:

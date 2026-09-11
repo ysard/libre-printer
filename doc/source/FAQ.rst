@@ -52,7 +52,7 @@ About the support of the bridge with modern printers
 
 |project_name| offers a way to forward the data to be printed to another printer.
 
-The support of other printers can be a problem problem but
+The support of other printers can be a problem but
 it's not the responsibility of the project because this part is
 handled by CUPS and its embedded drivers on GNU/Linux distributions.
 However, it should be noted that new printers are quickly supported
@@ -73,7 +73,7 @@ It should be noted that (in 2021) of all their binaries only `convert-escp2`
 (the Epson ESC instruction converter) is the one that is really useful.
 
 The other executables are only used to move the print files or to perform minor
-perform minor actions; they have all been reimplemented in the code of |project_name|.
+actions; they have all been reimplemented in the code of |project_name|.
 
 
 You can reuse the `convert-escp2` executable from Retroprinter as is in the

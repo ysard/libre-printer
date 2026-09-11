@@ -178,7 +178,7 @@ Non-standard pins, normally unassigned, can be kept
 high because some equipments require it (cables or devices).
 For example, the Commodore C64 seems to require a 5V voltage on pin 18.
 
-Pin 35 may may also require a high state for some equipment.
+Pin 35 may also require a high state for some equipment.
 The pad near pin 4 of resistor R7 should be connected for this purpose.
 
 Options:
