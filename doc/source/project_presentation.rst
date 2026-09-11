@@ -4,6 +4,13 @@
 Project presentation
 ********************
 
+.. figure:: _static/misc/3D_screenshot.webp
+   :scale: 50 %
+   :align: center
+   :alt: 3D visualisation of the interface and its enclosure
+
+   3D visualisation of the interface and its enclosure
+
 .. contents:: Summary
     :depth: 2
     :local:

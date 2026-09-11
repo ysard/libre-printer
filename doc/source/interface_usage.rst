@@ -20,6 +20,30 @@ a computer.
     :local:
     :backlinks: top
 
+Gallery
+=======
+
+.. figure:: _static/misc/3D_screenshot.webp
+   :scale: 50 %
+   :align: center
+   :alt: 3D visualisation of the interface and its enclosure
+
+   3D visualisation of the interface and its enclosure
+
+.. figure:: _static/misc/IMG_20241107_201701_small.jpg
+   :scale: 30 %
+   :align: center
+   :alt: fully assembled interface and housing
+
+   Fully assembled interface and housing
+
+.. figure:: _static/misc/IMG_20241107_201621_small.jpg
+   :scale: 30 %
+   :align: center
+   :alt: interface inserted into the enclosure
+
+   Interface inserted into the enclosure
+
 LED indications
 ===============
 
