@@ -59,7 +59,7 @@ The microcontroller of the interface is currently an Arduino ProMicro whose diag
 Here's how the LEDs of the Arduino behave:
 
 ================================================ ===========================================
-**Power LED (green)**                            Lit as soon as the interface is powered on
+**Power LED**                                    Lit as soon as the interface is powered on
 **TX LED only (red)**                            Interface waiting for configuration
 **RX LED flashes at a rate of 1/second (red)**   Interface ready to receive print data
 **RX LED flashes briefly + TX LED continuously** Interface receiving data and relaying it
