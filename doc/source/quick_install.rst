@@ -84,7 +84,7 @@ The LEDs provide a quick indication of the interface state:
 * **RX LED flashing regularly**: the interface is ready to receive printer data.
 * **RX flashing + TX on**: data is being received and processed.
 * **TX and RX on for several seconds**: the interface is in boot mode after a
-manual reset and is waiting the libreprinter service.
+  manual reset and is waiting the libreprinter service.
 
 Once the interface is ready, send a print job from the connected equipment.
 
