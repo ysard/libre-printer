@@ -13,6 +13,14 @@ Sometimes these devices cannot be replaced for cost reasons or simply because th
 However, they often work in pairs with printers that are no longer manufactured and are often the weak point of
 the installation because they are prone to breakdowns and the abandonment of the manufacture of their consumables.
 
+<p align="center">
+<img
+alt="3D visualisation of the interface and its enclosure"
+src="doc/source/_static/misc/3D_screenshot.webp"
+width="350">
+</p>
+
+
 ## Documentation
 
 Complete documentation about software & hardware is available
