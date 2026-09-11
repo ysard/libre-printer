@@ -1,5 +1,6 @@
 .. _installation:
 
+============
 Installation
 ============
 
@@ -9,16 +10,17 @@ Installation
     :backlinks: top
 
 Foreword
---------
+========
 
-Language used
-~~~~~~~~~~~~~
+Languages used
+--------------
 
-All the main code is developped in Python3.6+ language.
+All the main code is developped in Python3.9+ language.
 
-However external programs like ESC converters are written in C or C++.
-This is the choice of the programmers depending on their preferences or by desire to
-hide their work and make their project not modifiable (ex: the binaries of Retroprinter).
+However external programs like the legacy converters (from Retroprinter) are
+written in C or C++.
+This is the choice of the programmers depending on their preferences or by desire
+to hide their work and make their project not modifiable.
 
 
 System requirements
@@ -27,13 +29,16 @@ System requirements
 A functional Python3 environment must be installed on your computer if you
 choose to not install the Debian package (i.e. for manual installation).
 
-For the eventual compilation of external binaries, you may need a GCC/G++ based build chain.
+For the eventual compilation of external binaries like GhostPCL for the HP PCL
+language, you may need a GCC/G++ based build chain.
 
 **Most/all of these requirements are already installed on basic GNU/Linux systems.**
 
+Standard installation / configuration (recommended)
+===================================================
 
-Install the Debian package (recommended)
-----------------------------------------
+Install the Debian package
+--------------------------
 
 The Debian package comes with the preconfigured software and automatic
 downloading of the dependencies.
@@ -97,6 +102,58 @@ file (``libreprinter.conf``) for your printer (configuration file can be passed
 to the libreprinter binary via its command line as you will see in the systemd file).
 
 
+Advanced / development installation
+===================================
+
+.. _setting_up_a_virtual_environment:
+
+Setting up a Python virtual environment for a manual installation
+-----------------------------------------------------------------
+
+As always, the use of a Python virtual environment
+(via `virtualenvwrapper <https://docs.python-guide.org/dev/virtualenvs/>`_) is **strongly advised**
+at least for development purposes.
+
+This is not a mandatory step but it is a good and a **simple** practice to separate projects
+from each other in order to avoid conflicts between dependencies.
+
+* Install virtualenvwrapper:
+
+.. code-block:: bash
+
+   $ pip install --user virtualenvwrapper
+
+* Edit your ``~/.bashrc`` or ``~/.zshrc`` file to source the ``virtualenvwrapper.sh``
+  script with these lines:
+
+.. code-block:: bash
+
+   $ export PATH=$PATH:~/.local/bin
+   $ export WORKON_HOME=~/.virtualenvs
+   $ mkdir -p $WORKON_HOME
+   $ # The location of this script may vary depending on your GNU/Linux distro
+   $ # and depending of your installation procedure with pip.
+   $ # See ~/.local/bin/ or /usr/bin
+   $ source ~/.local/bin/virtualenvwrapper.sh
+
+* Restart your terminal or run:
+
+.. code-block:: bash
+
+   $ source ~/.bashrc
+
+* Create your virtualenv:
+
+.. code-block:: bash
+
+   $ mkvirtualenv libreprinter -p /usr/bin/python3
+
+* Later, if you want to work in the virtualenv:
+
+.. code-block:: bash
+
+   $ workon libreprinter
+
 
 Install the release version manually
 ------------------------------------
@@ -110,7 +167,8 @@ third-party software repository for Python language:
 We recommend first the use of a Python virtual environment;
 see the chapter below: :ref:`setting_up_a_virtual_environment`.
 
-You can install the project with the following command on all systems with a Python environment with ``pip``:
+You can install the project with the following command on all systems with a
+Python environment with ``pip``:
 
 .. code-block:: bash
 
@@ -209,62 +267,13 @@ You can test the packages from the source directory with:
    $ make tests
 
 
-.. _setting_up_a_virtual_environment:
-
-Setting up a Python virtual environment for a manual installation
------------------------------------------------------------------
-
-As always, the use of a Python virtual environment
-(via `virtualenvwrapper <https://docs.python-guide.org/dev/virtualenvs/>`_) is **strongly advised**
-at least for development purposes.
-
-This is not a mandatory step but it is a good and a **simple** practice to separate projects
-from each other in order to avoid conflicts between dependencies.
-
-* Install virtualenvwrapper:
-
-.. code-block:: bash
-
-   $ pip install --user virtualenvwrapper
-
-* Edit your ``~/.bashrc`` or ``~/.zshrc`` file to source the ``virtualenvwrapper.sh`` script with these lines:
-
-.. code-block:: bash
-
-   $ export PATH=$PATH:~/.local/bin
-   $ export WORKON_HOME=~/.virtualenvs
-   $ mkdir -p $WORKON_HOME
-   $ # The location of this script may vary depending on your GNU/Linux distro
-   $ # and depending of your installation procedure with pip.
-   $ # See ~/.local/bin/ or /usr/bin
-   $ source ~/.local/bin/virtualenvwrapper.sh
-
-* Restart your terminal or run:
-
-.. code-block:: bash
-
-   $ source ~/.bashrc
-
-* Create your virtualenv:
-
-.. code-block:: bash
-
-   $ mkvirtualenv libreprinter -p /usr/bin/python3
-
-* Later, if you want to work in the virtualenv:
-
-.. code-block:: bash
-
-   $ workon libreprinter
-
-
 .. _setting_up_dependencies:
 
 Install the external dependencies
----------------------------------
+=================================
 
 GhostPCL
-~~~~~~~~
+--------
 
 If you plan to use LibrePrinter with a computer that sends data in the
 **HP PCL format**, you'll need the **GhostPCL** utility developed by the GhostScript team.
@@ -292,7 +301,7 @@ in the parameter ``pcl_converter_path`` of the config file ``libreprinter.conf``
 (default is ``/usr/local/bin/gpcl6``).
 
 Download compiled binaries
-**************************
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - `v10.0.0 linux-x86_64 (Artifex release) <https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/tag/gs1000>`_
 - `v10.03.1 linux-armv6 (LibrePrinter release) <https://github.com/ysard/libre-printer/releases/tag/1.0.0rc1>`_
@@ -300,7 +309,8 @@ Download compiled binaries
 Then copy the ``gpcl6`` binary to ``/usr/local`` and make it executable (``chmod 755 /usr/local/gpcl6``).
 
 Compilation
-***********
+~~~~~~~~~~~
+
 Compiling sources is easy (but takes time); First, download and extract the archive
 (for example: ``ghostpdl-10.03.1.tar.xz``), then:
 
@@ -311,8 +321,8 @@ Compiling sources is easy (but takes time); First, download and extract the arch
    $ make install # Will install the binaries in /usr/local by default
 
 
-RetroPrinter vendor blobs
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Legacy converters / RetroPrinter compatibility
+----------------------------------------------
 
 .. warning:: Until now, only the ``convert-escp2`` binary v3.7 is available on x86_64.
     Other binaries, updates & platforms should come, but in the meantime you will
@@ -360,12 +370,14 @@ There are currently 3 installation methods.
 access rights** of the assets by |project_name|.
 
 .. note::
-    The paths involved are atypical, even amateurish and dangerous (most of accesses are for root,
-    and their programs also run as root... like SysAdmins say, *using root or chmod 777
+    The paths involved are atypical, even amateurish and dangerous (access rights
+    are for everyone, and their programs also run as root.
+    Like any sys admin say, *using root or chmod 777
     for everything is the best way to prove you don't know what you're doing*.),
     but hey, it's not *our* fault!
 
-The following ACLs (Access Control List) rules will fix the rights for the user ``libreprinter``:
+The following ACLs (Access Control List) rules will fix the rights for the user
+``libreprinter``:
 
 .. code-block:: bash
 
