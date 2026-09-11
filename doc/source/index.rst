@@ -25,6 +25,7 @@ Basics
    :maxdepth: 2
 
    project_presentation
+   quick_install
    installation
    service_configuration
    examples
