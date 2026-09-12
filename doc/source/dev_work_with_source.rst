@@ -11,7 +11,7 @@ All the main code is developped in Python3.9+ language.
 
 
 Technical documentation
-=======================
+-----------------------
 
 .. toctree::
    :maxdepth: 5
