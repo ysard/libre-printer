@@ -81,7 +81,7 @@ created by udev on your system.
 The LEDs provide a quick indication of the interface state:
 
 * **Power LED on**: the interface is powered.
-* **RX LED flashing regularly**: the interface is ready to receive printer data.
+* **RX LED flashing regularly**: the interface is ready to receive the printing data.
 * **RX flashing + TX on**: data is being received and processed.
 * **TX and RX on for several seconds**: the interface is in boot mode after a
   manual reset and is waiting the libreprinter service.
@@ -107,8 +107,9 @@ Troubleshooting
 If the interface is not detected, first check the USB connection and verify
 that a `/dev/ttyACM*` device is present.
 
-If the interface is detected but no data is received, verify that the selected
-interface type and, for RS-232, the serial parameters match the connected equipment.
+If the interface is detected but no data is received, verify the selected
+interface type and, for RS-232, that the serial parameters match the connected
+equipment.
 
 For detailed hardware information, connector pinouts and advanced configuration,
 see :ref:`interface_usage` and :ref:`service_configuration`.
