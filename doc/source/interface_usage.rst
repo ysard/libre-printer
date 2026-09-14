@@ -62,8 +62,8 @@ Here's how the LEDs of the Arduino behave:
 **Power LED**                                    Lit as soon as the interface is powered on
 **TX LED only (red)**                            Interface waiting for configuration
 **RX LED flashes at a rate of 1/second (red)**   Interface ready to receive print data
-**RX LED flashes briefly + TX LED continuously** Interface receiving data and relaying it
-**TX LED + RX LED during ~7seconds**             Interface in boot mode after a manual reset
+**RX LED + TX LED flash almost continuously**    Interface receiving data and relaying it
+**RX LED + TX LED during ~7seconds**             Interface in **boot mode** after a manual reset
 ================================================ ===========================================
 
 Datasheet & list of components
